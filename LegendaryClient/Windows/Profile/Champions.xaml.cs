@@ -1,11 +1,11 @@
-﻿using LegendaryClient.Logic;
+﻿using LegendaryClient.Controls;
+using LegendaryClient.Logic;
 using LegendaryClient.Logic.SQLite;
 using PVPNetConnect.RiotObjects.Platform.Catalog.Champion;
-using System.Collections.Generic;
-using System.Windows.Controls;
-using System.Linq;
-using LegendaryClient.Controls;
 using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Windows.Controls;
 
 namespace LegendaryClient.Windows.Profile
 {
@@ -69,12 +69,15 @@ namespace LegendaryClient.Windows.Profile
                 case "All":
                     AllChampions = true;
                     break;
+
                 case "Owned":
                     OwnedChampions = true;
                     break;
+
                 case "Not Owned":
                     NotOwnedChampions = true;
                     break;
+
                 default:
                     AvaliableChampions = true;
                     break;
@@ -87,8 +90,6 @@ namespace LegendaryClient.Windows.Profile
                     (OwnedChampions && champ.Owned) ||
                     (NotOwnedChampions && !champ.Owned))
                 {
-                    //Add to ListView
-                    ListViewItem item = new ListViewItem();
                     ProfileChampionImage championImage = new ProfileChampionImage();
                     champions champion = champions.GetChampion(champ.ChampionId);
                     championImage.ChampImage.Source = champion.icon;
@@ -99,9 +100,7 @@ namespace LegendaryClient.Windows.Profile
                     {
                         championImage.ChampImage.Opacity = 0.5;
                     }
-                    item.Tag = champ.ChampionId;
-                    item.Content = championImage.Content;
-                    ChampionSelectListView.Items.Add(item);
+                    ChampionSelectListView.Items.Add(championImage);
                 }
             }
         }

@@ -58,6 +58,7 @@ namespace LegendaryClient.Windows.Profile
                             control.SummonerSpell2.Source = new BitmapImage(uriSource);
 
                             #region Generate Background
+
                             Image m = new Image();
                             Canvas.SetZIndex(m, -2);
                             m.Stretch = Stretch.None;
@@ -77,9 +78,10 @@ namespace LegendaryClient.Windows.Profile
                                                 System.Drawing.GraphicsUnit.Pixel);
                             }
 
-                            m.Source = ToWpfBitmap(target);
+                            m.Source = Client.ToWpfBitmap(target);
                             ImageGrid.Children.Add(m);
-                            #endregion
+
+                            #endregion Generate Background
                         }
                     }
 
@@ -122,19 +124,17 @@ namespace LegendaryClient.Windows.Profile
 
             foreach (var x in CurrentGame.Game.BannedChampions)
             {
-                ListViewItem item = new ListViewItem();
                 Image champImage = new Image();
                 champImage.Height = 58;
                 champImage.Width = 58;
                 champImage.Source = champions.GetChampion(x.ChampionId).icon;
-                item.Content = champImage;
                 if (x.TeamId == 100)
                 {
-                    BlueBanListView.Items.Add(item);
+                    BlueBanListView.Items.Add(champImage);
                 }
                 else
                 {
-                    PurpleBanListView.Items.Add(item);
+                    PurpleBanListView.Items.Add(champImage);
                 }
             }
 
@@ -151,23 +151,6 @@ namespace LegendaryClient.Windows.Profile
                 MMRLabel.Content = "≈" + deserializedJSON["interestScore"];
             }
             catch { MMRLabel.Content = "N/A"; }
-        }
-
-        public BitmapSource ToWpfBitmap(System.Drawing.Bitmap bitmap)
-        {
-            using (MemoryStream stream = new MemoryStream())
-            {
-                bitmap.Save(stream, System.Drawing.Imaging.ImageFormat.Bmp);
-
-                stream.Position = 0;
-                BitmapImage result = new BitmapImage();
-                result.BeginInit();
-                result.CacheOption = BitmapCacheOption.OnLoad;
-                result.StreamSource = stream;
-                result.EndInit();
-                result.Freeze();
-                return result;
-            }
         }
     }
 }

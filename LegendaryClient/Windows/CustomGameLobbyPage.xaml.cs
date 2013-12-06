@@ -2,7 +2,6 @@
 using LegendaryClient.Controls;
 using LegendaryClient.Logic;
 using LegendaryClient.Logic.Maps;
-using LegendaryClient.Logic.SQLite;
 using PVPNetConnect.RiotObjects.Platform.Game;
 using System;
 using System.Collections.Generic;
@@ -53,7 +52,7 @@ namespace LegendaryClient.Windows
                         //Run once
                         BaseMap map = BaseMap.GetMap(dto.MapId);
                         MapLabel.Content = map.DisplayName;
-                        ModeLabel.Content = TitleCaseString(dto.GameMode);
+                        ModeLabel.Content = Client.TitleCaseString(dto.GameMode);
                         GameTypeConfigDTO configType = Client.LoginPacket.GameTypeConfigs.Find(x => x.Id == dto.GameTypeConfigId);
                         TypeLabel.Content = GetGameMode(configType.Id);
                         SizeLabel.Content = dto.MaxNumPlayers / 2 + "v" + dto.MaxNumPlayers / 2;
@@ -71,50 +70,50 @@ namespace LegendaryClient.Windows
                     {
                         OptomisticLock = dto.OptimisticLock;
                         LaunchedTeamSelect = false;
-                            BlueTeamListView.Items.Clear();
-                            PurpleTeamListView.Items.Clear();
+                        BlueTeamListView.Items.Clear();
+                        PurpleTeamListView.Items.Clear();
 
-                            List<Participant> AllParticipants = new List<Participant>(dto.TeamOne.ToArray());
-                            AllParticipants.AddRange(dto.TeamTwo);
+                        List<Participant> AllParticipants = new List<Participant>(dto.TeamOne.ToArray());
+                        AllParticipants.AddRange(dto.TeamTwo);
 
-                            int i = 0;
-                            bool PurpleSide = false;
+                        int i = 0;
+                        bool PurpleSide = false;
 
-                            foreach (Participant playerTeam in AllParticipants)
+                        foreach (Participant playerTeam in AllParticipants)
+                        {
+                            i++;
+                            CustomLobbyPlayer lobbyPlayer = new CustomLobbyPlayer();
+                            if (playerTeam is PlayerParticipant)
                             {
-                                i++;
-                                CustomLobbyPlayer lobbyPlayer = new CustomLobbyPlayer();
-                                if (playerTeam is PlayerParticipant)
-                                {
-                                    PlayerParticipant player = playerTeam as PlayerParticipant;
-                                    lobbyPlayer = RenderPlayer(player, dto.OwnerSummary.SummonerId == player.SummonerId);
-                                    IsOwner = dto.OwnerSummary.SummonerId == Client.LoginPacket.AllSummonerData.Summoner.SumId;
-                                    StartGameButton.IsEnabled = IsOwner;
+                                PlayerParticipant player = playerTeam as PlayerParticipant;
+                                lobbyPlayer = RenderPlayer(player, dto.OwnerSummary.SummonerId == player.SummonerId);
+                                IsOwner = dto.OwnerSummary.SummonerId == Client.LoginPacket.AllSummonerData.Summoner.SumId;
+                                StartGameButton.IsEnabled = IsOwner;
 
-                                    if (Client.Whitelist.Count > 0)
+                                if (Client.Whitelist.Count > 0)
+                                {
+                                    if (!Client.Whitelist.Contains(player.SummonerName.ToLower()))
                                     {
-                                        if (!Client.Whitelist.Contains(player.SummonerName.ToLower()))
-                                        {
-                                            await Client.PVPNet.BanUserFromGame(Client.GameID, player.AccountId);
-                                        }
+                                        await Client.PVPNet.BanUserFromGame(Client.GameID, player.AccountId);
                                     }
                                 }
-
-                                if (i > dto.TeamOne.Count)
-                                {
-                                    i = 0;
-                                    PurpleSide = true;
-                                }
-
-                                if (!PurpleSide)
-                                {
-                                    BlueTeamListView.Items.Add(lobbyPlayer);
-                                }
-                                else
-                                {
-                                    PurpleTeamListView.Items.Add(lobbyPlayer);
-                                }
                             }
+
+                            if (i > dto.TeamOne.Count)
+                            {
+                                i = 0;
+                                PurpleSide = true;
+                            }
+
+                            if (!PurpleSide)
+                            {
+                                BlueTeamListView.Items.Add(lobbyPlayer);
+                            }
+                            else
+                            {
+                                PurpleTeamListView.Items.Add(lobbyPlayer);
+                            }
+                        }
                     }
                     else if (dto.GameState == "CHAMP_SELECT" || dto.GameState == "PRE_CHAMP_SELECT")
                     {
@@ -130,7 +129,7 @@ namespace LegendaryClient.Windows
             }
         }
 
-        void newRoom_OnParticipantJoin(Room room, RoomParticipant participant)
+        private void newRoom_OnParticipantJoin(Room room, RoomParticipant participant)
         {
             Dispatcher.BeginInvoke(DispatcherPriority.Input, new ThreadStart(() =>
             {
@@ -140,7 +139,7 @@ namespace LegendaryClient.Windows
             }));
         }
 
-        void newRoom_OnRoomMessage(object sender, jabber.protocol.client.Message msg)
+        private void newRoom_OnRoomMessage(object sender, jabber.protocol.client.Message msg)
         {
             Dispatcher.BeginInvoke(DispatcherPriority.Input, new ThreadStart(() =>
             {
@@ -250,26 +249,6 @@ namespace LegendaryClient.Windows
                 default:
                     return Client.LoginPacket.GameTypeConfigs.Find(x => x.Id == i).Name;
             }
-        }
-
-        public static String TitleCaseString(String s)
-        {
-            if (s == null) return s;
-
-            String[] words = s.Split(' ');
-            for (int i = 0; i < words.Length; i++)
-            {
-                if (words[i].Length == 0) continue;
-
-                Char firstChar = Char.ToUpper(words[i][0]);
-                String rest = "";
-                if (words[i].Length > 1)
-                {
-                    rest = words[i].Substring(1).ToLower();
-                }
-                words[i] = firstChar + rest;
-            }
-            return String.Join(" ", words);
         }
     }
 

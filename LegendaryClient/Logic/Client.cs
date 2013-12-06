@@ -6,7 +6,6 @@ using LegendaryClient.Logic.Region;
 using LegendaryClient.Logic.SQLite;
 using LegendaryClient.Windows;
 using PVPNetConnect;
-using PVPNetConnect.RiotObjects.Platform.Broadcast;
 using PVPNetConnect.RiotObjects.Platform.Clientfacade.Domain;
 using PVPNetConnect.RiotObjects.Platform.Game;
 using PVPNetConnect.RiotObjects.Platform.Game.Message;
@@ -23,6 +22,7 @@ using System.Text.RegularExpressions;
 using System.Threading;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Media.Imaging;
 using System.Windows.Threading;
 using System.Xml;
 
@@ -74,6 +74,11 @@ namespace LegendaryClient.Logic
         internal static List<items> Items;
 
         /// <summary>
+        /// The database of all masteries
+        /// </summary>
+        internal static List<masteries> Masteries;
+
+        /// <summary>
         /// The database of all the search tags
         /// </summary>
         internal static List<championSearchTags> SearchTags;
@@ -86,6 +91,7 @@ namespace LegendaryClient.Logic
         internal static List<string> Whitelist = new List<string>();
 
         #region Chat
+
         internal static JabberClient ChatClient;
 
         internal static PresenceType _CurrentPresence;
@@ -335,7 +341,8 @@ namespace LegendaryClient.Logic
 
         internal static int AmountOfWins; //Calculate wins for presence
         internal static bool IsRanked;
-        #endregion
+
+        #endregion Chat
 
         internal static Grid MainGrid;
         internal static Label StatusLabel;
@@ -468,7 +475,7 @@ namespace LegendaryClient.Logic
         {
             ;
         }
-        
+
         internal static void OnMessageReceived(object sender, object message)
         {
             MainWin.Dispatcher.BeginInvoke(DispatcherPriority.Input, new ThreadStart(() =>
@@ -491,6 +498,7 @@ namespace LegendaryClient.Logic
                             messageOver.MessageTitle.Content = "Banned from custom game";
                             messageOver.MessageTextBox.Text = "You have been banned from this custom game!";
                             break;
+
                         default:
                             messageOver.MessageTextBox.Text = notification.MessageCode + Environment.NewLine;
                             messageOver.MessageTextBox.Text = Convert.ToString(notification.MessageArgument);
@@ -604,7 +612,7 @@ namespace LegendaryClient.Logic
             p.StartInfo.WorkingDirectory = GameDirectory;
             p.StartInfo.FileName = Path.Combine(GameDirectory, "League of Legends.exe");
             p.StartInfo.Arguments = "\"8393\" \"LoLLauncher.exe\" \"\" \"spectator "
-                + SpectatorServer + " " 
+                + SpectatorServer + " "
                 + Key + " "
                 + GameId + " "
                 + Platform + "\"";
@@ -614,6 +622,7 @@ namespace LegendaryClient.Logic
         #endregion League Of Legends Logic
 
         internal static MainWindow MainWin;
+
         internal static void FocusClient()
         {
             if (MainWin.WindowState == WindowState.Minimized)
@@ -625,6 +634,43 @@ namespace LegendaryClient.Logic
             MainWin.Topmost = true;  // important
             MainWin.Topmost = false; // important
             MainWin.Focus();         // important
+        }
+
+        public static String TitleCaseString(String s)
+        {
+            if (s == null) return s;
+
+            String[] words = s.Split(' ');
+            for (int i = 0; i < words.Length; i++)
+            {
+                if (words[i].Length == 0) continue;
+
+                Char firstChar = Char.ToUpper(words[i][0]);
+                String rest = "";
+                if (words[i].Length > 1)
+                {
+                    rest = words[i].Substring(1).ToLower();
+                }
+                words[i] = firstChar + rest;
+            }
+            return String.Join(" ", words);
+        }
+
+        public static BitmapSource ToWpfBitmap(System.Drawing.Bitmap bitmap)
+        {
+            using (MemoryStream stream = new MemoryStream())
+            {
+                bitmap.Save(stream, System.Drawing.Imaging.ImageFormat.Bmp);
+
+                stream.Position = 0;
+                BitmapImage result = new BitmapImage();
+                result.BeginInit();
+                result.CacheOption = BitmapCacheOption.OnLoad;
+                result.StreamSource = stream;
+                result.EndInit();
+                result.Freeze();
+                return result;
+            }
         }
     }
 
