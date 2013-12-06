@@ -18,6 +18,7 @@ namespace LegendaryClient.Windows.Profile
     {
         private MasteryBookPageDTO SelectedBook;
         private LargeChatPlayer PlayerItem;
+        private int UsedPoints;
 
         public Masteries()
         {
@@ -58,7 +59,7 @@ namespace LegendaryClient.Windows.Profile
             DefenseListView.Items.Clear();
             UtilityListView.Items.Clear();
 
-            int UsedPoints = 0;
+            UsedPoints = 0;
             foreach (masteries Mastery in Client.Masteries)
             {
                 MasteryItem item = new MasteryItem();
@@ -102,22 +103,28 @@ namespace LegendaryClient.Windows.Profile
 
         void item_MouseRightButtonDown(object sender, MouseButtonEventArgs e)
         {
-            MasteryItem item = (MasteryItem)sender;
-            masteries playerItem = (masteries)item.Tag;
-            if (playerItem.selectedRank == 0)
-                return;
-            playerItem.selectedRank -= 1;
-            RenderMasteries();
+            if (UsedPoints > 0)
+            {
+                MasteryItem item = (MasteryItem)sender;
+                masteries playerItem = (masteries)item.Tag;
+                if (playerItem.selectedRank == 0)
+                    return;
+                playerItem.selectedRank -= 1;
+                RenderMasteries();
+            }
         }
 
         void item_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
-            MasteryItem item = (MasteryItem)sender; 
-            masteries playerItem = (masteries)item.Tag;
-            if (playerItem.selectedRank == playerItem.ranks)
-                return;
-            playerItem.selectedRank += 1;
-            RenderMasteries();
+            if (UsedPoints < 30)
+            {
+                MasteryItem item = (MasteryItem)sender;
+                masteries playerItem = (masteries)item.Tag;
+                if (playerItem.selectedRank == playerItem.ranks)
+                    return;
+                playerItem.selectedRank += 1;
+                RenderMasteries();
+            }
         }
 
         private void item_MouseLeave(object sender, MouseEventArgs e)
