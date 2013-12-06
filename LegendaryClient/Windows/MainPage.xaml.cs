@@ -87,13 +87,14 @@ namespace LegendaryClient.Windows
                                     {
                                         if (player.PlayerOrTeamName == PlayerData.Summoner.Name)
                                         {
-                                            TypedObject miniSeries = player.MiniSeries as TypedObject;
+                                            /*TypedObject miniSeries = player.MiniSeries as TypedObject;
                                             string Series = "";
                                             if (miniSeries != null)
                                             {
                                                 Series = (string)miniSeries["progress"];
                                             }
-                                            CurrentLP = (player.LeaguePoints == 100 ? Series : Convert.ToString(player.LeaguePoints));
+                                            CurrentLP = (player.LeaguePoints == 100 ? Series : Convert.ToString(player.LeaguePoints));*/
+                                            CurrentLP = Convert.ToString(player.LeaguePoints);
                                         }
                                     }
                                 }
