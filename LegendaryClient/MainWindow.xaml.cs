@@ -129,6 +129,7 @@ namespace LegendaryClient
         #pragma warning disable 4014 //Code does not need to be awaited
         private void LogoutButton_Click(object sender, RoutedEventArgs e)
         {
+            Properties.Settings.Default.AutoLogin = false;
             if (Client.IsLoggedIn)
             {
                 LoginPage page = new LoginPage();
