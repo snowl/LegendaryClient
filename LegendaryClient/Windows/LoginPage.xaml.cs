@@ -85,7 +85,7 @@ namespace LegendaryClient.Windows
                 RegionComboBox.SelectedValue = Properties.Settings.Default.Region;
             }
             var uriSource = new Uri(Path.Combine(Client.ExecutingDirectory, "Assets", "champions", champions.GetChampion(Client.LatestChamp).splashPath), UriKind.Absolute);
-            LoginImage.Source = Client.GetImage(uriSource);;
+            LoginImage.Source = Client.GetImage(uriSource);
         }
 
         private void LoginButton_Click(object sender, RoutedEventArgs e)
