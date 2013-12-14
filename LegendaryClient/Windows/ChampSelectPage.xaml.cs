@@ -28,12 +28,39 @@ namespace LegendaryClient.Windows
     /// </summary>
     public partial class ChampSelectPage : Page
     {
-        private bool BanningPhase = false;
+        private bool _BanningPhase;
+        private bool BanningPhase
+        {
+            get { return _BanningPhase; }
+            set {
+                if (_BanningPhase != value)
+                {
+                    RenderChamps(value);
+                    _BanningPhase = value;
+                }
+            }
+        }
+
+        private int _LastPickTurn;
+        private int LastPickTurn
+        {
+            get { return _LastPickTurn; }
+            set
+            {
+                if (_LastPickTurn != value)
+                {
+                    counter = configType.MainPickTimerDuration - 3;
+                    _LastPickTurn = value;
+                }
+            }
+        }
+
         private GameDTO LatestDto;
         private ChampionDTO[] Champions;
+        private List<ChampionDTO> ChampList;
+        private List<ChampionBanInfoDTO> ChampionsForBan;
         private MasteryBookDTO MyMasteries;
         private SpellBookDTO MyRunes;
-        private List<ChampionDTO> MyChamps = new List<ChampionDTO>();
         private GameTypeConfigDTO configType;
         private System.Windows.Forms.Timer CountdownTimer;
         private int counter;
@@ -56,7 +83,7 @@ namespace LegendaryClient.Windows
             MyMasteries = Client.LoginPacket.AllSummonerData.MasteryBook;
             MyRunes = Client.LoginPacket.AllSummonerData.SpellBook;
 
-            /*int i = 0;
+            int i = 0;
             foreach (MasteryBookPageDTO MasteryPage in MyMasteries.BookPages)
             {
                 string MasteryPageName = MasteryPage.Name;
@@ -79,7 +106,7 @@ namespace LegendaryClient.Windows
                 RuneComboBox.Items.Add(RunePageName);
                 if (RunePage.Current)
                     RuneComboBox.SelectedValue = RunePageName;
-            }*/
+            }
 
             QuickLoad = true;
 
@@ -106,6 +133,7 @@ namespace LegendaryClient.Windows
             CountdownTimer.Start();
 
             LatestDto = latestDTO;
+            ChampionBanInfoDTO[] ChampsForBan = await Client.PVPNet.GetChampionsForBan();
 
             string JID = Client.GetChatroomJID(latestDTO.RoomName.Replace("@sec", ""), latestDTO.RoomPassword, false);
             Chatroom = Client.ConfManager.GetRoom(new jabber.JID(JID));
@@ -114,29 +142,11 @@ namespace LegendaryClient.Windows
             Chatroom.OnParticipantJoin += Chatroom_OnParticipantJoin;
             Chatroom.Join(latestDTO.RoomPassword);
 
-            List<ChampionDTO> champList = new List<ChampionDTO>(Champions);
-
-            champList.Sort((x, y) => champions.GetChampion(x.ChampionId).displayName.CompareTo(champions.GetChampion(y.ChampionId).displayName));
-
-            foreach (ChampionDTO champ in champList)
-            {
-                if (champ.Owned || champ.FreeToPlay)
-                {
-                    MyChamps.Add(champ);
-
-                    //Add to ListView
-                    ListViewItem item = new ListViewItem();
-                    ChampionImage championImage = new ChampionImage();
-                    championImage.ChampImage.Source = champions.GetChampion(champ.ChampionId).icon;
-                    if (champ.FreeToPlay)
-                        championImage.FreeToPlayLabel.Visibility = Visibility.Visible;
-                    championImage.Width = 64;
-                    championImage.Height = 64;
-                    item.Tag = champ.ChampionId;
-                    item.Content = championImage.Content;
-                    ChampionSelectListView.Items.Add(item);
-                }
-            }
+            ChampList = new List<ChampionDTO>(Champions);
+            ChampList.Sort((x, y) => champions.GetChampion(x.ChampionId).displayName.CompareTo(champions.GetChampion(y.ChampionId).displayName));
+            ChampionsForBan = new List<ChampionBanInfoDTO>(ChampsForBan);
+            ChampionsForBan.Sort((x, y) => champions.GetChampion(x.ChampionId).displayName.CompareTo(champions.GetChampion(y.ChampionId).displayName));
+            RenderChamps(false);
 
             ChampSelect_OnMessageReceived(this, latestDTO);
             Client.PVPNet.OnMessageReceived += ChampSelect_OnMessageReceived;
@@ -158,7 +168,7 @@ namespace LegendaryClient.Windows
 
                 GameDTO ChampDTO = message as GameDTO;
                 LatestDto = ChampDTO;
-                Dispatcher.BeginInvoke(DispatcherPriority.Input, new ThreadStart(async () =>
+                Dispatcher.BeginInvoke(DispatcherPriority.Input, new ThreadStart(() =>
                 {
                     ListViewItem[] ChampionArray = new ListViewItem[ChampionSelectListView.Items.Count];
                     ChampionSelectListView.Items.CopyTo(ChampionArray, 0);
@@ -214,12 +224,9 @@ namespace LegendaryClient.Windows
                         BlueBanListView.Visibility = Visibility.Visible;
                         PurpleBanListView.Visibility = Visibility.Visible;
                         GameStatusLabel.Content = "Bans are on-going";
-                        counter = configType.BanTimerDuration;
-
-                        ChampionBanInfoDTO[] BannedChamps = await Client.PVPNet.GetChampionsForBan();
+                        counter = configType.BanTimerDuration - 3;
 
                         #region Render Bans
-
                         BlueBanListView.Items.Clear();
                         PurpleBanListView.Items.Clear();
                         foreach (var x in ChampDTO.BannedChampions)
@@ -242,6 +249,24 @@ namespace LegendaryClient.Windows
                                 if ((int)y.Tag == x.ChampionId)
                                 {
                                     ChampionSelectListView.Items.Remove(y);
+                                    //Remove from arrays
+                                    foreach (ChampionDTO PlayerChamps in ChampList.ToArray())
+                                    {
+                                        if (x.ChampionId == PlayerChamps.ChampionId)
+                                        {
+                                            ChampList.Remove(PlayerChamps);
+                                            break;
+                                        }
+                                    }
+
+                                    foreach (ChampionBanInfoDTO BanChamps in ChampionsForBan.ToArray())
+                                    {
+                                        if (x.ChampionId == BanChamps.ChampionId)
+                                        {
+                                            ChampionsForBan.Remove(BanChamps);
+                                            break;
+                                        }
+                                    }
                                 }
                             }
                         }
@@ -250,6 +275,7 @@ namespace LegendaryClient.Windows
                     }
                     else if (ChampDTO.GameState == "CHAMP_SELECT")
                     {
+                        LastPickTurn = ChampDTO.PickTurn;
                         BanningPhase = false;
                     }
                     else if (ChampDTO.GameState == "POST_CHAMP_SELECT")
@@ -257,7 +283,7 @@ namespace LegendaryClient.Windows
                         HasLockedIn = true;
                         GameStatusLabel.Content = "All players have picked!";
                         if (configType != null)
-                            counter = configType.PostPickTimerDuration - 5;
+                            counter = configType.PostPickTimerDuration - 2;
                         else
                             counter = 10;
                     }
@@ -265,6 +291,7 @@ namespace LegendaryClient.Windows
                     {
                         GameStatusLabel.Content = "The game is about to start!";
                         DodgeButton.IsEnabled = false; //Cannot dodge past this point!
+                        counter = 1;
                     }
 
                     #region Display players
@@ -412,12 +439,12 @@ namespace LegendaryClient.Windows
                     HasLaunchedGame = true;
                     Dispatcher.BeginInvoke(DispatcherPriority.Input, new ThreadStart(() =>
                     {
-                        Client.SwitchPage(new MainPage());
                         if (CountdownTimer != null)
                         {
                             CountdownTimer.Stop();
                         }
                         Client.PVPNet.OnMessageReceived -= ChampSelect_OnMessageReceived;
+                        Client.QuitCurrentGame();
                     }));
                     Client.LaunchGame();
                 }
@@ -481,6 +508,51 @@ namespace LegendaryClient.Windows
                             item.Content = skinImage;
                             SkinSelectListView.Items.Add(item);
                         }
+                    }
+                }
+            }
+        }
+
+        internal void RenderChamps(bool RenderBans)
+        {
+            ChampionSelectListView.Items.Clear();
+            if (!RenderBans)
+            {
+                foreach (ChampionDTO champ in ChampList)
+                {
+                    champions getChamp = champions.GetChampion(champ.ChampionId);
+                    if ((champ.Owned || champ.FreeToPlay) && getChamp.displayName.ToLower().Contains(SearchTextBox.Text.ToLower()))
+                    {
+                        //Add to ListView
+                        ListViewItem item = new ListViewItem();
+                        ChampionImage championImage = new ChampionImage();
+                        championImage.ChampImage.Source = champions.GetChampion(champ.ChampionId).icon;
+                        if (champ.FreeToPlay)
+                            championImage.FreeToPlayLabel.Visibility = Visibility.Visible;
+                        championImage.Width = 64;
+                        championImage.Height = 64;
+                        item.Tag = champ.ChampionId;
+                        item.Content = championImage.Content;
+                        ChampionSelectListView.Items.Add(item);
+                    }
+                }
+            }
+            else
+            {
+                foreach (ChampionBanInfoDTO champ in ChampionsForBan)
+                {
+                    champions getChamp = champions.GetChampion(champ.ChampionId);
+                    if (champ.EnemyOwned && getChamp.displayName.ToLower().Contains(SearchTextBox.Text.ToLower()))
+                    {
+                        //Add to ListView
+                        ListViewItem item = new ListViewItem();
+                        ChampionImage championImage = new ChampionImage();
+                        championImage.ChampImage.Source = champions.GetChampion(champ.ChampionId).icon;
+                        championImage.Width = 64;
+                        championImage.Height = 64;
+                        item.Tag = champ.ChampionId;
+                        item.Content = championImage.Content;
+                        ChampionSelectListView.Items.Add(item);
                     }
                 }
             }
@@ -581,12 +653,11 @@ namespace LegendaryClient.Windows
             }
         }
 
-        private async void DodgeButton_Click(object sender, RoutedEventArgs e)
+        private void DodgeButton_Click(object sender, RoutedEventArgs e)
         {
             //TODO - add messagebox
-            await Client.PVPNet.QuitGame();
             Client.PVPNet.OnMessageReceived -= ChampSelect_OnMessageReceived;
-            Client.SwitchPage(new MainPage());
+            Client.QuitCurrentGame();
         }
 
         private async void LockInButton_Click(object sender, RoutedEventArgs e)
@@ -600,6 +671,7 @@ namespace LegendaryClient.Windows
 
         private void SearchTextBox_TextChanged(object sender, TextChangedEventArgs e)
         {
+            RenderChamps(BanningPhase);
         }
 
         private void EditMasteriesButton_Click(object sender, RoutedEventArgs e)
@@ -656,6 +728,8 @@ namespace LegendaryClient.Windows
 
         private void RuneComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
+            if (!QuickLoad) //Make loading quicker
+                return;
         }
 
         private void ChatButton_Click(object sender, RoutedEventArgs e)

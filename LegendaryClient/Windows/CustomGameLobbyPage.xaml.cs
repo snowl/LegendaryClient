@@ -184,10 +184,11 @@ namespace LegendaryClient.Windows
                                 lobbyPlayer = RenderPlayer(player, dto.OwnerSummary.SummonerId == player.SummonerId);
                                 IsOwner = dto.OwnerSummary.SummonerId == Client.LoginPacket.AllSummonerData.Summoner.SumId;
                                 StartGameButton.IsEnabled = IsOwner;
+                                WhitelistAddButton.IsEnabled = IsOwner;
 
                                 if (Client.Whitelist.Count > 0)
                                 {
-                                    if (!Client.Whitelist.Contains(player.SummonerName.ToLower()) && player.SummonerId != Client.LoginPacket.AllSummonerData.Summoner.SumId)
+                                    if (!Client.Whitelist.Contains(player.SummonerName.ToLower()) && player.SummonerId != Client.LoginPacket.AllSummonerData.Summoner.SumId && IsOwner)
                                     {
                                         await Client.PVPNet.BanUserFromGame(Client.GameID, player.AccountId);
                                     }

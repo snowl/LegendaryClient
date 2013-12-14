@@ -52,7 +52,7 @@
             </ListView.ItemsPanel>
         </ListView>
 
-        <ListView x:Name="ChampionSelectListView" HorizontalAlignment="Stretch" Margin="145,80,145,0" Height="370" VerticalAlignment="Top" ScrollViewer.HorizontalScrollBarVisibility="Disabled" Background="#66505050">
+        <ListView x:Name="ChampionSelectListView" HorizontalAlignment="Stretch" Margin="145,80,145,0" Height="370" VerticalAlignment="Top" ScrollViewer.HorizontalScrollBarVisibility="Disabled" Background="#66505050" BorderBrush="{x:Null}">
             <ListView.ItemsPanel>
                 <ItemsPanelTemplate>
                     <WrapPanel />

@@ -74,7 +74,7 @@ namespace LegendaryClient
         void CurrentDomain_FirstChanceException(object sender, System.Runtime.ExceptionServices.FirstChanceExceptionEventArgs e)
         {
             //Disregard PVPNetSpam
-            if (e.Exception.Message.Contains("too small for an Int32"))
+            if (e.Exception.Message.Contains("too small for an Int32") || e.Exception.Message.Contains("Constructor on type "))
                 return;
             Client.Log("A first chance exception was thrown", "EXCEPTION");
             Client.Log(e.Exception.Message, "EXCEPTION");
@@ -161,5 +161,6 @@ namespace LegendaryClient
                 Client.SwitchPage(page);
             }
         }
+
     }
 }

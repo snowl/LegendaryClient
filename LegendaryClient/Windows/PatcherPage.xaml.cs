@@ -62,6 +62,7 @@ namespace LegendaryClient.Windows
                     Dispatcher.BeginInvoke(DispatcherPriority.Input, new ThreadStart(() =>
                     {
                         CurrentProgressLabel.Content = "Could not retrieve update files!";
+                        Client.Log("Couldn't get update files for LegendaryClient");
                     }));
                     return;
                 }
@@ -69,6 +70,7 @@ namespace LegendaryClient.Windows
                 string[] VersionSplit = VersionString.Split('|');
 
                 LogTextBox("Update data: " + VersionSplit[0] + "|" + VersionSplit[1]);
+                Client.Log("Update data: " + VersionSplit[0] + "|" + VersionSplit[1]);
 
 #if !DEBUG //Dont patch client while in DEBUG
                 if (VersionSplit.Length == 3)
@@ -92,6 +94,7 @@ namespace LegendaryClient.Windows
                 }
 #endif
                 LogTextBox("LegendaryClient is up to date");
+                Client.Log("LC Patched");
 
                 #endregion LegendaryClient
 
@@ -120,6 +123,7 @@ namespace LegendaryClient.Windows
                 LogTextBox("DataDragon Version: " + patcher.DDragonVersion);
                 string DDragonVersion = File.ReadAllText(Path.Combine(Client.ExecutingDirectory, "Assets", "VERSION_DDragon"));
                 LogTextBox("Current DataDragon Version: " + DDragonVersion);
+                Client.Log("DD: " + patcher.DDragonVersion + "|" + DDragonVersion);
 
                 if (patcher.DDragonVersion != DDragonVersion)
                 {
@@ -181,6 +185,7 @@ namespace LegendaryClient.Windows
                 LogTextBox("Current Air Assets Version: " + AirVersion);
                 bool RetrieveCurrentInstallation = false;
                 string AirLocation = "";
+                Client.Log("AIR: " + LatestAIR + "|" + AirVersion);
 
                 if (AirVersion == "0.0.0.0")
                 {
@@ -204,6 +209,7 @@ namespace LegendaryClient.Windows
 
                     if (RetrieveCurrentInstallation)
                     {
+                        Client.Log("Got previous installation: " + AirLocation);
                         LogTextBox("Getting Air Assets from " + AirLocation);
                         Dispatcher.BeginInvoke(DispatcherPriority.Input, new ThreadStart(() =>
                         {
