@@ -157,7 +157,7 @@ namespace LegendaryClient.Windows.Profile
                         img = new Image();
                         img.Width = 58;
                         img.Height = 58;
-                        img.Source = Client.GetImage(uriSource);;
+                        img.Source = Client.GetImage(uriSource);
                         img.Tag = item;
                         img.MouseMove += img_MouseMove;
                         img.MouseLeave += img_MouseLeave;
@@ -217,7 +217,7 @@ namespace LegendaryClient.Windows.Profile
                 PlayerItem.PlayerStatus.Text = ParsedDescription;
 
                 var uriSource = new Uri(Path.Combine(Client.ExecutingDirectory, "Assets", "item", Item.id + ".png"), UriKind.RelativeOrAbsolute);
-                PlayerItem.ProfileImage.Source = Client.GetImage(uriSource);;
+                PlayerItem.ProfileImage.Source = Client.GetImage(uriSource);
 
                 PlayerItem.HorizontalAlignment = System.Windows.HorizontalAlignment.Left;
                 PlayerItem.VerticalAlignment = System.Windows.VerticalAlignment.Top;

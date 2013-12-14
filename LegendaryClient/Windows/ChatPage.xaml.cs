@@ -88,7 +88,7 @@ namespace LegendaryClient.Windows
                             player.PlayerStatus.Content = ChatPlayerPair.Value.Status;
                             player.PlayerStatus.Foreground = brush;
                             var uriSource = new Uri(Path.Combine(Client.ExecutingDirectory, "Assets", "profileicon", ChatPlayerPair.Value.ProfileIcon + ".png"), UriKind.RelativeOrAbsolute);
-                            player.ProfileImage.Source = Client.GetImage(uriSource);;
+                            player.ProfileImage.Source = Client.GetImage(uriSource);
 
                             if (ChatPlayerPair.Value.GameStatus != "outOfGame")
                             {
@@ -156,7 +156,7 @@ namespace LegendaryClient.Windows
                 PlayerItem.LevelLabel.Content = playerItem.Level;
                 PlayerItem.UsingLegendary.Visibility = playerItem.UsingLegendary ? System.Windows.Visibility.Visible : System.Windows.Visibility.Hidden;
                 var uriSource = new Uri(Path.Combine(Client.ExecutingDirectory, "Assets", "profileicon", playerItem.ProfileIcon + ".png"), UriKind.RelativeOrAbsolute);
-                PlayerItem.ProfileImage.Source = Client.GetImage(uriSource);;
+                PlayerItem.ProfileImage.Source = Client.GetImage(uriSource);
                 if (playerItem.Status != null)
                 {
                     PlayerItem.PlayerStatus.Text = playerItem.Status.Replace("∟", "");

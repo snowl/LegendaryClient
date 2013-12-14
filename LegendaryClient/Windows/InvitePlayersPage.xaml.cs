@@ -56,7 +56,7 @@ namespace LegendaryClient.Windows
                         player.LevelLabel.Content = ChatPlayerPair.Value.Level;
                         player.PlayerStatus.Content = ChatPlayerPair.Value.Status;
                         var uriSource = new Uri(Path.Combine(Client.ExecutingDirectory, "Assets", "profileicon", ChatPlayerPair.Value.ProfileIcon + ".png"), UriKind.RelativeOrAbsolute);
-                        player.ProfileImage.Source = Client.GetImage(uriSource);;
+                        player.ProfileImage.Source = Client.GetImage(uriSource);
 
                         //Show available players
                         if (ChatPlayerPair.Value.GameStatus != "outOfGame")

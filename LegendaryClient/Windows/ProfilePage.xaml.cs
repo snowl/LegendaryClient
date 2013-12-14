@@ -59,7 +59,7 @@ namespace LegendaryClient.Windows
 
             int ProfileIconID = Summoner.ProfileIconId;
             var uriSource = new Uri(Path.Combine(Client.ExecutingDirectory, "Assets", "profileicon", ProfileIconID + ".png"), UriKind.RelativeOrAbsolute);
-            ProfileImage.Source = Client.GetImage(uriSource);;
+            ProfileImage.Source = Client.GetImage(uriSource);
 
             PlatformGameLifecycleDTO n = await Client.PVPNet.RetrieveInProgressSpectatorGameInfo(s);
             if (n.GameName != null)
