@@ -17,6 +17,7 @@ namespace LegendaryClient.Windows
         {
             InitializeComponent();
             Client.StatusLabel = StatusLabel;
+            Client.StatusGrid = StatusGrid;
             Client.ChatListView = ChatListView;
             Client.ChatClient.OnMessage += ChatClient_OnMessage;
         }
@@ -75,10 +76,28 @@ namespace LegendaryClient.Windows
             if (Client.ChatContainer.Visibility == System.Windows.Visibility.Hidden)
             {
                 Client.ChatContainer.Visibility = System.Windows.Visibility.Visible;
+                Client.NotificationContainer.Visibility = System.Windows.Visibility.Hidden;
                 Client.NotificationOverlayContainer.Margin = new Thickness(0, 0, 260, 50);
             }
             else
             {
+                Client.ChatContainer.Visibility = System.Windows.Visibility.Hidden;
+                Client.NotificationContainer.Visibility = System.Windows.Visibility.Hidden;
+                Client.NotificationOverlayContainer.Margin = new Thickness(0, 0, 10, 50);
+            }
+        }
+
+        private void NotificationButton_Click(object sender, RoutedEventArgs e)
+        {
+            if (Client.NotificationContainer.Visibility == System.Windows.Visibility.Hidden)
+            {
+                Client.NotificationContainer.Visibility = System.Windows.Visibility.Visible;
+                Client.ChatContainer.Visibility = System.Windows.Visibility.Hidden;
+                Client.NotificationOverlayContainer.Margin = new Thickness(0, 0, 260, 50);
+            }
+            else
+            {
+                Client.NotificationContainer.Visibility = System.Windows.Visibility.Hidden;
                 Client.ChatContainer.Visibility = System.Windows.Visibility.Hidden;
                 Client.NotificationOverlayContainer.Margin = new Thickness(0, 0, 10, 50);
             }
@@ -119,6 +138,11 @@ namespace LegendaryClient.Windows
                 Client.ChatItem.Margin = new System.Windows.Thickness(relativePoint.X, 0, 0, 40);
                 ChatListView.SelectedIndex = -1;
             }
+        }
+
+        private void CloseButton_Click(object sender, RoutedEventArgs e)
+        {
+            Client.QuitCurrentGame();
         }
     }
 }

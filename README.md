@@ -43,11 +43,13 @@ Still-in Progress Screenshots
 ![ChampSelect2](http://i.imgur.com/FBK2dw3.jpg)
 ![CustomGameCreate](http://i.imgur.com/vig8S6P.png)
 ![SearchCustomGames](http://i.imgur.com/1j5Yw8c.png)
-![CustomGameLobby](http://i.imgur.com/Z345BSm.png)
+![CustomGameLobby](http://i.imgur.com/QF2MtZB.png)
+![Inviting](http://i.imgur.com/99q4kcd.png)
 ![Profile](http://i.imgur.com/BSLpms5.png)
 ![AggregatedStats](http://puu.sh/5CHtN.jpg)
 ![Skins](http://i.imgur.com/Lsz3x4d.jpg)
 ![Settings](http://i.imgur.com/ZTktZTY.png)
+![Notifications](http://i.imgur.com/96bctwF.png)
 
 Other Features
 ======

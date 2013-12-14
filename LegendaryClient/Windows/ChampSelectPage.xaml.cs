@@ -90,7 +90,6 @@ namespace LegendaryClient.Windows
             {
                 Client.PVPNet.OnMessageReceived -= ChampSelect_OnMessageReceived;
                 await Client.PVPNet.QuitGame();
-                Client.ClearPage(this);
 
                 Client.SwitchPage(new MainPage());
                 MessageOverlay overlay = new MessageOverlay();
@@ -202,7 +201,6 @@ namespace LegendaryClient.Windows
                             CountdownTimer.Stop();
                         }
                         Client.PVPNet.OnMessageReceived -= ChampSelect_OnMessageReceived;
-                        Client.ClearPage(this);
                         FakePage fakePage = new FakePage();
                         fakePage.Content = Client.LastPageContent;
                         Client.SwitchPage(fakePage);
@@ -420,7 +418,6 @@ namespace LegendaryClient.Windows
                             CountdownTimer.Stop();
                         }
                         Client.PVPNet.OnMessageReceived -= ChampSelect_OnMessageReceived;
-                        Client.ClearPage(this);
                     }));
                     Client.LaunchGame();
                 }
@@ -589,10 +586,6 @@ namespace LegendaryClient.Windows
             //TODO - add messagebox
             await Client.PVPNet.QuitGame();
             Client.PVPNet.OnMessageReceived -= ChampSelect_OnMessageReceived;
-            Client.ClearPage(new CustomGameLobbyPage());
-            Client.ClearPage(new CreateCustomGamePage());
-            Client.ClearPage(this);
-
             Client.SwitchPage(new MainPage());
         }
 

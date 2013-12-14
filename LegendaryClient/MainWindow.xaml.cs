@@ -38,6 +38,7 @@ namespace LegendaryClient
             ChatContainer.Content = new ChatPage().Content;
             StatusContainer.Content = new StatusPage().Content;
             NotificationOverlayContainer.Content = new FakePage().Content;
+            NotificationContainer.Content = new NotificationsPage().Content;
 
             Grid NotificationTempGrid = null;
             foreach (var x in NotificationOverlayContainer.GetChildObjects())
@@ -57,6 +58,7 @@ namespace LegendaryClient
             Client.OverlayContainer = OverlayContainer;
             Client.ChatContainer = ChatContainer;
             Client.StatusContainer = StatusContainer;
+            Client.NotificationContainer = NotificationContainer;
             Client.NotificationOverlayContainer = NotificationOverlayContainer;
             Client.SwitchPage(new PatcherPage());
         }
@@ -126,7 +128,6 @@ namespace LegendaryClient
         {
         }
 
-        #pragma warning disable 4014 //Code does not need to be awaited
         private void LogoutButton_Click(object sender, RoutedEventArgs e)
         {
             if (Client.IsLoggedIn)

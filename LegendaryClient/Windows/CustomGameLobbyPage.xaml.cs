@@ -25,6 +25,8 @@ namespace LegendaryClient.Windows
         private bool IsOwner;
         private double OptomisticLock;
         private bool HasConnectedToChat;
+        private double GameId;
+        private int MapId;
         private Room newRoom;
 
         public CustomGameLobbyPage()
@@ -38,6 +40,40 @@ namespace LegendaryClient.Windows
             {
                 GameLobby_OnMessageReceived(null, Client.GameLobbyDTO);
             }
+
+            Client.InviteListView = InviteListView;
+            Client.InviteListView.Items.Clear();
+            Client.ChatClient.OnMessage += ChatClient_OnMessage;
+            Client.StatusGrid.Visibility = System.Windows.Visibility.Visible;
+            Client.PlayButton.Visibility = System.Windows.Visibility.Collapsed;
+            Client.GameStatus = "hostingPracticeGame";
+            Client.SetChatHover();
+        }
+
+        public void ChatClient_OnMessage(object sender, jabber.protocol.client.Message msg)
+        {
+            if (msg.Subject != null)
+            {
+                ChatSubjects subject = (ChatSubjects)Enum.Parse(typeof(ChatSubjects), msg.Subject, true);
+
+                if (subject == ChatSubjects.PRACTICE_GAME_INVITE_ACCEPT)
+                {
+                    ChatPlayerItem PlayerInfo = Client.AllPlayers[msg.From.User];
+                    Dispatcher.BeginInvoke(DispatcherPriority.Input, new ThreadStart(() =>
+                    {
+                        foreach (var x in Client.InviteListView.Items)
+                        {
+                            InvitePlayer invitePlayer = x as InvitePlayer;
+                            if ((string)invitePlayer.PlayerLabel.Content == PlayerInfo.Username)
+                            {
+                                invitePlayer.StatusLabel.Content = "Accepted";
+                            }
+                        }
+                    }));
+
+                    Client.Message(msg.From.User, msg.Body, ChatSubjects.PRACTICE_GAME_INVITE_ACCEPT_ACK);
+                }
+            }
         }
 
         private void GameLobby_OnMessageReceived(object sender, object message)
@@ -47,6 +83,8 @@ namespace LegendaryClient.Windows
                 GameDTO dto = message as GameDTO;
                 Dispatcher.BeginInvoke(DispatcherPriority.Input, new ThreadStart(async () =>
                 {
+                    MapId = dto.MapId;
+                    GameId = dto.Id;
                     if (!HasConnectedToChat)
                     {
                         //Run once
@@ -189,13 +227,9 @@ namespace LegendaryClient.Windows
             return lobbyPlayer;
         }
 
-        private async void QuitGameButton_Click(object sender, RoutedEventArgs e)
+        private void QuitGameButton_Click(object sender, RoutedEventArgs e)
         {
-            await Client.PVPNet.QuitGame();
-            Client.ClearPage(new CustomGameLobbyPage()); //Clear pages
-            Client.ClearPage(new CreateCustomGamePage());
-
-            Client.SwitchPage(new MainPage());
+            Client.QuitCurrentGame();
         }
 
         private async void SwitchTeamsButton_Click(object sender, RoutedEventArgs e)
@@ -213,6 +247,12 @@ namespace LegendaryClient.Windows
         private async void StartGameButton_Click(object sender, RoutedEventArgs e)
         {
             await Client.PVPNet.StartChampionSelection(Client.GameID, OptomisticLock);
+        }
+
+        private void InviteButton_Click(object sender, RoutedEventArgs e)
+        {
+            Client.OverlayContainer.Content = new InvitePlayersPage(GameId, MapId).Content;
+            Client.OverlayContainer.Visibility = System.Windows.Visibility.Visible;
         }
 
         public static string GetGameMode(int i)

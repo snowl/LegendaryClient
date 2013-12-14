@@ -132,8 +132,6 @@ namespace LegendaryClient.Windows
             }));
         }
 
-#pragma warning disable 4014 //Code does not need to be awaited
-
         private async void GotLoginPacket(LoginDataPacket packet)
         {
             Client.LoginPacket = packet;
@@ -178,7 +176,6 @@ namespace LegendaryClient.Windows
                 Client.ConfManager.Stream = Client.ChatClient;
 
                 Client.SwitchPage(new MainPage());
-                Client.ClearPage(this);
             }));
         }
     }

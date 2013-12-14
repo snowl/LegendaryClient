@@ -39,6 +39,7 @@ namespace LegendaryClient.Controls
             MessageData = Message;
             NotificationTypeLabel.Content = Client.TitleCaseString(Enum.GetName(typeof(ChatSubjects), subject).Replace("_", " "));
 
+            //TODO: Get name from id
             ChatPlayerItem Player = Client.AllPlayers[Message.From.User];
             using (XmlReader reader = XmlReader.Create(new StringReader(Message.Body)))
             {
@@ -90,6 +91,14 @@ namespace LegendaryClient.Controls
             /*
             Client.MainGrid.Children.Remove(Client.ChatItem);
             Client.ChatListView.Items.Remove(tempPlayer);*/
+        }
+
+        private void AcceptButton_Click(object sender, RoutedEventArgs e)
+        {
+            if (Subject == ChatSubjects.PRACTICE_GAME_INVITE)
+            {
+                Client.Message(MessageData.From.User, MessageData.Body, ChatSubjects.PRACTICE_GAME_INVITE_ACCEPT);
+            }
         }
     }
 }

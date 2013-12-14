@@ -159,11 +159,16 @@ namespace LegendaryClient.Logic
                 MainWin.Dispatcher.BeginInvoke(DispatcherPriority.Input, new ThreadStart(() =>
                 {
                     ChatSubjects subject = (ChatSubjects) Enum.Parse(typeof(ChatSubjects), msg.Subject, true);
-                    NotificationPopup pop = new NotificationPopup(subject, msg);
-                    pop.Height = 230;
-                    pop.HorizontalAlignment = HorizontalAlignment.Right;
-                    pop.VerticalAlignment = VerticalAlignment.Bottom;
-                    Client.NotificationGrid.Children.Add(pop);
+
+                    if (subject == ChatSubjects.PRACTICE_GAME_INVITE ||
+                        subject == ChatSubjects.GAME_INVITE)
+                    {
+                        NotificationPopup pop = new NotificationPopup(subject, msg);
+                        pop.Height = 230;
+                        pop.HorizontalAlignment = HorizontalAlignment.Right;
+                        pop.VerticalAlignment = VerticalAlignment.Bottom;
+                        Client.NotificationGrid.Children.Add(pop);
+                    }
                 }));
 
                 return;
@@ -374,17 +379,21 @@ namespace LegendaryClient.Logic
 
         #endregion Chat
 
+        //These are controls that need to be modified over one page
         internal static Grid MainGrid;
         internal static Grid NotificationGrid;
+        internal static Grid StatusGrid;
         internal static Label StatusLabel;
         internal static Label InfoLabel;
-        internal static ContentControl OverlayContainer;
         internal static Button PlayButton;
+        internal static ContentControl OverlayContainer;
         internal static ContentControl ChatContainer;
         internal static ContentControl StatusContainer;
+        internal static ContentControl NotificationContainer;
         internal static ContentControl NotificationOverlayContainer;
         internal static ListView ChatListView;
         internal static ChatItem ChatItem;
+        internal static ListView InviteListView;
 
         internal static Image MainPageProfileImage;
 
@@ -409,34 +418,25 @@ namespace LegendaryClient.Logic
         internal static void SwitchPage(Page page)
         {
             IsOnPlayPage = page is PlayPage;
-            foreach (Page p in Pages) //Cache pages
+            //Dont cache important pages
+            if (!(page is LoginPage ||
+                  page is CustomGameLobbyPage ||
+                  page is ChampSelectPage ||
+                  page is CreateCustomGamePage))
             {
-                if (p.GetType() == page.GetType())
+                foreach (Page p in Pages) //Cache pages
                 {
-                    Container.Content = p.Content;
-                    return;
+                    if (p.GetType() == page.GetType())
+                    {
+                        Container.Content = p.Content;
+                        return;
+                    }
                 }
             }
             Container.Content = page.Content;
             if (!(page is FakePage))
                 Pages.Add(page);
         }
-
-        /// <summary>
-        /// Clears the cache of a certain page if not used anymore
-        /// </summary>
-        internal static void ClearPage(Page page)
-        {
-            foreach (Page p in Pages.ToArray())
-            {
-                if (p.GetType() == page.GetType())
-                {
-                    Pages.Remove(p);
-                    return;
-                }
-            }
-        }
-
         #endregion WPF Tab Change
 
         #region League Of Legends Logic
@@ -538,7 +538,6 @@ namespace LegendaryClient.Logic
                     }
                     Client.OverlayContainer.Content = messageOver.Content;
                     Client.OverlayContainer.Visibility = Visibility.Visible;
-                    Client.ClearPage(new CustomGameLobbyPage());
                     Client.SwitchPage(new MainPage());
                 }
                 else if (message is EndOfGameStats)
@@ -655,6 +654,15 @@ namespace LegendaryClient.Logic
             p.Start();
         }
 
+        internal async static void QuitCurrentGame()
+        {
+            await Client.PVPNet.QuitGame();
+            Client.StatusGrid.Visibility = System.Windows.Visibility.Hidden;
+            Client.PlayButton.Visibility = System.Windows.Visibility.Visible;
+            Client.GameStatus = "outOfGame";
+            Client.SetChatHover();
+            Client.SwitchPage(new MainPage());
+        }
         #endregion League Of Legends Logic
 
         internal static MainWindow MainWin;
