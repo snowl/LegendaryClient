@@ -1,0 +1,1 @@
+"<body><invitelist><invitee status=\"ACCEPTED\" name=\"Snowl\" /></invitelist></body>"

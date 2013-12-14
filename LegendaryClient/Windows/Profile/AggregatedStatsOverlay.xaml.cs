@@ -4,10 +4,10 @@ using LegendaryClient.Logic.SQLite;
 using PVPNetConnect.RiotObjects.Platform.Statistics;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Reflection;
 using System.Windows;
 using System.Windows.Controls;
-using System.Linq;
 
 //While this is in the Profile folder, the namespace is LegendaryClient.Windows
 namespace LegendaryClient.Windows

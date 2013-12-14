@@ -6,6 +6,7 @@ using MahApps.Metro.Controls;
 using PVPNetConnect;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Windows;
 using System.Windows.Controls;
 
@@ -22,6 +23,13 @@ namespace LegendaryClient
         {
             InitializeComponent();
             Client.ExecutingDirectory = System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location);
+
+            //Set up logging before we do anything
+            AppDomain.CurrentDomain.FirstChanceException += CurrentDomain_FirstChanceException;
+            if (!File.Exists(Path.Combine(Client.ExecutingDirectory, "lcdebug.log")))
+            {
+                File.Create(Path.Combine(Client.ExecutingDirectory, "lcdebug.log"));
+            }
 
             Client.InfoLabel = InfoLabel;
             Client.PVPNet = new PVPNetConnection();
@@ -61,6 +69,13 @@ namespace LegendaryClient
             Client.NotificationContainer = NotificationContainer;
             Client.NotificationOverlayContainer = NotificationOverlayContainer;
             Client.SwitchPage(new PatcherPage());
+        }
+
+        void CurrentDomain_FirstChanceException(object sender, System.Runtime.ExceptionServices.FirstChanceExceptionEventArgs e)
+        {
+            Client.Log("A first chance exception was thrown", "EXCEPTION");
+            Client.Log(e.Exception.Message, "EXCEPTION");
+            Client.Log(e.Exception.StackTrace, "EXCEPTION");
         }
 
         private void ThemeButton_Click(object sender, RoutedEventArgs e)

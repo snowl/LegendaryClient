@@ -180,7 +180,7 @@ namespace LegendaryClient.Windows
                             if (InGameChamp != null)
                                 PlayerItem.InGameStatus.Text = "In Game" + Environment.NewLine +
                                                                "Playing as " + InGameChamp.displayName + Environment.NewLine +
-                                                               "For " + string.Format("{0} Minutes and {1} Seconds", elapsed.Minutes, elapsed.Seconds) ;
+                                                               "For " + string.Format("{0} Minutes and {1} Seconds", elapsed.Minutes, elapsed.Seconds);
                             else
                                 PlayerItem.InGameStatus.Text = "In Game";
                             break;
@@ -189,7 +189,7 @@ namespace LegendaryClient.Windows
                             break;
                         case "inQueue":
                             PlayerItem.InGameStatus.Text = "In Queue" + Environment.NewLine +
-                                                           "For " + string.Format("{0} Minutes and {1} Seconds", elapsed.Minutes, elapsed.Seconds) ;
+                                                           "For " + string.Format("{0} Minutes and {1} Seconds", elapsed.Minutes, elapsed.Seconds);
                             break;
                         case "spectating":
                             PlayerItem.InGameStatus.Text = "Spectating";

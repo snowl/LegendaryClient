@@ -13,6 +13,7 @@ using System.Windows.Documents;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Threading;
+using System.Xml;
 
 namespace LegendaryClient.Windows
 {
@@ -43,36 +44,49 @@ namespace LegendaryClient.Windows
 
             Client.InviteListView = InviteListView;
             Client.InviteListView.Items.Clear();
-            Client.ChatClient.OnMessage += ChatClient_OnMessage;
+            Client.OnMessage += Client_OnMessage;
             Client.StatusGrid.Visibility = System.Windows.Visibility.Visible;
             Client.PlayButton.Visibility = System.Windows.Visibility.Collapsed;
             Client.GameStatus = "hostingPracticeGame";
             Client.SetChatHover();
         }
 
-        public void ChatClient_OnMessage(object sender, jabber.protocol.client.Message msg)
+        public void Client_OnMessage(object sender, jabber.protocol.client.Message msg)
         {
             if (msg.Subject != null)
             {
                 ChatSubjects subject = (ChatSubjects)Enum.Parse(typeof(ChatSubjects), msg.Subject, true);
 
-                if (subject == ChatSubjects.PRACTICE_GAME_INVITE_ACCEPT)
+                ChatPlayerItem PlayerInfo = Client.AllPlayers[msg.From.User];
+                Dispatcher.BeginInvoke(DispatcherPriority.Input, new ThreadStart(() =>
                 {
-                    ChatPlayerItem PlayerInfo = Client.AllPlayers[msg.From.User];
-                    Dispatcher.BeginInvoke(DispatcherPriority.Input, new ThreadStart(() =>
+                    InvitePlayer invitePlayer = null;
+                    foreach (var x in Client.InviteListView.Items)
                     {
-                        foreach (var x in Client.InviteListView.Items)
+                        InvitePlayer tempInvPlayer = (InvitePlayer)x;
+                        if ((string)tempInvPlayer.PlayerLabel.Content == PlayerInfo.Username)
                         {
-                            InvitePlayer invitePlayer = x as InvitePlayer;
-                            if ((string)invitePlayer.PlayerLabel.Content == PlayerInfo.Username)
-                            {
-                                invitePlayer.StatusLabel.Content = "Accepted";
-                            }
+                            invitePlayer = x as InvitePlayer;
+                            break;
                         }
-                    }));
+                    }
 
-                    Client.Message(msg.From.User, msg.Body, ChatSubjects.PRACTICE_GAME_INVITE_ACCEPT_ACK);
-                }
+                    if (subject == ChatSubjects.PRACTICE_GAME_INVITE_ACCEPT)
+                    {
+                        invitePlayer.StatusLabel.Content = "Accepted";
+                        Client.Message(msg.From.User, msg.Body, ChatSubjects.PRACTICE_GAME_INVITE_ACCEPT_ACK);
+                    }
+
+                    if (subject == ChatSubjects.GAME_INVITE_REJECT)
+                    {
+                        invitePlayer.StatusLabel.Content = "Rejected";
+                    }
+
+                    if (subject == ChatSubjects.GAME_INVITE_LIST_STATUS)
+                    {
+                        ParseCurrentInvitees(msg.Body);
+                    }
+                }));
             }
         }
 
@@ -181,6 +195,12 @@ namespace LegendaryClient.Windows
         {
             Dispatcher.BeginInvoke(DispatcherPriority.Input, new ThreadStart(() =>
             {
+                if (msg.InnerText.Contains("invitelist"))
+                {
+                    ParseCurrentInvitees(msg.InnerText.Replace("<![CDATA[", "").Replace("]]>", ""));
+                    return;
+                }
+
                 if (msg.Body != "This room is not anonymous")
                 {
                     TextRange tr = new TextRange(ChatText.Document.ContentEnd, ChatText.Document.ContentEnd);
@@ -288,6 +308,29 @@ namespace LegendaryClient.Windows
 
                 default:
                     return Client.LoginPacket.GameTypeConfigs.Find(x => x.Id == i).Name;
+            }
+        }
+
+        private void ParseCurrentInvitees(string Message)
+        {
+            Client.InviteListView.Items.Clear();
+            using (XmlReader reader = XmlReader.Create(new StringReader(Message)))
+            {
+                while (reader.Read())
+                {
+                    if (reader.IsStartElement())
+                    {
+                        switch (reader.Name)
+                        {
+                            case "invitee":
+                                InvitePlayer invitePlayer = new InvitePlayer();
+                                invitePlayer.StatusLabel.Content = Client.TitleCaseString(reader.GetAttribute("status"));
+                                invitePlayer.PlayerLabel.Content = reader.GetAttribute("name");
+                                Client.InviteListView.Items.Add(invitePlayer);
+                                break;
+                        }
+                    }
+                }
             }
         }
     }

@@ -147,7 +147,7 @@ namespace LegendaryClient.Windows
             {
                 Client.StatusContainer.Visibility = System.Windows.Visibility.Visible;
                 Client.Container.Margin = new Thickness(0, 0, 0, 40);
-                
+
                 //Setup chat
                 Client.ChatClient.AutoReconnect = 30;
                 Client.ChatClient.KeepAlive = 10;

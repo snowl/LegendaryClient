@@ -1,9 +1,5 @@
-﻿using LegendaryClient.Controls;
-using LegendaryClient.Logic;
-using PVPNetConnect.RiotObjects.Platform.Game;
-using PVPNetConnect.RiotObjects.Platform.Matchmaking;
+﻿using LegendaryClient.Logic;
 using System;
-using System.Collections.Generic;
 using System.Net;
 using System.Net.NetworkInformation;
 using System.Threading;

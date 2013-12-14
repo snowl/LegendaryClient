@@ -11,7 +11,6 @@ using System.Text.RegularExpressions;
 using System.Threading;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
@@ -45,7 +44,7 @@ namespace LegendaryClient.Windows.Profile
             {
                 Game.GameType = Client.TitleCaseString(Game.GameType.Replace("_GAME", "").Replace("MATCHED", "NORMAL"));
                 MatchStats Match = new MatchStats();
-                
+
                 foreach (RawStat Stat in Game.Statistics)
                 {
                     var type = typeof(MatchStats);
@@ -72,7 +71,7 @@ namespace LegendaryClient.Windows.Profile
                     champions GameChamp = champions.GetChampion((int)Math.Round(stats.Game.ChampionId));
                     item.ChampionImage.Source = GameChamp.icon;
                     item.ChampionNameLabel.Content = GameChamp.displayName;
-                    item.ScoreLabel.Content = 
+                    item.ScoreLabel.Content =
                         string.Format("{0}/{1}/{2} ({3})",
                         stats.ChampionsKilled,
                         stats.NumDeaths,

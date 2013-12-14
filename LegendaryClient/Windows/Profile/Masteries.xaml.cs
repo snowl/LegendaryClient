@@ -4,11 +4,9 @@ using LegendaryClient.Logic.SQLite;
 using PVPNetConnect.RiotObjects.Platform.Summoner.Masterybook;
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
-using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 
 namespace LegendaryClient.Windows.Profile
@@ -162,7 +160,7 @@ namespace LegendaryClient.Windows.Profile
 
         void item_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
-            MasteryItem item = (MasteryItem)sender; 
+            MasteryItem item = (MasteryItem)sender;
             masteries playerItem = (masteries)item.Tag;
             //Max rank
             if (playerItem.selectedRank == playerItem.ranks)
@@ -229,7 +227,7 @@ namespace LegendaryClient.Windows.Profile
                     PlayerItem.Width = 250;
 
                 PlayerItem.PlayerWins.Content = "Requires " + playerItem.treeRow * 4 + " points in " + playerItem.tree;
-                
+
                 bool IsAtRequirement = true;
                 switch (playerItem.tree)
                 {

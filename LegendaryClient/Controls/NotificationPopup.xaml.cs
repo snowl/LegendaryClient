@@ -1,20 +1,12 @@
 ﻿using jabber.protocol.client;
 using LegendaryClient.Logic;
 using LegendaryClient.Logic.Maps;
+using LegendaryClient.Windows;
 using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
 using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
 using System.Xml;
 
 namespace LegendaryClient.Controls
@@ -30,6 +22,7 @@ namespace LegendaryClient.Controls
         int ProfileIconId = 0;
         int MapId = 0;
         int QueueId = 0;
+        int GameId = 0;
         string GameType;
 
         public NotificationPopup(ChatSubjects subject, Message Message)
@@ -71,6 +64,10 @@ namespace LegendaryClient.Controls
                                 reader.Read();
                                 QueueId = Convert.ToInt32(reader.Value);
                                 break;
+                            case "gameId":
+                                reader.Read();
+                                GameId = Convert.ToInt32(reader.Value);
+                                break;
                         }
 
                         #endregion Parse Popup
@@ -88,9 +85,13 @@ namespace LegendaryClient.Controls
 
         private void CloseButton_Click(object sender, RoutedEventArgs e)
         {
-            /*
-            Client.MainGrid.Children.Remove(Client.ChatItem);
-            Client.ChatListView.Items.Remove(tempPlayer);*/
+            this.Visibility = System.Windows.Visibility.Hidden;
+        }
+
+        private void DeclineButton_Click(object sender, RoutedEventArgs e)
+        {
+            Client.Message(MessageData.From.User, MessageData.Body, ChatSubjects.GAME_INVITE_REJECT);
+            this.Visibility = System.Windows.Visibility.Hidden;
         }
 
         private void AcceptButton_Click(object sender, RoutedEventArgs e)
@@ -98,6 +99,14 @@ namespace LegendaryClient.Controls
             if (Subject == ChatSubjects.PRACTICE_GAME_INVITE)
             {
                 Client.Message(MessageData.From.User, MessageData.Body, ChatSubjects.PRACTICE_GAME_INVITE_ACCEPT);
+                Client.PVPNet.JoinGame(GameId);
+
+                Client.InGame = true;
+                Client.GameID = GameId;
+                Client.GameName = "Joined game";
+
+                Client.SwitchPage(new CustomGameLobbyPage());
+                this.Visibility = System.Windows.Visibility.Hidden;
             }
         }
     }
