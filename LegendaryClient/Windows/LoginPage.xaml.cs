@@ -86,6 +86,13 @@ namespace LegendaryClient.Windows
             }
             var uriSource = new Uri(Path.Combine(Client.ExecutingDirectory, "Assets", "champions", champions.GetChampion(Client.LatestChamp).splashPath), UriKind.Absolute);
             LoginImage.Source = new BitmapImage(uriSource);
+            if (!String.IsNullOrWhiteSpace(Properties.Settings.Default.SavedPassword) &&
+                !String.IsNullOrWhiteSpace(Properties.Settings.Default.Region) &&
+                Properties.Settings.Default.AutoLogin)
+            {
+                AutoLoginCheckBox.IsChecked = true;
+                LoginButton_Click(null, null);
+            }
         }
 
         private void LoginButton_Click(object sender, RoutedEventArgs e)
@@ -99,6 +106,8 @@ namespace LegendaryClient.Windows
                 Properties.Settings.Default.SavedUsername = LoginUsernameBox.Text;
             else
                 Properties.Settings.Default.SavedUsername = "";
+
+            Properties.Settings.Default.AutoLogin = (bool)AutoLoginCheckBox.IsChecked;
             Properties.Settings.Default.Region = (string)RegionComboBox.SelectedValue;
             Properties.Settings.Default.Save();
 
@@ -111,6 +120,7 @@ namespace LegendaryClient.Windows
             Client.PVPNet.OnMessageReceived += Client.OnMessageReceived;
             BaseRegion SelectedRegion = BaseRegion.GetRegion((string)RegionComboBox.SelectedValue);
             Client.Region = SelectedRegion;
+            Client.Version = "3.15.foobar";
             Client.PVPNet.Connect(LoginUsernameBox.Text, LoginPasswordBox.Password, SelectedRegion.PVPRegion, Client.Version);
         }
 

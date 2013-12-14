@@ -130,6 +130,7 @@ namespace LegendaryClient
 
         private void LogoutButton_Click(object sender, RoutedEventArgs e)
         {
+            Properties.Settings.Default.AutoLogin = false;
             if (Client.IsLoggedIn)
             {
                 LoginPage page = new LoginPage();
