@@ -442,7 +442,7 @@ namespace LegendaryClient.Windows
             ListViewItem item = new ListViewItem();
             Image skinImage = new Image();
             var uriSource = new Uri(Path.Combine(Client.ExecutingDirectory, "Assets", "champions", Champion.portraitPath), UriKind.Absolute);
-            skinImage.Source = new BitmapImage(uriSource);
+            skinImage.Source = Client.GetImage(uriSource);;
             skinImage.Width = 191;
             skinImage.Stretch = Stretch.UniformToFill;
             item.Tag = "0:" + Champion.id; //Hack
@@ -454,7 +454,7 @@ namespace LegendaryClient.Windows
             {
                 ChampionAbility championAbility = new ChampionAbility();
                 uriSource = new Uri(Path.Combine(Client.ExecutingDirectory, "Assets", "abilities", ability.iconPath), UriKind.Absolute);
-                championAbility.AbilityImage.Source = new BitmapImage(uriSource);
+                championAbility.AbilityImage.Source = Client.GetImage(uriSource);;
                 championAbility.AbilityHotKey.Content = ability.hotkey;
                 championAbility.AbilityName.Content = ability.name;
                 championAbility.AbilityDescription.Text = ability.description;
@@ -474,7 +474,7 @@ namespace LegendaryClient.Windows
                             item = new ListViewItem();
                             skinImage = new Image();
                             uriSource = new Uri(Path.Combine(Client.ExecutingDirectory, "Assets", "champions", championSkins.GetSkin(skin.SkinId).portraitPath), UriKind.Absolute);
-                            skinImage.Source = new BitmapImage(uriSource);
+                            skinImage.Source = Client.GetImage(uriSource);;
                             skinImage.Width = 191;
                             skinImage.Stretch = Stretch.UniformToFill;
                             item.Tag = skin.SkinId;
@@ -496,16 +496,16 @@ namespace LegendaryClient.Windows
             if (selection.Spell1Id != 0)
             {
                 var uriSource = new Uri(Path.Combine(Client.ExecutingDirectory, "Assets", "spell", SummonerSpell.GetSpellImageName((int)selection.Spell1Id)), UriKind.Absolute);
-                control.SummonerSpell1.Source = new BitmapImage(uriSource);
+                control.SummonerSpell1.Source = Client.GetImage(uriSource);;
                 uriSource = new Uri(Path.Combine(Client.ExecutingDirectory, "Assets", "spell", SummonerSpell.GetSpellImageName((int)selection.Spell2Id)), UriKind.Absolute);
-                control.SummonerSpell2.Source = new BitmapImage(uriSource);
+                control.SummonerSpell2.Source = Client.GetImage(uriSource);;
             }
             if (player.SummonerName == Client.LoginPacket.AllSummonerData.Summoner.Name)
             {
                 var uriSource = new Uri(Path.Combine(Client.ExecutingDirectory, "Assets", "spell", SummonerSpell.GetSpellImageName((int)selection.Spell1Id)), UriKind.Absolute);
-                SummonerSpell1Image.Source = new BitmapImage(uriSource);
+                SummonerSpell1Image.Source = Client.GetImage(uriSource);;
                 uriSource = new Uri(Path.Combine(Client.ExecutingDirectory, "Assets", "spell", SummonerSpell.GetSpellImageName((int)selection.Spell2Id)), UriKind.Absolute);
-                SummonerSpell2Image.Source = new BitmapImage(uriSource);
+                SummonerSpell2Image.Source = Client.GetImage(uriSource);;
             }
             control.PlayerName.Content = player.SummonerName;
             return control;
@@ -530,7 +530,7 @@ namespace LegendaryClient.Windows
                         fadingAnimation.Completed += (eSender, eArgs) =>
                         {
                             var uriSource = new Uri(Path.Combine(Client.ExecutingDirectory, "Assets", "champions", champions.GetChampion((int)item.Tag).splashPath), UriKind.Absolute);
-                            BackgroundSplash.Source = new BitmapImage(uriSource);
+                            BackgroundSplash.Source = Client.GetImage(uriSource);;
                             fadingAnimation = new DoubleAnimation();
                             fadingAnimation.From = 0;
                             fadingAnimation.To = 0.4;

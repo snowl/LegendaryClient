@@ -42,6 +42,11 @@ namespace LegendaryClient.Windows
                 GameLobby_OnMessageReceived(null, Client.GameLobbyDTO);
             }
 
+            foreach (string s in Client.Whitelist)
+            {
+                WhitelistListBox.Items.Add(s);
+            }
+
             Client.InviteListView = InviteListView;
             Client.InviteListView.Items.Clear();
             Client.OnMessage += Client_OnMessage;
@@ -49,6 +54,44 @@ namespace LegendaryClient.Windows
             Client.PlayButton.Visibility = System.Windows.Visibility.Collapsed;
             Client.GameStatus = "hostingPracticeGame";
             Client.SetChatHover();
+        }
+
+        private void WhitelistAddButton_Click(object sender, RoutedEventArgs e)
+        {
+            if (!String.IsNullOrWhiteSpace(WhiteListTextBox.Text))
+            {
+                if (!Client.Whitelist.Contains(WhiteListTextBox.Text.ToLower()))
+                {
+                    Client.Whitelist.Add(WhiteListTextBox.Text.ToLower());
+                    Dispatcher.BeginInvoke(DispatcherPriority.Input, new ThreadStart(() =>
+                    {
+                        WhitelistListBox.Items.Add(WhiteListTextBox.Text);
+                        WhiteListTextBox.Text = "";
+                    }));
+                }
+            }
+        }
+
+        private void WhitelistListBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (WhitelistListBox.SelectedIndex != -1)
+            {
+                WhitelistRemoveButton.IsEnabled = true;
+            }
+        }
+
+        private void WhitelistRemoveButton_Click(object sender, RoutedEventArgs e)
+        {
+            if (WhitelistListBox.SelectedIndex != -1)
+            {
+                if (Client.Whitelist.Count == 1)
+                    WhitelistRemoveButton.IsEnabled = false;
+                Client.Whitelist.Remove(WhitelistListBox.SelectedValue.ToString().ToLower());
+                Dispatcher.BeginInvoke(DispatcherPriority.Input, new ThreadStart(() =>
+                {
+                    WhitelistListBox.Items.Remove(WhitelistListBox.SelectedValue);
+                }));
+            }
         }
 
         public void Client_OnMessage(object sender, jabber.protocol.client.Message msg)
@@ -144,7 +187,7 @@ namespace LegendaryClient.Windows
 
                                 if (Client.Whitelist.Count > 0)
                                 {
-                                    if (!Client.Whitelist.Contains(player.SummonerName.ToLower()))
+                                    if (!Client.Whitelist.Contains(player.SummonerName.ToLower()) && player.SummonerId != Client.LoginPacket.AllSummonerData.Summoner.SumId)
                                     {
                                         await Client.PVPNet.BanUserFromGame(Client.GameID, player.AccountId);
                                     }
@@ -231,7 +274,7 @@ namespace LegendaryClient.Windows
             lobbyPlayer.PlayerName.Content = player.SummonerName;
 
             var uriSource = new Uri(Path.Combine(Client.ExecutingDirectory, "Assets", "profileicon", player.ProfileIconId + ".png"), UriKind.RelativeOrAbsolute);
-            lobbyPlayer.ProfileImage.Source = new BitmapImage(uriSource);
+            lobbyPlayer.ProfileImage.Source = Client.GetImage(uriSource);;
 
             if (IsOwner)
                 lobbyPlayer.OwnerLabel.Visibility = Visibility.Visible;

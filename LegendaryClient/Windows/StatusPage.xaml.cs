@@ -28,6 +28,17 @@ namespace LegendaryClient.Windows
             //If is special message, don't show popup
             if (msg.Subject != null)
             {
+                Dispatcher.BeginInvoke(DispatcherPriority.Input, new ThreadStart(() =>
+                {
+                    ChatSubjects subject = (ChatSubjects)Enum.Parse(typeof(ChatSubjects), msg.Subject, true);
+                
+                    if ((subject == ChatSubjects.PRACTICE_GAME_INVITE ||
+                        subject == ChatSubjects.GAME_INVITE) &&
+                        Client.NotificationContainer.Visibility != System.Windows.Visibility.Visible)
+                    {
+                        NotificationButton.Content = ".";
+                    }
+                }));
                 return;
             }
 
@@ -89,6 +100,7 @@ namespace LegendaryClient.Windows
 
         private void NotificationButton_Click(object sender, RoutedEventArgs e)
         {
+            NotificationButton.Content = "-";
             if (Client.NotificationContainer.Visibility == System.Windows.Visibility.Hidden)
             {
                 Client.NotificationContainer.Visibility = System.Windows.Visibility.Visible;

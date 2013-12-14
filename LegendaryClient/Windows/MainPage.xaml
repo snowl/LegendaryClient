@@ -38,7 +38,9 @@
                     </Border>
 
                     <Grid x:Name="ImageGrid" Background="Black">
+                        <Image Source="/LegendaryClient;component/Background.jpg" Opacity="0.30" />
                     </Grid>
+                    
                     <ListView x:Name="BlueListView" HorizontalAlignment="Left" Margin="10,10,0,10" VerticalAlignment="Stretch" ScrollViewer.HorizontalScrollBarVisibility="Disabled" Width="125" BorderBrush="{x:Null}" Background="{x:Null}">
                         <ListView.ItemsPanel>
                             <ItemsPanelTemplate>

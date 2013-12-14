@@ -32,7 +32,7 @@ namespace LegendaryClient.Logic.JSON
 
                 Dictionary<string, object> imageData = singularMasteryData["image"] as Dictionary<string, object>;
                 var uriSource = new Uri(Path.Combine(Client.ExecutingDirectory, "Assets", "mastery", (string)imageData["full"]), UriKind.Absolute);
-                newMastery.icon = new BitmapImage(uriSource);
+                newMastery.icon = Client.GetImage(uriSource);;
 
                 MasteryList.Add(newMastery);
             }

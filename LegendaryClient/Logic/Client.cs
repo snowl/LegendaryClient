@@ -751,6 +751,16 @@ namespace LegendaryClient.Logic
             file.WriteLine(string.Format("({0} {1}) [{2}]: {3}", DateTime.Now.ToShortDateString(), DateTime.Now.ToShortTimeString(), type, lines));
             file.Close();
         }
+
+        public static BitmapImage GetImage(Uri Address)
+        {
+            if (!File.Exists(Address.AbsolutePath))
+            {
+                Log("Cannot find " + Address, "WARN");
+                Address = new Uri("/LegendaryClient;component/NONE.png", UriKind.RelativeOrAbsolute);
+            }
+            return new BitmapImage(Address);
+        }
         #endregion Public Helper Methods
     }
 

@@ -28,7 +28,7 @@ namespace LegendaryClient.Windows
                 champImage.Width = 64;
                 champImage.Margin = new Thickness(5, 5, 5, 5);
                 var uriSource = new Uri(Path.Combine(Client.ExecutingDirectory, "Assets", "spell", "Summoner" + Spell.ToString() + ".png"), UriKind.Absolute);
-                champImage.Source = new BitmapImage(uriSource);
+                champImage.Source = Client.GetImage(uriSource);;
                 champImage.Tag = (int)Spell;
                 SummonerSpellListView.Items.Add(champImage);
             }
@@ -44,13 +44,13 @@ namespace LegendaryClient.Windows
                 var uriSource = new Uri(Path.Combine(Client.ExecutingDirectory, "Assets", "spell", "Summoner" + spellName + ".png"), UriKind.Absolute);
                 if (SelectedSpell1 == 0)
                 {
-                    SummonerSpell1.Source = new BitmapImage(uriSource);
+                    SummonerSpell1.Source = Client.GetImage(uriSource);;
                     SummonerSpellListView.Items.Remove(item);
                     SelectedSpell1 = spellId;
                 }
                 else
                 {
-                    SummonerSpell2.Source = new BitmapImage(uriSource);
+                    SummonerSpell2.Source = Client.GetImage(uriSource);;
                     await Client.PVPNet.SelectSpells(SelectedSpell1, spellId);
                     Client.OverlayContainer.Visibility = Visibility.Hidden;
                 }

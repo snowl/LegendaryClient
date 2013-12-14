@@ -35,7 +35,7 @@ namespace LegendaryClient.Windows
             foreach (champions c in Client.Champions)
             {
                 var Source = new Uri(Path.Combine(Client.ExecutingDirectory, "Assets", "champions", c.iconPath), UriKind.Absolute);
-                c.icon = new BitmapImage(Source);
+                c.icon = Client.GetImage(Source);
             }
             Client.ChampionSkins = (from s in Client.SQLiteDatabase.Table<championSkins>()
                                     orderby s.name
@@ -85,7 +85,7 @@ namespace LegendaryClient.Windows
                 RegionComboBox.SelectedValue = Properties.Settings.Default.Region;
             }
             var uriSource = new Uri(Path.Combine(Client.ExecutingDirectory, "Assets", "champions", champions.GetChampion(Client.LatestChamp).splashPath), UriKind.Absolute);
-            LoginImage.Source = new BitmapImage(uriSource);
+            LoginImage.Source = Client.GetImage(uriSource);;
         }
 
         private void LoginButton_Click(object sender, RoutedEventArgs e)

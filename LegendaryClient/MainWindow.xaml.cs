@@ -26,9 +26,9 @@ namespace LegendaryClient
 
             //Set up logging before we do anything
             AppDomain.CurrentDomain.FirstChanceException += CurrentDomain_FirstChanceException;
-            if (!File.Exists(Path.Combine(Client.ExecutingDirectory, "lcdebug.log")))
+            if (File.Exists(Path.Combine(Client.ExecutingDirectory, "lcdebug.log")))
             {
-                File.Create(Path.Combine(Client.ExecutingDirectory, "lcdebug.log"));
+                File.Delete(Path.Combine(Client.ExecutingDirectory, "lcdebug.log"));
             }
 
             Client.InfoLabel = InfoLabel;
@@ -73,6 +73,9 @@ namespace LegendaryClient
 
         void CurrentDomain_FirstChanceException(object sender, System.Runtime.ExceptionServices.FirstChanceExceptionEventArgs e)
         {
+            //Disregard PVPNetSpam
+            if (e.Exception.Message.Contains("too small for an Int32"))
+                return;
             Client.Log("A first chance exception was thrown", "EXCEPTION");
             Client.Log(e.Exception.Message, "EXCEPTION");
             Client.Log(e.Exception.StackTrace, "EXCEPTION");
