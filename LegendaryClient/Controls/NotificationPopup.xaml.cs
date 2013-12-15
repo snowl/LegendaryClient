@@ -75,7 +75,7 @@ namespace LegendaryClient.Controls
                 }
             }
 
-            var uriSource = new Uri(Path.Combine(Client.ExecutingDirectory, "Assets", "profileicon", ProfileIconId + ".png"), UriKind.RelativeOrAbsolute);
+            var uriSource = Path.Combine(Client.ExecutingDirectory, "Assets", "profileicon", ProfileIconId + ".png");
             ProfileImage.Source = Client.GetImage(uriSource);
 
             NotificationTextBox.Text = Player.Username + " has invited you to a game" + Environment.NewLine

@@ -752,14 +752,15 @@ namespace LegendaryClient.Logic
             file.Close();
         }
 
-        public static BitmapImage GetImage(Uri Address)
+        public static BitmapImage GetImage(string Address)
         {
-            if (!File.Exists(Address.AbsolutePath))
+            Uri UriSource = new Uri(Address, UriKind.RelativeOrAbsolute);
+            if (!File.Exists(Address))
             {
                 Log("Cannot find " + Address, "WARN");
-                Address = new Uri("/LegendaryClient;component/NONE.png", UriKind.RelativeOrAbsolute);
+                UriSource = new Uri("/LegendaryClient;component/NONE.png", UriKind.RelativeOrAbsolute);
             }
-            return new BitmapImage(Address);
+            return new BitmapImage(UriSource);
         }
         #endregion Public Helper Methods
     }

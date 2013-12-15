@@ -94,7 +94,7 @@ namespace LegendaryClient.Windows
 
             Client.InfoLabel.Content = "IP: " + Client.LoginPacket.IpBalance + " ∙ RP: " + Client.LoginPacket.RpBalance;
             int ProfileIconID = Client.LoginPacket.AllSummonerData.Summoner.ProfileIconId;
-            var uriSource = new Uri(Path.Combine(Client.ExecutingDirectory, "Assets", "profileicon", ProfileIconID + ".png"), UriKind.RelativeOrAbsolute);
+            string uriSource = Path.Combine(Client.ExecutingDirectory, "Assets", "profileicon", ProfileIconID + ".png");
             ProfileImage.Source = Client.GetImage(uriSource);
             Client.MainPageProfileImage = ProfileImage;
         }
@@ -322,9 +322,9 @@ namespace LegendaryClient.Windows
                         }
                         ChampSelectPlayer control = new ChampSelectPlayer();
                         control.ChampionImage.Source = champions.GetChampion(championId).icon;
-                        var uriSource = new Uri(Path.Combine(Client.ExecutingDirectory, "Assets", "spell", SummonerSpell.GetSpellImageName(spell1Id)), UriKind.Absolute);
+                        string uriSource = Path.Combine(Client.ExecutingDirectory, "Assets", "spell", SummonerSpell.GetSpellImageName(spell1Id));
                         control.SummonerSpell1.Source = Client.GetImage(uriSource);
-                        uriSource = new Uri(Path.Combine(Client.ExecutingDirectory, "Assets", "spell", SummonerSpell.GetSpellImageName(spell2Id)), UriKind.Absolute);
+                        uriSource = Path.Combine(Client.ExecutingDirectory, "Assets", "spell", SummonerSpell.GetSpellImageName(spell2Id));
                         control.SummonerSpell2.Source = Client.GetImage(uriSource);
 
                         control.PlayerName.Content = PlayerName;

@@ -31,7 +31,7 @@ namespace LegendaryClient.Logic.JSON
                 newMastery.prereq = Convert.ToInt32(singularMasteryData["prereq"]);
 
                 Dictionary<string, object> imageData = singularMasteryData["image"] as Dictionary<string, object>;
-                var uriSource = new Uri(Path.Combine(Client.ExecutingDirectory, "Assets", "mastery", (string)imageData["full"]), UriKind.Absolute);
+                var uriSource = Path.Combine(Client.ExecutingDirectory, "Assets", "mastery", (string)imageData["full"]);
                 newMastery.icon = Client.GetImage(uriSource);
 
                 MasteryList.Add(newMastery);

@@ -7,6 +7,7 @@ using PVPNetConnect;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Reflection;
 using System.Windows;
 using System.Windows.Controls;
 
@@ -22,7 +23,7 @@ namespace LegendaryClient
         public MainWindow()
         {
             InitializeComponent();
-            Client.ExecutingDirectory = System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location);
+            Client.ExecutingDirectory = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
 
             //Set up logging before we do anything
             AppDomain.CurrentDomain.FirstChanceException += CurrentDomain_FirstChanceException;

@@ -56,7 +56,6 @@ namespace LegendaryClient.Windows
         }
 
         private GameDTO LatestDto;
-        private ChampionDTO[] Champions;
         private List<ChampionDTO> ChampList;
         private List<ChampionBanInfoDTO> ChampionsForBan;
         private MasteryBookDTO MyMasteries;
@@ -79,7 +78,8 @@ namespace LegendaryClient.Windows
         private async void StartChampSelect()
         {
             Client.FocusClient();
-            Champions = Client.PlayerChampions;
+            ChampList = new List<ChampionDTO>(Client.PlayerChampions);
+            ChampList.Sort((x, y) => champions.GetChampion(x.ChampionId).displayName.CompareTo(champions.GetChampion(y.ChampionId).displayName));
             MyMasteries = Client.LoginPacket.AllSummonerData.MasteryBook;
             MyRunes = Client.LoginPacket.AllSummonerData.SpellBook;
 
@@ -142,8 +142,6 @@ namespace LegendaryClient.Windows
             Chatroom.OnParticipantJoin += Chatroom_OnParticipantJoin;
             Chatroom.Join(latestDTO.RoomPassword);
 
-            ChampList = new List<ChampionDTO>(Champions);
-            ChampList.Sort((x, y) => champions.GetChampion(x.ChampionId).displayName.CompareTo(champions.GetChampion(y.ChampionId).displayName));
             ChampionsForBan = new List<ChampionBanInfoDTO>(ChampsForBan);
             ChampionsForBan.Sort((x, y) => champions.GetChampion(x.ChampionId).displayName.CompareTo(champions.GetChampion(y.ChampionId).displayName));
             RenderChamps(false);
@@ -468,7 +466,7 @@ namespace LegendaryClient.Windows
             //Render default skin
             ListViewItem item = new ListViewItem();
             Image skinImage = new Image();
-            var uriSource = new Uri(Path.Combine(Client.ExecutingDirectory, "Assets", "champions", Champion.portraitPath), UriKind.Absolute);
+            string uriSource = Path.Combine(Client.ExecutingDirectory, "Assets", "champions", Champion.portraitPath);
             skinImage.Source = Client.GetImage(uriSource);
             skinImage.Width = 191;
             skinImage.Stretch = Stretch.UniformToFill;
@@ -480,7 +478,7 @@ namespace LegendaryClient.Windows
             foreach (championAbilities ability in Abilities)
             {
                 ChampionAbility championAbility = new ChampionAbility();
-                uriSource = new Uri(Path.Combine(Client.ExecutingDirectory, "Assets", "abilities", ability.iconPath), UriKind.Absolute);
+                uriSource = Path.Combine(Client.ExecutingDirectory, "Assets", "abilities", ability.iconPath);
                 championAbility.AbilityImage.Source = Client.GetImage(uriSource);
                 championAbility.AbilityHotKey.Content = ability.hotkey;
                 championAbility.AbilityName.Content = ability.name;
@@ -490,7 +488,7 @@ namespace LegendaryClient.Windows
                 AbilityListView.Items.Add(championAbility);
             }
 
-            foreach (ChampionDTO champ in Champions)
+            foreach (ChampionDTO champ in ChampList)
             {
                 if (champ.ChampionId == selection.ChampionId)
                 {
@@ -500,7 +498,7 @@ namespace LegendaryClient.Windows
                         {
                             item = new ListViewItem();
                             skinImage = new Image();
-                            uriSource = new Uri(Path.Combine(Client.ExecutingDirectory, "Assets", "champions", championSkins.GetSkin(skin.SkinId).portraitPath), UriKind.Absolute);
+                            uriSource = Path.Combine(Client.ExecutingDirectory, "Assets", "champions", championSkins.GetSkin(skin.SkinId).portraitPath);
                             skinImage.Source = Client.GetImage(uriSource);
                             skinImage.Width = 191;
                             skinImage.Stretch = Stretch.UniformToFill;
@@ -567,16 +565,16 @@ namespace LegendaryClient.Windows
             }
             if (selection.Spell1Id != 0)
             {
-                var uriSource = new Uri(Path.Combine(Client.ExecutingDirectory, "Assets", "spell", SummonerSpell.GetSpellImageName((int)selection.Spell1Id)), UriKind.Absolute);
+                string uriSource = Path.Combine(Client.ExecutingDirectory, "Assets", "spell", SummonerSpell.GetSpellImageName((int)selection.Spell1Id));
                 control.SummonerSpell1.Source = Client.GetImage(uriSource);
-                uriSource = new Uri(Path.Combine(Client.ExecutingDirectory, "Assets", "spell", SummonerSpell.GetSpellImageName((int)selection.Spell2Id)), UriKind.Absolute);
+                uriSource = Path.Combine(Client.ExecutingDirectory, "Assets", "spell", SummonerSpell.GetSpellImageName((int)selection.Spell2Id));
                 control.SummonerSpell2.Source = Client.GetImage(uriSource);
             }
             if (player.SummonerName == Client.LoginPacket.AllSummonerData.Summoner.Name)
             {
-                var uriSource = new Uri(Path.Combine(Client.ExecutingDirectory, "Assets", "spell", SummonerSpell.GetSpellImageName((int)selection.Spell1Id)), UriKind.Absolute);
+                string uriSource = Path.Combine(Client.ExecutingDirectory, "Assets", "spell", SummonerSpell.GetSpellImageName((int)selection.Spell1Id));
                 SummonerSpell1Image.Source = Client.GetImage(uriSource);
-                uriSource = new Uri(Path.Combine(Client.ExecutingDirectory, "Assets", "spell", SummonerSpell.GetSpellImageName((int)selection.Spell2Id)), UriKind.Absolute);
+                uriSource = Path.Combine(Client.ExecutingDirectory, "Assets", "spell", SummonerSpell.GetSpellImageName((int)selection.Spell2Id));
                 SummonerSpell2Image.Source = Client.GetImage(uriSource);
             }
             control.PlayerName.Content = player.SummonerName;
@@ -601,7 +599,7 @@ namespace LegendaryClient.Windows
                         fadingAnimation.Duration = new Duration(TimeSpan.FromSeconds(0.2));
                         fadingAnimation.Completed += (eSender, eArgs) =>
                         {
-                            var uriSource = new Uri(Path.Combine(Client.ExecutingDirectory, "Assets", "champions", champions.GetChampion((int)item.Tag).splashPath), UriKind.Absolute);
+                            string uriSource = Path.Combine(Client.ExecutingDirectory, "Assets", "champions", champions.GetChampion((int)item.Tag).splashPath);
                             BackgroundSplash.Source = Client.GetImage(uriSource);
                             fadingAnimation = new DoubleAnimation();
                             fadingAnimation.From = 0;
@@ -726,10 +724,36 @@ namespace LegendaryClient.Windows
             }
         }
 
-        private void RuneComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        private async void RuneComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             if (!QuickLoad) //Make loading quicker
                 return;
+
+            SpellBookPageDTO SelectedRunePage = new SpellBookPageDTO();
+            int i = 0;
+            bool HasChanged = false;
+            foreach (SpellBookPageDTO RunePage in MyRunes.BookPages)
+            {
+                string RunePageName = RunePage.Name;
+                if (RunePageName.StartsWith("@@"))
+                {
+                    RunePageName = "Rune Page " + ++i;
+                }
+                RunePage.Current = false;
+                if (RunePageName == (string)RuneComboBox.SelectedItem)
+                {
+                    RunePage.Current = true;
+                    SelectedRunePage = RunePage;
+                    HasChanged = true;
+                    TextRange tr = new TextRange(ChatText.Document.ContentEnd, ChatText.Document.ContentEnd);
+                    tr.Text = "Selected " + RunePageName + " as Rune Page" + Environment.NewLine;
+                    tr.ApplyPropertyValue(TextElement.ForegroundProperty, Brushes.White);
+                }
+            }
+            if (HasChanged)
+            {
+                await Client.PVPNet.SelectDefaultSpellBookPage(SelectedRunePage);
+            }
         }
 
         private void ChatButton_Click(object sender, RoutedEventArgs e)

@@ -153,7 +153,7 @@ namespace LegendaryClient.Windows.Profile
 
                     if (((string)item.Key).StartsWith("Item"))
                     {
-                        var uriSource = new Uri(Path.Combine(Client.ExecutingDirectory, "Assets", "item", item.Value + ".png"), UriKind.Absolute);
+                        var uriSource = Path.Combine(Client.ExecutingDirectory, "Assets", "item", item.Value + ".png");
                         img = new Image();
                         img.Width = 58;
                         img.Height = 58;
@@ -216,7 +216,7 @@ namespace LegendaryClient.Windows.Profile
                 ParsedDescription = Regex.Replace(ParsedDescription, "<.*?>", string.Empty);
                 PlayerItem.PlayerStatus.Text = ParsedDescription;
 
-                var uriSource = new Uri(Path.Combine(Client.ExecutingDirectory, "Assets", "item", Item.id + ".png"), UriKind.RelativeOrAbsolute);
+                var uriSource = Path.Combine(Client.ExecutingDirectory, "Assets", "item", Item.id + ".png");
                 PlayerItem.ProfileImage.Source = Client.GetImage(uriSource);
 
                 PlayerItem.HorizontalAlignment = System.Windows.HorizontalAlignment.Left;

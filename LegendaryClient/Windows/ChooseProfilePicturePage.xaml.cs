@@ -29,7 +29,7 @@ namespace LegendaryClient.Windows
                 champImage.Height = 64;
                 champImage.Width = 64;
                 champImage.Margin = new Thickness(5, 5, 5, 5);
-                var uriSource = new Uri(Path.Combine(Client.ExecutingDirectory, "Assets", "profileicon", ic.IconId + ".png"), UriKind.Absolute);
+                var uriSource = Path.Combine(Client.ExecutingDirectory, "Assets", "profileicon", ic.IconId + ".png");
                 champImage.Source = Client.GetImage(uriSource);
                 champImage.Tag = ic.IconId;
                 SummonerIconListView.Items.Add(champImage);
@@ -40,7 +40,7 @@ namespace LegendaryClient.Windows
                 champImage.Height = 64;
                 champImage.Width = 64;
                 champImage.Margin = new Thickness(5, 5, 5, 5);
-                var uriSource = new Uri(Path.Combine(Client.ExecutingDirectory, "Assets", "profileicon", i + ".png"), UriKind.Absolute);
+                var uriSource = Path.Combine(Client.ExecutingDirectory, "Assets", "profileicon", i + ".png");
                 champImage.Source = Client.GetImage(uriSource);
                 champImage.Tag = i;
                 SummonerIconListView.Items.Add(champImage);
@@ -61,7 +61,7 @@ namespace LegendaryClient.Windows
                 await Client.PVPNet.UpdateProfileIconId(SummonerIcon);
                 Client.LoginPacket.AllSummonerData.Summoner.ProfileIconId = SummonerIcon;
                 Client.SetChatHover();
-                var uriSource = new Uri(Path.Combine(Client.ExecutingDirectory, "Assets", "profileicon", SummonerIcon + ".png"), UriKind.RelativeOrAbsolute);
+                var uriSource = Path.Combine(Client.ExecutingDirectory, "Assets", "profileicon", SummonerIcon + ".png");
                 Client.MainPageProfileImage.Source = Client.GetImage(uriSource);
             }
             Client.OverlayContainer.Visibility = Visibility.Hidden;

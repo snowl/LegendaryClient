@@ -274,7 +274,7 @@ namespace LegendaryClient.Windows
             CustomLobbyPlayer lobbyPlayer = new CustomLobbyPlayer();
             lobbyPlayer.PlayerName.Content = player.SummonerName;
 
-            var uriSource = new Uri(Path.Combine(Client.ExecutingDirectory, "Assets", "profileicon", player.ProfileIconId + ".png"), UriKind.RelativeOrAbsolute);
+            string uriSource = Path.Combine(Client.ExecutingDirectory, "Assets", "profileicon", player.ProfileIconId + ".png");
             lobbyPlayer.ProfileImage.Source = Client.GetImage(uriSource);
 
             if (IsOwner)

@@ -62,7 +62,7 @@ namespace LegendaryClient.Windows.Profile
                 {
                     ProfileSkinImage skinImage = new ProfileSkinImage();
                     championSkins championSkin = championSkins.GetSkin(skin.SkinId);
-                    var uriSource = new Uri(Path.Combine(Client.ExecutingDirectory, "Assets", "champions", championSkins.GetSkin(skin.SkinId).portraitPath), UriKind.Absolute);
+                    var uriSource = Path.Combine(Client.ExecutingDirectory, "Assets", "champions", championSkins.GetSkin(skin.SkinId).portraitPath);
                     skinImage.SkinImage.Source = Client.GetImage(uriSource);
                     if (!skin.StillObtainable)
                         skinImage.LimitedLabel.Visibility = System.Windows.Visibility.Visible;
