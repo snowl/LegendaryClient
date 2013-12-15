@@ -86,6 +86,13 @@ namespace LegendaryClient.Windows
             }
             string uriSource = Path.Combine(Client.ExecutingDirectory, "Assets", "champions", champions.GetChampion(Client.LatestChamp).splashPath);
             LoginImage.Source = Client.GetImage(uriSource);
+            if (!String.IsNullOrWhiteSpace(Properties.Settings.Default.SavedPassword) &&
+                !String.IsNullOrWhiteSpace(Properties.Settings.Default.Region) &&
+                Properties.Settings.Default.AutoLogin)
+            {
+                AutoLoginCheckBox.IsChecked = true;
+                LoginButton_Click(null, null);
+            }
         }
 
         private void LoginButton_Click(object sender, RoutedEventArgs e)
@@ -99,6 +106,8 @@ namespace LegendaryClient.Windows
                 Properties.Settings.Default.SavedUsername = LoginUsernameBox.Text;
             else
                 Properties.Settings.Default.SavedUsername = "";
+
+            Properties.Settings.Default.AutoLogin = (bool)AutoLoginCheckBox.IsChecked;
             Properties.Settings.Default.Region = (string)RegionComboBox.SelectedValue;
             Properties.Settings.Default.Save();
 
