@@ -33,7 +33,7 @@ namespace LegendaryClient.Windows
         {
             Thread bgThead = new Thread(() =>
             {
-                /*LogTextBox("Starting Patcher");
+                LogTextBox("Starting Patcher");
 
                 WebClient client = new WebClient();
                 client.DownloadProgressChanged += (o, e) =>
@@ -293,7 +293,7 @@ namespace LegendaryClient.Windows
                     }));
                 }
 
-                #endregion lol_game_client*/
+                #endregion lol_game_client
 
                 FinishPatching();
             });
