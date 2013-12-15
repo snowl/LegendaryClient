@@ -8,6 +8,7 @@ using PVPNetConnect.RiotObjects.Platform.Game;
 using PVPNetConnect.RiotObjects.Platform.Reroll.Pojo;
 using PVPNetConnect.RiotObjects.Platform.Summoner.Masterybook;
 using PVPNetConnect.RiotObjects.Platform.Summoner.Spellbook;
+using PVPNetConnect.RiotObjects.Platform.Trade;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -55,11 +56,26 @@ namespace LegendaryClient.Windows
             }
         }
 
+        private double _MyChampId;
+        private double MyChampId
+        {
+            get { return _MyChampId; }
+            set
+            {
+                if (_MyChampId != value)
+                {
+                    PlayerTradeControl.Visibility = System.Windows.Visibility.Hidden;
+                    _MyChampId = value;
+                }
+            }
+        }
+
         private GameDTO LatestDto;
         private List<ChampionDTO> ChampList;
         private List<ChampionBanInfoDTO> ChampionsForBan;
         private MasteryBookDTO MyMasteries;
         private SpellBookDTO MyRunes;
+        private PotentialTradersDTO CanTradeWith;
         private GameTypeConfigDTO configType;
         private System.Windows.Forms.Timer CountdownTimer;
         private int counter;
@@ -166,7 +182,7 @@ namespace LegendaryClient.Windows
 
                 GameDTO ChampDTO = message as GameDTO;
                 LatestDto = ChampDTO;
-                Dispatcher.BeginInvoke(DispatcherPriority.Input, new ThreadStart(() =>
+                Dispatcher.BeginInvoke(DispatcherPriority.Input, new ThreadStart(async () =>
                 {
                     ListViewItem[] ChampionArray = new ListViewItem[ChampionSelectListView.Items.Count];
                     ChampionSelectListView.Items.CopyTo(ChampionArray, 0);
@@ -278,6 +294,7 @@ namespace LegendaryClient.Windows
                     }
                     else if (ChampDTO.GameState == "POST_CHAMP_SELECT")
                     {
+                        CanTradeWith = await Client.PVPNet.GetPotentialTraders();
                         HasLockedIn = true;
                         GameStatusLabel.Content = "All players have picked!";
                         if (configType != null)
@@ -449,6 +466,32 @@ namespace LegendaryClient.Windows
 
                 #endregion Launching Game
             }
+            else if (message.GetType() == typeof(TradeContractDTO))
+            {
+                Dispatcher.BeginInvoke(DispatcherPriority.Input, new ThreadStart(() =>
+                {
+                    TradeContractDTO TradeDTO = message as TradeContractDTO;
+                    if (TradeDTO.State == "PENDING")
+                    {
+                        PlayerTradeControl.Visibility = System.Windows.Visibility.Visible;
+                        PlayerTradeControl.Tag = TradeDTO;
+                        PlayerTradeControl.AcceptButton.Visibility = System.Windows.Visibility.Visible;
+                        PlayerTradeControl.DeclineButton.Content = "Decline";
+
+                        champions MyChampion = champions.GetChampion((int)TradeDTO.ResponderChampionId);
+                        PlayerTradeControl.MyChampImage.Source = MyChampion.icon;
+                        PlayerTradeControl.MyChampLabel.Content = MyChampion.displayName;
+                        champions TheirChampion = champions.GetChampion((int)TradeDTO.RequesterChampionId);
+                        PlayerTradeControl.TheirChampImage.Source = TheirChampion.icon;
+                        PlayerTradeControl.TheirChampLabel.Content = TheirChampion.displayName;
+                        PlayerTradeControl.RequestLabel.Content = string.Format("{0} wants to trade!", TradeDTO.RequesterInternalSummonerName);
+                    }
+                    else if (TradeDTO.State == "CANCELED" || TradeDTO.State == "DECLINED")
+                    {
+                        PlayerTradeControl.Visibility = System.Windows.Visibility.Hidden;
+                    }
+                }));
+            }
         }
 
         internal void RenderLockInGrid(PlayerChampionSelectionDTO selection)
@@ -576,9 +619,39 @@ namespace LegendaryClient.Windows
                 SummonerSpell1Image.Source = Client.GetImage(uriSource);
                 uriSource = Path.Combine(Client.ExecutingDirectory, "Assets", "spell", SummonerSpell.GetSpellImageName((int)selection.Spell2Id));
                 SummonerSpell2Image.Source = Client.GetImage(uriSource);
+                MyChampId = selection.ChampionId;
             }
+            if (player.PickMode == 2)
+            {
+                string uriSource = "/LegendaryClient;component/Locked.png";
+                control.LockedInIcon.Source = Client.GetImage(uriSource);
+            }
+            if (CanTradeWith.PotentialTraders.Contains(player.SummonerInternalName) || DevMode)
+            {
+                control.TradeButton.Visibility = System.Windows.Visibility.Visible;
+            }
+            control.LockedInIcon.Visibility = System.Windows.Visibility.Visible;
+            control.TradeButton.Tag = new KeyValuePair<PlayerChampionSelectionDTO, PlayerParticipant>(selection, player);
+            control.TradeButton.Click += TradeButton_Click;
             control.PlayerName.Content = player.SummonerName;
             return control;
+        }
+
+        private async void TradeButton_Click(object sender, RoutedEventArgs e)
+        {
+            KeyValuePair<PlayerChampionSelectionDTO, PlayerParticipant> p = (KeyValuePair<PlayerChampionSelectionDTO, PlayerParticipant>)((Button)sender).Tag;
+            await Client.PVPNet.AttemptTrade(p.Value.SummonerInternalName, p.Key.ChampionId);
+
+            PlayerTradeControl.Visibility = System.Windows.Visibility.Visible;
+            champions MyChampion = champions.GetChampion((int)MyChampId);
+            PlayerTradeControl.MyChampImage.Source = MyChampion.icon;
+            PlayerTradeControl.MyChampLabel.Content = MyChampion.displayName;
+            champions TheirChampion = champions.GetChampion((int)p.Key.ChampionId);
+            PlayerTradeControl.TheirChampImage.Source = TheirChampion.icon;
+            PlayerTradeControl.TheirChampLabel.Content = TheirChampion.displayName;
+            PlayerTradeControl.RequestLabel.Content = "Sent trade request...";
+            PlayerTradeControl.AcceptButton.Visibility = System.Windows.Visibility.Hidden;
+            PlayerTradeControl.DeclineButton.Content = "Cancel";
         }
 
         private async void ListViewItem_PreviewMouseDown(object sender, MouseButtonEventArgs e)

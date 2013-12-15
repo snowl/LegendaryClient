@@ -158,6 +158,9 @@
       <DependentUpon>RecentGameOverview.xaml</DependentUpon>
     </Compile>
     <Compile Include="Controls\TextBoxWatermarked.cs" />
+    <Compile Include="Controls\TradeControl.xaml.cs">
+      <DependentUpon>TradeControl.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Controls\WindowsExensions.cs" />
     <Compile Include="Controls\AccessKeyScoper.cs" />
     <Compile Include="Logic\ChatPrefixes.cs" />
@@ -375,6 +378,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Controls\Steel.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\TradeControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

@@ -205,7 +205,10 @@ namespace LegendaryClient.Logic
 
         internal static void SetChatHover()
         {
-            ChatClient.Presence(CurrentPresence, GetPresence(), null, 0);
+            if (ChatClient.IsAuthenticated)
+            {
+                ChatClient.Presence(CurrentPresence, GetPresence(), null, 0);
+            }
         }
 
         internal static string GetPresence()
@@ -755,7 +758,7 @@ namespace LegendaryClient.Logic
         public static BitmapImage GetImage(string Address)
         {
             Uri UriSource = new Uri(Address, UriKind.RelativeOrAbsolute);
-            if (!File.Exists(Address))
+            if (!File.Exists(Address) && !Address.StartsWith("/LegendaryClient;component"))
             {
                 Log("Cannot find " + Address, "WARN");
                 UriSource = new Uri("/LegendaryClient;component/NONE.png", UriKind.RelativeOrAbsolute);
