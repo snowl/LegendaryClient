@@ -87,8 +87,8 @@ namespace LegendaryClient.Windows
                             Brush brush = (Brush)bc.ConvertFrom("#FFFFFFFF");
                             player.PlayerStatus.Content = ChatPlayerPair.Value.Status;
                             player.PlayerStatus.Foreground = brush;
-                            var uriSource = new Uri(Path.Combine(Client.ExecutingDirectory, "Assets", "profileicon", ChatPlayerPair.Value.ProfileIcon + ".png"), UriKind.RelativeOrAbsolute);
-                            player.ProfileImage.Source = new BitmapImage(uriSource);
+                            var uriSource = Path.Combine(Client.ExecutingDirectory, "Assets", "profileicon", ChatPlayerPair.Value.ProfileIcon + ".png");
+                            player.ProfileImage.Source = Client.GetImage(uriSource);
 
                             if (ChatPlayerPair.Value.GameStatus != "outOfGame")
                             {
@@ -155,8 +155,8 @@ namespace LegendaryClient.Windows
                     PlayerItem.PlayerWins.Content = playerItem.RankedWins + " Ranked Wins";
                 PlayerItem.LevelLabel.Content = playerItem.Level;
                 PlayerItem.UsingLegendary.Visibility = playerItem.UsingLegendary ? System.Windows.Visibility.Visible : System.Windows.Visibility.Hidden;
-                var uriSource = new Uri(Path.Combine(Client.ExecutingDirectory, "Assets", "profileicon", playerItem.ProfileIcon + ".png"), UriKind.RelativeOrAbsolute);
-                PlayerItem.ProfileImage.Source = new BitmapImage(uriSource);
+                var uriSource = Path.Combine(Client.ExecutingDirectory, "Assets", "profileicon", playerItem.ProfileIcon + ".png");
+                PlayerItem.ProfileImage.Source = Client.GetImage(uriSource);
                 if (playerItem.Status != null)
                 {
                     PlayerItem.PlayerStatus.Text = playerItem.Status.Replace("∟", "");
@@ -180,7 +180,7 @@ namespace LegendaryClient.Windows
                             if (InGameChamp != null)
                                 PlayerItem.InGameStatus.Text = "In Game" + Environment.NewLine +
                                                                "Playing as " + InGameChamp.displayName + Environment.NewLine +
-                                                               "For " + string.Format("{0} Minutes and {1} Seconds", elapsed.Minutes, elapsed.Seconds) ;
+                                                               "For " + string.Format("{0} Minutes and {1} Seconds", elapsed.Minutes, elapsed.Seconds);
                             else
                                 PlayerItem.InGameStatus.Text = "In Game";
                             break;
@@ -189,7 +189,7 @@ namespace LegendaryClient.Windows
                             break;
                         case "inQueue":
                             PlayerItem.InGameStatus.Text = "In Queue" + Environment.NewLine +
-                                                           "For " + string.Format("{0} Minutes and {1} Seconds", elapsed.Minutes, elapsed.Seconds) ;
+                                                           "For " + string.Format("{0} Minutes and {1} Seconds", elapsed.Minutes, elapsed.Seconds);
                             break;
                         case "spectating":
                             PlayerItem.InGameStatus.Text = "Spectating";

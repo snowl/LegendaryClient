@@ -11,7 +11,6 @@ using System.Text.RegularExpressions;
 using System.Threading;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
@@ -45,7 +44,7 @@ namespace LegendaryClient.Windows.Profile
             {
                 Game.GameType = Client.TitleCaseString(Game.GameType.Replace("_GAME", "").Replace("MATCHED", "NORMAL"));
                 MatchStats Match = new MatchStats();
-                
+
                 foreach (RawStat Stat in Game.Statistics)
                 {
                     var type = typeof(MatchStats);
@@ -72,7 +71,7 @@ namespace LegendaryClient.Windows.Profile
                     champions GameChamp = champions.GetChampion((int)Math.Round(stats.Game.ChampionId));
                     item.ChampionImage.Source = GameChamp.icon;
                     item.ChampionNameLabel.Content = GameChamp.displayName;
-                    item.ScoreLabel.Content = 
+                    item.ScoreLabel.Content =
                         string.Format("{0}/{1}/{2} ({3})",
                         stats.ChampionsKilled,
                         stats.NumDeaths,
@@ -154,11 +153,11 @@ namespace LegendaryClient.Windows.Profile
 
                     if (((string)item.Key).StartsWith("Item"))
                     {
-                        var uriSource = new Uri(Path.Combine(Client.ExecutingDirectory, "Assets", "item", item.Value + ".png"), UriKind.Absolute);
+                        var uriSource = Path.Combine(Client.ExecutingDirectory, "Assets", "item", item.Value + ".png");
                         img = new Image();
                         img.Width = 58;
                         img.Height = 58;
-                        img.Source = new BitmapImage(uriSource);
+                        img.Source = Client.GetImage(uriSource);
                         img.Tag = item;
                         img.MouseMove += img_MouseMove;
                         img.MouseLeave += img_MouseLeave;
@@ -217,8 +216,8 @@ namespace LegendaryClient.Windows.Profile
                 ParsedDescription = Regex.Replace(ParsedDescription, "<.*?>", string.Empty);
                 PlayerItem.PlayerStatus.Text = ParsedDescription;
 
-                var uriSource = new Uri(Path.Combine(Client.ExecutingDirectory, "Assets", "item", Item.id + ".png"), UriKind.RelativeOrAbsolute);
-                PlayerItem.ProfileImage.Source = new BitmapImage(uriSource);
+                var uriSource = Path.Combine(Client.ExecutingDirectory, "Assets", "item", Item.id + ".png");
+                PlayerItem.ProfileImage.Source = Client.GetImage(uriSource);
 
                 PlayerItem.HorizontalAlignment = System.Windows.HorizontalAlignment.Left;
                 PlayerItem.VerticalAlignment = System.Windows.VerticalAlignment.Top;

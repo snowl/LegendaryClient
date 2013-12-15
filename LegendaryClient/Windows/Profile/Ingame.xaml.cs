@@ -52,10 +52,10 @@ namespace LegendaryClient.Windows.Profile
                         if (championSelect.SummonerInternalName == participant.SummonerInternalName)
                         {
                             control.ChampionImage.Source = champions.GetChampion(championSelect.ChampionId).icon;
-                            var uriSource = new Uri(Path.Combine(Client.ExecutingDirectory, "Assets", "spell", SummonerSpell.GetSpellImageName(Convert.ToInt32(championSelect.Spell1Id))), UriKind.Absolute);
-                            control.SummonerSpell1.Source = new BitmapImage(uriSource);
-                            uriSource = new Uri(Path.Combine(Client.ExecutingDirectory, "Assets", "spell", SummonerSpell.GetSpellImageName(Convert.ToInt32(championSelect.Spell2Id))), UriKind.Absolute);
-                            control.SummonerSpell2.Source = new BitmapImage(uriSource);
+                            var uriSource = Path.Combine(Client.ExecutingDirectory, "Assets", "spell", SummonerSpell.GetSpellImageName(Convert.ToInt32(championSelect.Spell1Id)));
+                            control.SummonerSpell1.Source = Client.GetImage(uriSource);
+                            uriSource = Path.Combine(Client.ExecutingDirectory, "Assets", "spell", SummonerSpell.GetSpellImageName(Convert.ToInt32(championSelect.Spell2Id)));
+                            control.SummonerSpell2.Source = Client.GetImage(uriSource);
 
                             #region Generate Background
 

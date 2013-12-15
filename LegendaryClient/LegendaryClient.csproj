@@ -38,6 +38,7 @@
     <DefineConstants>TRACE;DEBUG</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <NoWarn>4014</NoWarn>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <PlatformTarget>x86</PlatformTarget>
@@ -47,6 +48,7 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <NoWarn>4014</NoWarn>
   </PropertyGroup>
   <PropertyGroup>
     <ApplicationIcon>Icon.ico</ApplicationIcon>
@@ -119,6 +121,9 @@
     <Compile Include="Controls\HoverOverLabel.xaml.cs">
       <DependentUpon>HoverOverLabel.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controls\InvitePlayer.xaml.cs">
+      <DependentUpon>InvitePlayer.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Controls\JoinQueue.xaml.cs">
       <DependentUpon>JoinQueue.xaml</DependentUpon>
     </Compile>
@@ -153,6 +158,9 @@
       <DependentUpon>RecentGameOverview.xaml</DependentUpon>
     </Compile>
     <Compile Include="Controls\TextBoxWatermarked.cs" />
+    <Compile Include="Controls\TradeControl.xaml.cs">
+      <DependentUpon>TradeControl.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Controls\WindowsExensions.cs" />
     <Compile Include="Controls\AccessKeyScoper.cs" />
     <Compile Include="Logic\ChatPrefixes.cs" />
@@ -191,6 +199,15 @@
     <Compile Include="Logic\SWF\SWFTypes\Rect.cs" />
     <Compile Include="Logic\SWF\SWFTypes\Tag.cs" />
     <Compile Include="Logic\SWF\SWFTypes\TagCodes.cs" />
+    <Compile Include="Windows\ChampionDetailsPage.xaml.cs">
+      <DependentUpon>ChampionDetailsPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Windows\InvitePlayersPage.xaml.cs">
+      <DependentUpon>InvitePlayersPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Windows\NotificationsPage.xaml.cs">
+      <DependentUpon>NotificationsPage.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Windows\Profile\AggregatedStatsOverlay.xaml.cs">
       <DependentUpon>AggregatedStatsOverlay.xaml</DependentUpon>
     </Compile>
@@ -312,6 +329,10 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
+    <Page Include="Controls\InvitePlayer.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Controls\JoinQueue.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -360,6 +381,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Controls\TradeControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -372,6 +397,18 @@
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Page Include="Windows\ChampionDetailsPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Windows\InvitePlayersPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Windows\NotificationsPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Windows\Profile\AggregatedStatsOverlay.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -531,6 +568,8 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="chat.png" />
+    <Resource Include="Background.jpg" />
+    <Resource Include="Locked.png" />
     <Content Include="netlib.Dns.dll">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
@@ -538,6 +577,8 @@
     <Content Include="sqlite3.dll">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Resource Include="Unlocked.png" />
+    <Resource Include="trade.png" />
     <Content Include="wLib.dll">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>

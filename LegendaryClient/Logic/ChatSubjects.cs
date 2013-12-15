@@ -5,16 +5,17 @@
         /// <summary>
         /// Hack, doesn't use the enum value
         /// </summary>
-        GAME_INVITE_OWNER_CANCELED,
         GAME_INVITE_ALLOW_DISABLED,
         GAME_FULL_INVITE_REJECTED,
         GAME_INVITE_ALLOW_ENABLED,
+        GAME_INVITE_OWNER_CANCEL,
         GAME_INVITE_ACCEPTED_ACK,
+        GAME_INVITE_LIST_STATUS,
         GAME_INVITE_SUGGESTED,
-        GAME_INVITE_REJECTED,
         GAME_INVITE_CANCELED,
         GAME_MSG_OUT_OF_SYNC,
         GAME_INVITE_ACCEPTED,
+        GAME_INVITE_REJECT,
         GAME_INVITE,
         VERIFY_INVITEE_RESET,
         VERIFY_INVITEE_ACK,

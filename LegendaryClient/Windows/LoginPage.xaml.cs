@@ -34,8 +34,8 @@ namespace LegendaryClient.Windows
                                 select s).ToList();
             foreach (champions c in Client.Champions)
             {
-                var Source = new Uri(Path.Combine(Client.ExecutingDirectory, "Assets", "champions", c.iconPath), UriKind.Absolute);
-                c.icon = new BitmapImage(Source);
+                string Source = Path.Combine(Client.ExecutingDirectory, "Assets", "champions", c.iconPath);
+                c.icon = Client.GetImage(Source);
             }
             Client.ChampionSkins = (from s in Client.SQLiteDatabase.Table<championSkins>()
                                     orderby s.name
@@ -84,6 +84,7 @@ namespace LegendaryClient.Windows
             {
                 RegionComboBox.SelectedValue = Properties.Settings.Default.Region;
             }
+<<<<<<< HEAD
             var uriSource = new Uri(Path.Combine(Client.ExecutingDirectory, "Assets", "champions", champions.GetChampion(Client.LatestChamp).splashPath), UriKind.Absolute);
             LoginImage.Source = new BitmapImage(uriSource);
             if (!String.IsNullOrWhiteSpace(Properties.Settings.Default.SavedPassword) &&
@@ -93,6 +94,10 @@ namespace LegendaryClient.Windows
                 AutoLoginCheckBox.IsChecked = true;
                 LoginButton_Click(null, null);
             }
+=======
+            string uriSource = Path.Combine(Client.ExecutingDirectory, "Assets", "champions", champions.GetChampion(Client.LatestChamp).splashPath);
+            LoginImage.Source = Client.GetImage(uriSource);
+>>>>>>> upstream/master
         }
 
         private void LoginButton_Click(object sender, RoutedEventArgs e)
@@ -141,8 +146,6 @@ namespace LegendaryClient.Windows
             }));
         }
 
-#pragma warning disable 4014 //Code does not need to be awaited
-
         private async void GotLoginPacket(LoginDataPacket packet)
         {
             Client.LoginPacket = packet;
@@ -158,7 +161,7 @@ namespace LegendaryClient.Windows
             {
                 Client.StatusContainer.Visibility = System.Windows.Visibility.Visible;
                 Client.Container.Margin = new Thickness(0, 0, 0, 40);
-                
+
                 //Setup chat
                 Client.ChatClient.AutoReconnect = 30;
                 Client.ChatClient.KeepAlive = 10;
@@ -187,7 +190,6 @@ namespace LegendaryClient.Windows
                 Client.ConfManager.Stream = Client.ChatClient;
 
                 Client.SwitchPage(new MainPage());
-                Client.ClearPage(this);
             }));
         }
     }

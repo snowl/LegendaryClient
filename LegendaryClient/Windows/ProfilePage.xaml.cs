@@ -58,8 +58,8 @@ namespace LegendaryClient.Windows
             SummonerLevelLabel.Content = "Level " + Summoner.SummonerLevel;
 
             int ProfileIconID = Summoner.ProfileIconId;
-            var uriSource = new Uri(Path.Combine(Client.ExecutingDirectory, "Assets", "profileicon", ProfileIconID + ".png"), UriKind.RelativeOrAbsolute);
-            ProfileImage.Source = new BitmapImage(uriSource);
+            var uriSource = Path.Combine(Client.ExecutingDirectory, "Assets", "profileicon", ProfileIconID + ".png");
+            ProfileImage.Source = Client.GetImage(uriSource);
 
             PlatformGameLifecycleDTO n = await Client.PVPNet.RetrieveInProgressSpectatorGameInfo(s);
             if (n.GameName != null)
