@@ -84,9 +84,8 @@ namespace LegendaryClient.Windows
             {
                 RegionComboBox.SelectedValue = Properties.Settings.Default.Region;
             }
-<<<<<<< HEAD
-            var uriSource = new Uri(Path.Combine(Client.ExecutingDirectory, "Assets", "champions", champions.GetChampion(Client.LatestChamp).splashPath), UriKind.Absolute);
-            LoginImage.Source = new BitmapImage(uriSource);
+            string uriSource = Path.Combine(Client.ExecutingDirectory, "Assets", "champions", champions.GetChampion(Client.LatestChamp).splashPath);
+            LoginImage.Source = Client.GetImage(uriSource);
             if (!String.IsNullOrWhiteSpace(Properties.Settings.Default.SavedPassword) &&
                 !String.IsNullOrWhiteSpace(Properties.Settings.Default.Region) &&
                 Properties.Settings.Default.AutoLogin)
@@ -94,10 +93,6 @@ namespace LegendaryClient.Windows
                 AutoLoginCheckBox.IsChecked = true;
                 LoginButton_Click(null, null);
             }
-=======
-            string uriSource = Path.Combine(Client.ExecutingDirectory, "Assets", "champions", champions.GetChampion(Client.LatestChamp).splashPath);
-            LoginImage.Source = Client.GetImage(uriSource);
->>>>>>> upstream/master
         }
 
         private void LoginButton_Click(object sender, RoutedEventArgs e)
