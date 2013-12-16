@@ -1,5 +1,6 @@
 ﻿using LegendaryClient.Controls;
 using LegendaryClient.Logic;
+using LegendaryClient.Logic.Maps;
 using LegendaryClient.Logic.SQLite;
 using PVPNetConnect.RiotObjects.Platform.Statistics;
 using System;
@@ -42,16 +43,20 @@ namespace LegendaryClient.Windows.Profile
             result.GameStatistics.Sort((s1, s2) => s2.CreateDate.CompareTo(s1.CreateDate));
             foreach (PlayerGameStats Game in result.GameStatistics)
             {
-                Game.GameType = Client.TitleCaseString(Game.GameType.Replace("_GAME", "").Replace("MATCHED", "NORMAL"));
+                Game.QueueType = Client.TitleCaseString(Game.QueueType.Replace("ODIN", "Dominion").Replace("UNRANKED", "").Replace("_5x5", "").Replace("_", " ")).Replace("Aram", "ARAM").Trim();
                 MatchStats Match = new MatchStats();
 
-                foreach (RawStat Stat in Game.Statistics)
-                {
-                    var type = typeof(MatchStats);
-                    string fieldName = Client.TitleCaseString(Stat.StatType.Replace('_', ' ')).Replace(" ", "");
-                    var f = type.GetField(fieldName);
-                    f.SetValue(Match, Stat.Value);
-                }
+                //try
+                //{
+                    foreach (RawStat Stat in Game.Statistics)
+                    {
+                        var type = typeof(MatchStats);
+                        string fieldName = Client.TitleCaseString(Stat.StatType.Replace('_', ' ')).Replace(" ", "");
+                        var f = type.GetField(fieldName);
+                        f.SetValue(Match, Stat.Value);
+                    }
+                //}
+                //catch { }
 
                 Match.Game = Game;
 
@@ -76,9 +81,9 @@ namespace LegendaryClient.Windows.Profile
                         stats.ChampionsKilled,
                         stats.NumDeaths,
                         stats.Assists,
-                        stats.Game.GameType);
+                        stats.Game.QueueType);
 
-                    item.CreepScoreLabel.Content = stats.MinionsKilled + " minions";
+                    item.MapLabel.Content = BaseMap.GetMap(stats.Game.GameMapId).DisplayName;
                     item.DateLabel.Content = stats.Game.CreateDate;
                     item.IPEarnedLabel.Content = "+" + stats.Game.IpEarned + " IP";
                     item.PingLabel.Content = stats.Game.UserServerPing + "ms";
@@ -279,6 +284,12 @@ namespace LegendaryClient.Windows.Profile
         public double TotalHeal = 0;
         public double NeutralMinionsKilledYourJungle = 0;
         public double NeutralMinionsKilledEnemyJungle = 0;
+        public double CombatPlayerScore = 0;
+        public double NodeNeutralize = 0;
+        public double TotalPlayerScore = 0;
+        public double ObjectivePlayerScore = 0;
+        public double NodeCapture = 0;
+        public double TotalScoreRank = 0;
         public PlayerGameStats Game = null;
     }
 }
