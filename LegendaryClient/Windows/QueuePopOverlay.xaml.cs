@@ -95,6 +95,21 @@ namespace LegendaryClient.Windows
                                 player = (QueuePopPlayer)Team2ListBox.Items[i - (PlayerParticipantStatus.Length / 2)];
                             }
                             player.ReadyCheckBox.IsChecked = true;
+                            player.ReadyCheckBox.Foreground = System.Windows.Media.Brushes.Green;
+                        }
+                        else if (c == '2')
+                        {
+                            QueuePopPlayer player = null;
+                            if (i < (PlayerParticipantStatus.Length / 2)) //Team 1
+                            {
+                                player = (QueuePopPlayer)Team1ListBox.Items[i];
+                            }
+                            else //Team 2
+                            {
+                                player = (QueuePopPlayer)Team2ListBox.Items[i - (PlayerParticipantStatus.Length / 2)];
+                            }
+                            player.ReadyCheckBox.IsChecked = null;
+                            player.ReadyCheckBox.Foreground = System.Windows.Media.Brushes.Red;
                         }
                         i++;
                     }

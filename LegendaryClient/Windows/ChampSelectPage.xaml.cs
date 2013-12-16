@@ -625,11 +625,11 @@ namespace LegendaryClient.Windows
             {
                 string uriSource = "/LegendaryClient;component/Locked.png";
                 control.LockedInIcon.Source = Client.GetImage(uriSource);
-            }
+            }/*
             if (CanTradeWith.PotentialTraders.Contains(player.SummonerInternalName) || DevMode)
             {
                 control.TradeButton.Visibility = System.Windows.Visibility.Visible;
-            }
+            }*/
             control.LockedInIcon.Visibility = System.Windows.Visibility.Visible;
             control.TradeButton.Tag = new KeyValuePair<PlayerChampionSelectionDTO, PlayerParticipant>(selection, player);
             control.TradeButton.Click += TradeButton_Click;

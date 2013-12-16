@@ -81,6 +81,11 @@ namespace LegendaryClient.Logic
         internal static List<masteries> Masteries;
 
         /// <summary>
+        /// The database of all runes
+        /// </summary>
+        internal static List<runes> Runes;
+
+        /// <summary>
         /// The database of all the search tags
         /// </summary>
         internal static List<championSearchTags> SearchTags;

@@ -22,24 +22,15 @@ namespace LegendaryClient.Windows.Profile
         private int OffenseUsedPoints = 0;
         private int DefenseUsedPoints = 0;
         private int UtilityUsedPoints = 0;
-        private List<double> MasteryPageOrder = new List<double>();
         public Masteries()
         {
             InitializeComponent();
             MasteryPageListView.Items.Clear();
             for (int i = 1; i <= Client.LoginPacket.AllSummonerData.MasteryBook.BookPages.Count; i++)
                 MasteryPageListView.Items.Add(i);
-            double SelectedPageId = 0;
-            foreach (MasteryBookPageDTO MasteryPage in Client.LoginPacket.AllSummonerData.MasteryBook.BookPages)
-            {
-                MasteryPageOrder.Add(MasteryPage.PageId);
-                if (MasteryPage.Current)
-                {
-                    SelectedPageId = MasteryPage.PageId;
-                }
-            }
-            MasteryPageOrder.Sort();
-            MasteryPageListView.SelectedIndex = MasteryPageOrder.IndexOf(SelectedPageId);
+            Client.LoginPacket.AllSummonerData.MasteryBook.BookPages.Sort((x, y) => x.PageId.CompareTo(y.PageId));
+            MasteryPageListView.SelectedIndex = Client.LoginPacket.AllSummonerData.MasteryBook.BookPages.IndexOf(
+                Client.LoginPacket.AllSummonerData.MasteryBook.BookPages.Find(x => x.Current == true));
         }
 
         public void ChangeBook()
@@ -343,12 +334,9 @@ namespace LegendaryClient.Windows.Profile
                 {
                     MasteryPage.Current = false;
                 }
-                if (MasteryPage.PageId == MasteryPageOrder[MasteryPageListView.SelectedIndex])
-                {
-                    MasteryPage.Current = true;
-                    SelectedBook = MasteryPage;
-                }
             }
+            Client.LoginPacket.AllSummonerData.MasteryBook.BookPages[MasteryPageListView.SelectedIndex].Current = true;
+            SelectedBook = Client.LoginPacket.AllSummonerData.MasteryBook.BookPages[MasteryPageListView.SelectedIndex];
             ChangeBook();
             RenderMasteries();
         }
