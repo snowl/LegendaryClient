@@ -46,17 +46,13 @@ namespace LegendaryClient.Windows.Profile
                 Game.QueueType = Client.TitleCaseString(Game.QueueType.Replace("ODIN", "Dominion").Replace("UNRANKED", "").Replace("_5x5", "").Replace("_", " ")).Replace("Aram", "ARAM").Trim();
                 MatchStats Match = new MatchStats();
 
-                //try
-                //{
-                    foreach (RawStat Stat in Game.Statistics)
-                    {
-                        var type = typeof(MatchStats);
-                        string fieldName = Client.TitleCaseString(Stat.StatType.Replace('_', ' ')).Replace(" ", "");
-                        var f = type.GetField(fieldName);
-                        f.SetValue(Match, Stat.Value);
-                    }
-                //}
-                //catch { }
+                foreach (RawStat Stat in Game.Statistics)
+                {
+                    var type = typeof(MatchStats);
+                    string fieldName = Client.TitleCaseString(Stat.StatType.Replace('_', ' ')).Replace(" ", "");
+                    var f = type.GetField(fieldName);
+                    f.SetValue(Match, Stat.Value);
+                }
 
                 Match.Game = Game;
 
