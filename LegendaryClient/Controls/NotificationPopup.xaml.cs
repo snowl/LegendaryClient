@@ -83,6 +83,14 @@ namespace LegendaryClient.Controls
                                      + "Game Type: " + Client.TitleCaseString(GameType).Replace("_", " ") + Environment.NewLine;
         }
 
+        public NotificationPopup(ChatSubjects subject, string Message)
+        {
+            InitializeComponent();
+            Subject = subject;
+            NotificationTypeLabel.Content = Client.TitleCaseString(Enum.GetName(typeof(ChatSubjects), subject).Replace("_", " "));
+            NotificationTextBox.Text = Message;
+        }
+
         private void CloseButton_Click(object sender, RoutedEventArgs e)
         {
             this.Visibility = System.Windows.Visibility.Hidden;

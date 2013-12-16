@@ -486,9 +486,20 @@ namespace LegendaryClient.Windows
                         PlayerTradeControl.TheirChampLabel.Content = TheirChampion.displayName;
                         PlayerTradeControl.RequestLabel.Content = string.Format("{0} wants to trade!", TradeDTO.RequesterInternalSummonerName);
                     }
-                    else if (TradeDTO.State == "CANCELED" || TradeDTO.State == "DECLINED")
+                    else if (TradeDTO.State == "CANCELED" || TradeDTO.State == "DECLINED" || TradeDTO.State == "BUSY")
                     {
                         PlayerTradeControl.Visibility = System.Windows.Visibility.Hidden;
+                        NotificationPopup pop = new NotificationPopup(ChatSubjects.INVITE_STATUS_CHANGED, 
+                            string.Format("{0} has {1} this trade", TradeDTO.RequesterInternalSummonerName, TradeDTO.State));
+
+                        if (TradeDTO.State == "BUSY")
+                            pop.NotificationTextBox.Text = string.Format("{0} is currently busy", TradeDTO.RequesterInternalSummonerName);
+
+                        pop.Height = 200;
+                        pop.OkButton.Visibility = System.Windows.Visibility.Visible;
+                        pop.HorizontalAlignment = HorizontalAlignment.Right;
+                        pop.VerticalAlignment = VerticalAlignment.Bottom;
+                        Client.NotificationGrid.Children.Add(pop);
                     }
                 }));
             }
@@ -626,7 +637,7 @@ namespace LegendaryClient.Windows
                 string uriSource = "/LegendaryClient;component/Locked.png";
                 control.LockedInIcon.Source = Client.GetImage(uriSource);
             }
-            if (CanTradeWith.PotentialTraders.Contains(player.SummonerInternalName) || DevMode)
+            if (CanTradeWith != null && (CanTradeWith.PotentialTraders.Contains(player.SummonerInternalName) || DevMode))
             {
                 control.TradeButton.Visibility = System.Windows.Visibility.Visible;
             }
