@@ -35,6 +35,7 @@ namespace LegendaryClient.Windows
             InitializeComponent();
 
             GameName.Content = Client.GameName;
+            Client.OnFixChampSelect += GameLobby_OnMessageReceived;
             Client.PVPNet.OnMessageReceived += GameLobby_OnMessageReceived;
             //If client has created game use initial DTO
             if (Client.GameLobbyDTO != null)

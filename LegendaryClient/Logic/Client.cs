@@ -514,6 +514,9 @@ namespace LegendaryClient.Logic
         internal static bool AutoAcceptQueue = false;
         internal static object LastPageContent;
 
+        //Fix for champ select
+        internal static event PVPNetConnection.OnMessageReceivedHandler OnFixChampSelect;
+
         /// <summary>
         /// When an error occurs while connected. Currently un-used
         /// </summary>
@@ -678,12 +681,25 @@ namespace LegendaryClient.Logic
                 }
             }
 
+            FixChampSelect();
+
             await PVPNet.QuitGame();
             StatusGrid.Visibility = System.Windows.Visibility.Hidden;
             PlayButton.Visibility = System.Windows.Visibility.Visible;
             GameStatus = "outOfGame";
             SetChatHover();
             SwitchPage(new MainPage());
+        }
+
+        internal static void FixChampSelect()
+        {
+            if (OnFixChampSelect != null)
+            {
+                foreach (Delegate d in OnFixChampSelect.GetInvocationList())
+                {
+                    PVPNet.OnMessageReceived -= (PVPNetConnection.OnMessageReceivedHandler)d;
+                }
+            }
         }
         #endregion League Of Legends Logic
 
