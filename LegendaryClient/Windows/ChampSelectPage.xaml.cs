@@ -242,7 +242,7 @@ namespace LegendaryClient.Windows
                         GameStatusLabel.Content = "Waiting for others to pick...";
                     }
 
-                    //Champion select was cancelled (TODO: Fix this, buggy)
+                    //Champion select was cancelled 
                     if (ChampDTO.GameState == "TEAM_SELECT")
                     {
                         if (CountdownTimer != null)
