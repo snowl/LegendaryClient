@@ -63,8 +63,6 @@
         <Label x:Name="QuintsLabel" Content="Quintessences" Foreground="White" FontSize="25" FontWeight="ExtraLight" HorizontalAlignment="Left" Margin="517,423,0,0" VerticalAlignment="Top"/>
         <ComboBox x:Name="RuneFilterComboBox" HorizontalAlignment="Left" Margin="10,73,0,0" VerticalAlignment="Top" Width="200" SelectionChanged="RuneFilterComboBox_SelectionChanged">
             <Label Content="All"/>
-            <Label Content="Health"/>
-            <Label Content="Mana"/>
             <Label Content="Attack"/>
             <Label Content="Magic"/>
             <Label Content="Defense"/>
@@ -74,21 +72,21 @@
             <ListView.View>
                 <GridView>
                     <GridViewColumn Header="Rune"/>
-                    <GridViewColumn Header="Count">
+                    <GridViewColumn Header="#" Width="40">
                         <GridViewColumn.CellTemplate>
                             <DataTemplate>
                                 <TextBlock >
                                     <TextBlock.Text>
-                                        <MultiBinding StringFormat="{}{0}&#x0a;{1}">
-                                            <Binding Path=".owned"></Binding>
-                                            <Binding Path="owned"></Binding>
+                                        <MultiBinding StringFormat="{}{0}/{1}">
+                                            <Binding Path=".Used"></Binding>
+                                            <Binding Path=".Owned"></Binding>
                                         </MultiBinding>
                                     </TextBlock.Text>
                                 </TextBlock>
                             </DataTemplate>
                         </GridViewColumn.CellTemplate>
                     </GridViewColumn>
-                    <GridViewColumn Header="Name And Effect">
+                    <GridViewColumn Header="Name And Effect" Width="300">
                         <GridViewColumn.CellTemplate>
                             <DataTemplate>
                                 <TextBlock >
@@ -106,6 +104,8 @@
             </ListView.View>
             <Grid Height="100" Width="100"/>
         </ListView>
-        <Label x:Name="StatsLabel" Content="" Foreground="White" FontSize="16" FontWeight="ExtraLight" HorizontalAlignment="Left" Margin="852,324,0,0" VerticalAlignment="Top"/>
+        <Label x:Name="StatsLabel" Content="" Foreground="White" FontWeight="ExtraLight" HorizontalAlignment="Left" Margin="852,324,0,0" VerticalAlignment="Top"/>
+        <Button x:Name="SaveRunes" Content="Save Rune Page" HorizontalAlignment="Left" Margin="264,45,0,0" VerticalAlignment="Top" Width="200" Click="SaveRunes_Click" />
+        <Button x:Name="ClearRunes" Content="Clear Rune Page" HorizontalAlignment="Left" Margin="264,73,0,0" VerticalAlignment="Top" Width="200" Click="ClearRunes_Click" />
     </Grid>
 </Page>

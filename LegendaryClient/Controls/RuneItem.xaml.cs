@@ -20,10 +20,13 @@ namespace LegendaryClient.Controls
     /// </summary>
     public partial class RuneItem : UserControl
     {
-        public int owned = 0;
+        public int Owned { get; set; }
+        public int Used { get; set; }
         public RuneItem()
         {
             InitializeComponent();
+            Owned = 0;
+            Used = 0;
         }
     }
 }
