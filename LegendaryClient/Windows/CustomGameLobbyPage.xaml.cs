@@ -35,6 +35,7 @@ namespace LegendaryClient.Windows
             InitializeComponent();
 
             GameName.Content = Client.GameName;
+            Client.OnFixLobby += GameLobby_OnMessageReceived;
             Client.PVPNet.OnMessageReceived += GameLobby_OnMessageReceived;
             //If client has created game use initial DTO
             if (Client.GameLobbyDTO != null)
@@ -94,20 +95,20 @@ namespace LegendaryClient.Windows
             }
         }
 
-        public void Client_OnMessage(object sender, jabber.protocol.client.Message msg)
+        public async void Client_OnMessage(object sender, jabber.protocol.client.Message msg)
         {
             if (msg.Subject != null)
             {
                 ChatSubjects subject = (ChatSubjects)Enum.Parse(typeof(ChatSubjects), msg.Subject, true);
-
-                ChatPlayerItem PlayerInfo = Client.AllPlayers[msg.From.User];
+                double[] Double = new double[1] { Convert.ToDouble(msg.From.User.Replace("sum", "")) };
+                string[] Name = await Client.PVPNet.GetSummonerNames(Double);
                 Dispatcher.BeginInvoke(DispatcherPriority.Input, new ThreadStart(() =>
                 {
                     InvitePlayer invitePlayer = null;
                     foreach (var x in Client.InviteListView.Items)
                     {
                         InvitePlayer tempInvPlayer = (InvitePlayer)x;
-                        if ((string)tempInvPlayer.PlayerLabel.Content == PlayerInfo.Username)
+                        if ((string)tempInvPlayer.PlayerLabel.Content == Name[0])
                         {
                             invitePlayer = x as InvitePlayer;
                             break;

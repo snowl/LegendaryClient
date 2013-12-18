@@ -6,7 +6,7 @@
              mc:Ignorable="d"
              d:DesignHeight="200" d:DesignWidth="300">
     <Grid>
-        <Rectangle Fill="#99505050" Stroke="#FF646464">
+        <Rectangle Fill="#B2505050" Stroke="#FF646464">
             <Rectangle.Effect>
                 <DropShadowEffect ShadowDepth="3" />
             </Rectangle.Effect>

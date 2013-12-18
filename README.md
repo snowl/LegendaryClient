@@ -44,6 +44,7 @@ Still-in Progress Screenshots
 ![CustomGameCreate](http://i.imgur.com/vig8S6P.png)
 ![SearchCustomGames](http://i.imgur.com/1j5Yw8c.png)
 ![CustomGameLobby](http://i.imgur.com/QF2MtZB.png)
+![Trading](http://puu.sh/5NcEw.jpg)
 ![Inviting](http://i.imgur.com/99q4kcd.png)
 ![Profile](http://i.imgur.com/BSLpms5.png)
 ![AggregatedStats](http://puu.sh/5CHtN.jpg)

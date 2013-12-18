@@ -31,7 +31,7 @@ namespace LegendaryClient.Windows
 
         private void StartPatcher()
         {
-            Thread bgThead = new Thread(() =>
+            Thread bgThread = new Thread(() =>
             {
                 LogTextBox("Starting Patcher");
 
@@ -297,8 +297,8 @@ namespace LegendaryClient.Windows
 
                 FinishPatching();
             });
-
-            bgThead.Start();
+            bgThread.IsBackground = true;
+            bgThread.Start();
         }
 
         private void FinishPatching()

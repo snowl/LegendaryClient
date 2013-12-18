@@ -520,6 +520,15 @@ namespace LegendaryClient.Logic
         internal static object LastPageContent;
 
         /// <summary>
+        /// Fix for champ select. Do not use this!
+        /// </summary>
+        internal static event PVPNetConnection.OnMessageReceivedHandler OnFixChampSelect;
+        /// <summary>
+        /// Allow lobby to still have a connection. Do not use this!
+        /// </summary>
+        internal static event PVPNetConnection.OnMessageReceivedHandler OnFixLobby;
+
+        /// <summary>
         /// When an error occurs while connected. Currently un-used
         /// </summary>
         internal static void PVPNet_OnError(object sender, PVPNetConnect.Error error)
@@ -683,12 +692,39 @@ namespace LegendaryClient.Logic
                 }
             }
 
+            FixChampSelect();
+            FixLobby();
+
             await PVPNet.QuitGame();
             StatusGrid.Visibility = System.Windows.Visibility.Hidden;
             PlayButton.Visibility = System.Windows.Visibility.Visible;
             GameStatus = "outOfGame";
             SetChatHover();
             SwitchPage(new MainPage());
+        }
+
+        internal static void FixLobby()
+        {
+            if (OnFixLobby != null)
+            {
+                foreach (Delegate d in OnFixLobby.GetInvocationList())
+                {
+                    PVPNet.OnMessageReceived -= (PVPNetConnection.OnMessageReceivedHandler)d;
+                    OnFixLobby -= (PVPNetConnection.OnMessageReceivedHandler)d;
+                }
+            }
+        }
+
+        internal static void FixChampSelect()
+        {
+            if (OnFixChampSelect != null)
+            {
+                foreach (Delegate d in OnFixChampSelect.GetInvocationList())
+                {
+                    PVPNet.OnMessageReceived -= (PVPNetConnection.OnMessageReceivedHandler)d;
+                    OnFixChampSelect -= (PVPNetConnection.OnMessageReceivedHandler)d;
+                }
+            }
         }
         #endregion League Of Legends Logic
 
