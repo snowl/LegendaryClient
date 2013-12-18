@@ -77,7 +77,6 @@ namespace LegendaryClient.Logic.Patcher
                 File.Copy(Path.Combine(AirLocation, "assets", "data", "gameStats", "gameStats_en_US.sqlite"), Path.Combine(Client.ExecutingDirectory, "gameStats_en_US.sqlite"));
             }
 
-            Copy(Path.Combine(AirLocation, "assets", "images", "abilities"), Path.Combine(Client.ExecutingDirectory, "Assets", "abilities"));
             Copy(Path.Combine(AirLocation, "assets", "images", "champions"), Path.Combine(Client.ExecutingDirectory, "Assets", "champions"));
 
             var VersionAIR = File.Create(Path.Combine("Assets", "VERSION_AIR"));

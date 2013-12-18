@@ -286,6 +286,7 @@ namespace LegendaryClient.Windows.Profile
         public double ObjectivePlayerScore = 0;
         public double NodeCapture = 0;
         public double TotalScoreRank = 0;
+        public double VictoryPointTotal = 0;
         public PlayerGameStats Game = null;
     }
 }

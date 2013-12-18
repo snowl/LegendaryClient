@@ -563,15 +563,13 @@ namespace LegendaryClient.Windows
             SkinSelectListView.Items.Add(item);
 
             //Render abilities
-            List<championAbilities> Abilities = championAbilities.GetAbilities(selection.ChampionId);
-            foreach (championAbilities ability in Abilities)
+            foreach (Spell ability in Champion.Spells)
             {
                 ChampionAbility championAbility = new ChampionAbility();
-                uriSource = Path.Combine(Client.ExecutingDirectory, "Assets", "abilities", ability.iconPath);
+                uriSource = Path.Combine(Client.ExecutingDirectory, "Assets", "spell", ability.Image);
                 championAbility.AbilityImage.Source = Client.GetImage(uriSource);
-                championAbility.AbilityHotKey.Content = ability.hotkey;
-                championAbility.AbilityName.Content = ability.name;
-                championAbility.AbilityDescription.Text = ability.description;
+                championAbility.AbilityName.Content = ability.Name;
+                championAbility.AbilityDescription.Text = ability.Tooltip;
                 championAbility.Width = 375;
                 championAbility.Height = 75;
                 AbilityListView.Items.Add(championAbility);

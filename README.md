@@ -28,9 +28,9 @@ You must compile these DLLS yourself:
 In-Client Screenshots (90-100)% complete
 =====================
 
-![Login](http://i.imgur.com/QcSZeOG.jpg)
-![News Screen](http://i.imgur.com/jJKtmNk.png)
-![Featured Games](http://i.imgur.com/p4LgrQf.png)
+![Login](http://puu.sh/5Q7jT.jpg)
+![News Screen](http://puu.sh/5Q7vd.jpg)
+![Featured Games](http://puu.sh/5Q7tZ.jpg)
 ![Store](http://i.imgur.com/raXcBfv.png)
 
 Still-in Progress Screenshots 
@@ -39,18 +39,19 @@ Still-in Progress Screenshots
 ![Chat](http://puu.sh/5FVHS.png)
 ![Queue](http://i.imgur.com/ZpZiyJ5.png)
 ![QueuePop](http://i.imgur.com/KAt5KXR.png)
-![ChampSelect](http://i.imgur.com/KEZHtw2.jpg)
-![ChampSelect2](http://i.imgur.com/FBK2dw3.jpg)
-![CustomGameCreate](http://i.imgur.com/vig8S6P.png)
-![SearchCustomGames](http://i.imgur.com/1j5Yw8c.png)
-![CustomGameLobby](http://i.imgur.com/QF2MtZB.png)
+![ChampSelect](http://puu.sh/5Q7wZ.jpg)
+![ChampSelect2](http://puu.sh/5Q7xO.jpg)
+![CustomGameCreate](http://puu.sh/5Q7yH.jpg)
+![SearchCustomGames](http://puu.sh/5Q7zE.png)
+![CustomGameLobby](http://puu.sh/5Q7Av.jpg)
 ![Trading](http://puu.sh/5NcEw.jpg)
 ![Inviting](http://i.imgur.com/99q4kcd.png)
-![Profile](http://i.imgur.com/BSLpms5.png)
-![AggregatedStats](http://puu.sh/5CHtN.jpg)
+![Profile](http://puu.sh/5Q7D8.jpg)
+![AggregatedStats](http://puu.sh/5Q7E2.jpg)
 ![Skins](http://i.imgur.com/Lsz3x4d.jpg)
 ![Settings](http://i.imgur.com/ZTktZTY.png)
 ![Notifications](http://i.imgur.com/96bctwF.png)
+![Champions](http://puu.sh/5Q78z.jpg)
 
 Other Features
 ======
