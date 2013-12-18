@@ -13,7 +13,7 @@ namespace LegendaryClient.Logic.SQLite
 
         public Dictionary<string, object> stats { get; set; }
 
-        public string[] tags { get; set; }
+        public ArrayList tags { get; set; }
 
         public BitmapImage icon { get; set; }
     }

@@ -18,7 +18,6 @@ namespace LegendaryClient.Logic.JSON
             JavaScriptSerializer serializer = new JavaScriptSerializer();
             Dictionary<string, object> deserializedJSON = serializer.Deserialize<Dictionary<string, object>>(runeJSON);
             Dictionary<string, object> runeData = deserializedJSON["data"] as Dictionary<string, object>;
-            //Dictionary<string, object> treeData = deserializedJSON["tree"] as Dictionary<string, object>;
 
             foreach (KeyValuePair<string, object> rune in runeData)
             {
@@ -27,35 +26,16 @@ namespace LegendaryClient.Logic.JSON
                 newRune.id = Convert.ToInt32(rune.Key);
                 newRune.name = singularRuneData["name"] as string;
                 newRune.description = singularRuneData["description"] as string;
+                newRune.description = newRune.description.Replace("(", "\n");
+                newRune.description = newRune.description.Replace(")", "");
                 newRune.stats = singularRuneData["stats"] as Dictionary<string, object>;
-                newRune.tags = singularRuneData["tags"] as string[];
-
+                newRune.tags = singularRuneData["tags"] as ArrayList;
                 Dictionary<string, object> imageData = singularRuneData["image"] as Dictionary<string, object>;
                 var uriSource = Path.Combine(Client.ExecutingDirectory, "Assets", "rune", (string)imageData["full"]);
                 newRune.icon = Client.GetImage(uriSource);
 
                 RuneList.Add(newRune);
             }
-            /*
-            int i = 0;
-            foreach (KeyValuePair<string, object> tree in treeData)
-            {
-                ArrayList list = (ArrayList)tree.Value;
-                for (i = 0; i < list.Count; i++)
-                {
-                    foreach (Dictionary<string, object> x in (ArrayList)list[i])
-                    {
-                        if (x != null)
-                        {
-                            int MasteryId = Convert.ToInt32(x["masteryId"]);
-                            masteries tempMastery = RuneList.Find(y => y.id == MasteryId);
-                            tempMastery.treeRow = i;
-                            tempMastery.tree = tree.Key;
-                        }
-                    }
-                }
-            }
-            */
             return RuneList;
         }
     }

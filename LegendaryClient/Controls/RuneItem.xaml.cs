@@ -20,6 +20,7 @@ namespace LegendaryClient.Controls
     /// </summary>
     public partial class RuneItem : UserControl
     {
+        public int owned = 0;
         public RuneItem()
         {
             InitializeComponent();
