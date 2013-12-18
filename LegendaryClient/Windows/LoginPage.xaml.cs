@@ -36,6 +36,8 @@ namespace LegendaryClient.Windows
             {
                 string Source = Path.Combine(Client.ExecutingDirectory, "Assets", "champions", c.iconPath);
                 c.icon = Client.GetImage(Source);
+                Champions.InsertExtraChampData(c);
+                ;
             }
             Client.ChampionSkins = (from s in Client.SQLiteDatabase.Table<championSkins>()
                                     orderby s.name

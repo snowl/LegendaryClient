@@ -37,6 +37,7 @@ namespace LegendaryClient.Windows
         internal int SelectedGame = 0;
         internal ArrayList gameList;
         internal ArrayList newsList;
+        internal System.Windows.Forms.Timer RefreshTimer;
 
         public MainPage()
         {
@@ -97,6 +98,20 @@ namespace LegendaryClient.Windows
             string uriSource = Path.Combine(Client.ExecutingDirectory, "Assets", "profileicon", ProfileIconID + ".png");
             ProfileImage.Source = Client.GetImage(uriSource);
             Client.MainPageProfileImage = ProfileImage;
+
+            RefreshTimer = new System.Windows.Forms.Timer();
+            RefreshTimer.Tick += new EventHandler(RefreshTimer_Tick);
+            RefreshTimer.Interval = 300000; // 5 minutes
+            RefreshTimer.Start();
+        }
+
+        private void RefreshTimer_Tick(object sender, EventArgs e)
+        {
+            if (SpectatorComboBox.SelectedIndex != -1 && SpectatorComboBox.SelectedValue != null)
+            {
+                BaseRegion region = BaseRegion.GetRegion((string)SpectatorComboBox.SelectedValue);
+                ChangeSpectatorRegion(region);
+            }
         }
 
         private void GotLeaguesForPlayer(SummonerLeaguesDTO result)
@@ -140,6 +155,7 @@ namespace LegendaryClient.Windows
                     PlayerProgressLabel.Content = "Level 30";
                     PlayerCurrentProgressLabel.Content = "";
                     PlayerAimProgressLabel.Content = "";
+                    return;
                 }
 
                 PlayerProgressLabel.Content = CurrentTier;
@@ -342,10 +358,6 @@ namespace LegendaryClient.Windows
                 if (pair.Key == "gameId")
                 {
                     GameId = (int)pair.Value;
-                }
-                if (pair.Key == "mapId")
-                {
-                    MapLabel.Content = BaseMap.GetMap((int)pair.Value).DisplayName;
                 }
                 if (pair.Key == "bannedChampions")
                 {

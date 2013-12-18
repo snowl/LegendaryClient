@@ -154,7 +154,7 @@ namespace LegendaryClient
             {
                 LoginPage page = new LoginPage();
                 Client.Pages.Clear();
-                Client.PVPNet.QuitGame();
+                Client.QuitCurrentGame();
                 Client.PVPNet.Disconnect();
                 Client.ChatClient.Close();
                 Client.IsLoggedIn = false;

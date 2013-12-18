@@ -165,6 +165,7 @@
     <Compile Include="Controls\AccessKeyScoper.cs" />
     <Compile Include="Logic\ChatPrefixes.cs" />
     <Compile Include="Logic\ChatSubjects.cs" />
+    <Compile Include="Logic\JSON\Champions.cs" />
     <Compile Include="Logic\JSON\Items.cs" />
     <Compile Include="Logic\JSON\Masteries.cs" />
     <Compile Include="Logic\Maps\Map1.cs" />
@@ -188,6 +189,7 @@
     <Compile Include="Logic\Region\RU.cs" />
     <Compile Include="Logic\SQLite\keybindingEvents.cs" />
     <Compile Include="Logic\SQLite\masteries.cs" />
+    <Compile Include="Logic\SQLite\Spell.cs" />
     <Compile Include="Logic\SQLite\SQLite.cs" />
     <Compile Include="Logic\SQLite\items.cs" />
     <Compile Include="Logic\PlayerSpell\SummonerSpell.cs" />
