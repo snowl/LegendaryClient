@@ -160,6 +160,9 @@
     <Compile Include="Controls\RecentGameOverview.xaml.cs">
       <DependentUpon>RecentGameOverview.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controls\RuneItem.xaml.cs">
+      <DependentUpon>RuneItem.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Controls\TextBoxWatermarked.cs" />
     <Compile Include="Controls\TradeControl.xaml.cs">
       <DependentUpon>TradeControl.xaml</DependentUpon>
@@ -171,6 +174,7 @@
     <Compile Include="Logic\JSON\Champions.cs" />
     <Compile Include="Logic\JSON\Items.cs" />
     <Compile Include="Logic\JSON\Masteries.cs" />
+    <Compile Include="Logic\JSON\Runes.cs" />
     <Compile Include="Logic\Maps\Map1.cs" />
     <Compile Include="Logic\Maps\Map10.cs" />
     <Compile Include="Logic\Maps\Map8.cs" />
@@ -191,6 +195,7 @@
     <Compile Include="Logic\Region\RU.cs" />
     <Compile Include="Logic\SQLite\keybindingEvents.cs" />
     <Compile Include="Logic\SQLite\masteries.cs" />
+    <Compile Include="Logic\SQLite\runes.cs" />
     <Compile Include="Logic\SQLite\Spell.cs" />
     <Compile Include="Logic\SQLite\SQLite.cs" />
     <Compile Include="Logic\SQLite\items.cs" />
@@ -382,6 +387,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Controls\RecentGameOverview.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\RuneItem.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

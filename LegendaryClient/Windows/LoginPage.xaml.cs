@@ -49,6 +49,7 @@ namespace LegendaryClient.Windows
                                select s).ToList();
             Client.Items = Items.PopulateItems();
             Client.Masteries = Masteries.PopulateMasteries();
+            Client.Runes = Runes.PopulateRunes();
 
             //Retrieve latest client version
             SWFReader reader = new SWFReader("ClientLibCommon.dat");
