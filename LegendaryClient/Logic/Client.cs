@@ -61,11 +61,6 @@ namespace LegendaryClient.Logic
         internal static List<champions> Champions;
 
         /// <summary>
-        /// The database of all the champion abilities
-        /// </summary>
-        internal static List<championAbilities> ChampionAbilities;
-
-        /// <summary>
         /// The database of all the champion skins
         /// </summary>
         internal static List<championSkins> ChampionSkins;

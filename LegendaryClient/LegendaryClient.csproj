@@ -103,6 +103,9 @@
     <Compile Include="Controls\ChampionAbility.xaml.cs">
       <DependentUpon>ChampionAbility.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controls\ChampionDetailAbility.xaml.cs">
+      <DependentUpon>ChampionDetailAbility.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Controls\ChampionImage.xaml.cs">
       <DependentUpon>ChampionImage.xaml</DependentUpon>
     </Compile>
@@ -174,7 +177,6 @@
     <Compile Include="Logic\Maps\Map12.cs" />
     <Compile Include="Logic\Maps\BaseMap.cs" />
     <Compile Include="Logic\Patcher\RiotPatcher.cs" />
-    <Compile Include="Logic\SQLite\championAbilities.cs" />
     <Compile Include="Logic\SQLite\champions.cs" />
     <Compile Include="Logic\SQLite\championSearchTags.cs" />
     <Compile Include="Logic\SQLite\championSkins.cs" />
@@ -304,6 +306,10 @@
       <DependentUpon>ShopPage.xaml</DependentUpon>
     </Compile>
     <Page Include="Controls\ChampionAbility.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\ChampionDetailAbility.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

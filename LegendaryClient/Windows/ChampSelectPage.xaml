@@ -68,7 +68,7 @@
         </ListView>
 
         <Grid x:Name="AfterChampionSelectGrid" HorizontalAlignment="Stretch" Margin="145,80,145,0" Height="370" VerticalAlignment="Top" Background="#66505050" Visibility="Hidden">
-            <ListView x:Name="AbilityListView" HorizontalAlignment="Left" Width="390" Margin="5,5,00,5" VerticalAlignment="Stretch" ScrollViewer.HorizontalScrollBarVisibility="Disabled" Background="{x:Null}" BorderBrush="{x:Null}">
+            <ListView x:Name="AbilityListView" HorizontalAlignment="Left" Width="390" Margin="5,5,0,5" VerticalAlignment="Stretch" ScrollViewer.HorizontalScrollBarVisibility="Disabled" Background="{x:Null}" BorderBrush="{x:Null}">
                 <ListView.ItemsPanel>
                     <ItemsPanelTemplate>
                         <WrapPanel />

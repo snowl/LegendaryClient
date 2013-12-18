@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Web.Script.Serialization;
 
@@ -33,9 +34,37 @@ namespace LegendaryClient.Logic.JSON
                 NewSpell.Name = champSpells["name"] as string;
                 NewSpell.Description = champSpells["description"] as string;
                 NewSpell.Tooltip = champSpells["tooltip"] as string;
-                NewSpell.MaxRank = champSpells["maxrank"] as string;
+                NewSpell.MaxRank = (int)champSpells["maxrank"];
+                Dictionary<string, object> Image = (Dictionary<string, object>)champSpells["image"];
+                NewSpell.Image = Image["full"] as string;
+                foreach (Dictionary<string, object> x in (ArrayList)champSpells["vars"])
+                {
+                    string Type = x["link"] as string;
+                    Type = Type.Replace("spelldamage", "Ability Power");
+                    Type = Type.Replace("bonusattackdamage", "Bonus Attack Damage");
+                    Type = Type.Replace("attackdamage", "Total Attack Damage");
+                    Type = Type.Replace("armor", "Armor");
+                    NewSpell.Tooltip = NewSpell.Tooltip.Replace("{{ " + x["key"] + " }}", Convert.ToString(x["coeff"]) + " " + Type);
+                }
 
+                int i = 0;
+                foreach (ArrayList x in (ArrayList)champSpells["effect"])
+                {
+                    string Scaling = "";
+                    if (x == null)
+                        continue;
 
+                    foreach (var y in x)
+                        Scaling += y + "/";
+
+                    Scaling = Scaling.Substring(0, Scaling.Length - 1);
+
+                    i++;
+                    NewSpell.Tooltip = NewSpell.Tooltip.Replace("{{ e" + i + " }}", Scaling);
+                }
+
+                NewSpell.Tooltip = NewSpell.Tooltip.Replace("<br>", Environment.NewLine);
+                NewSpell.Tooltip = Regex.Replace(NewSpell.Tooltip, "<.*?>", string.Empty);
 
                 Champ.Spells.Add(NewSpell);
             }

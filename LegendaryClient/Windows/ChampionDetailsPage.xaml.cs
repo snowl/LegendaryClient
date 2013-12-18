@@ -1,4 +1,5 @@
-﻿using LegendaryClient.Logic;
+﻿using LegendaryClient.Controls;
+using LegendaryClient.Logic;
 using LegendaryClient.Logic.SQLite;
 using System;
 using System.Collections.Generic;
@@ -58,7 +59,20 @@ namespace LegendaryClient.Windows
                 SkinSelectListView.Items.Add(item);
             }
 
+            foreach (Spell Sp in Champ.Spells)
+            {
+                ChampionDetailAbility detailAbility = new ChampionDetailAbility();
+                detailAbility.AbilityDescription.Text = Sp.Tooltip;
+                detailAbility.AbilityName.Content = Sp.Name;
+                var uriSource = Path.Combine(Client.ExecutingDirectory, "Assets", "spell", Sp.Image);
+                detailAbility.AbilityImage.Source = Client.GetImage(uriSource);
+                AbilityListView.Items.Add(detailAbility);
+            }
+
             ChampionImage.Source = Client.GetImage(Path.Combine(Client.ExecutingDirectory, "Assets", "champions", Champ.splashPath));
+
+            LoreText.Text = Champ.Lore.Replace("<br>", Environment.NewLine);
+            TipsText.Text = string.Format("Tips while playing {0}:{1}{2}{2}{2}Tips while playing aginst {0}:{3}", Champ.displayName, Champ.tips.Replace("*", Environment.NewLine + "*"), Environment.NewLine, Champ.opponentTips.Replace("*", Environment.NewLine + "*"));
         }
 
 
