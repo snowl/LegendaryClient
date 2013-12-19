@@ -102,7 +102,10 @@ namespace LegendaryClient.Logic.Patcher
             }
 
             string ParentDirectory = Directory.GetParent(GameLocation).FullName;
-            Copy(Path.Combine(ParentDirectory, "Config"), Path.Combine(Client.ExecutingDirectory, "Config"));
+            if (Directory.Exists(Path.Combine(ParentDirectory, "Config")))
+            {
+                Copy(Path.Combine(ParentDirectory, "Config"), Path.Combine(Client.ExecutingDirectory, "Config"));
+            }
 
             Copy(Path.Combine(GameLocation, "projects", "lol_game_client"), Path.Combine(Client.ExecutingDirectory, "RADS", "projects", "lol_game_client"));
             File.Copy(Path.Combine(GameLocation, "RiotRadsIO.dll"), Path.Combine(Client.ExecutingDirectory, "RADS", "RiotRadsIO.dll"));

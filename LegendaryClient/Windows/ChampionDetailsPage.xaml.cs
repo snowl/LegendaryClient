@@ -23,6 +23,16 @@ namespace LegendaryClient.Windows
             RenderChampions(ChampionId);
         }
 
+        public ChampionDetailsPage(int ChampionId, int SkinID)
+        {
+            InitializeComponent();
+            RenderChampions(ChampionId);
+            championSkins skin = championSkins.GetSkin(SkinID);
+            SkinName.Content = skin.displayName;
+            string uriSource = Path.Combine(Client.ExecutingDirectory, "Assets", "champions", skin.splashPath);
+            ChampionImage.Source = Client.GetImage(uriSource);
+        }
+
         public void RenderChampions(int ChampionId)
         {
             champions Champ = champions.GetChampion(ChampionId);
@@ -74,7 +84,6 @@ namespace LegendaryClient.Windows
             LoreText.Text = Champ.Lore.Replace("<br>", Environment.NewLine);
             TipsText.Text = string.Format("Tips while playing {0}:{1}{2}{2}{2}Tips while playing aginst {0}:{3}", Champ.displayName, Champ.tips.Replace("*", Environment.NewLine + "*"), Environment.NewLine, Champ.opponentTips.Replace("*", Environment.NewLine + "*"));
         }
-
 
         private void SkinSelectListView_PreviewMouseDown(object sender, MouseButtonEventArgs e)
         {
