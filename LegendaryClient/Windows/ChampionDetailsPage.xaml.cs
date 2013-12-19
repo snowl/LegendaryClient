@@ -95,7 +95,7 @@ namespace LegendaryClient.Windows
                     championSkins skin = championSkins.GetSkin((int)item.Tag);
                     SkinName.Content = skin.displayName;
                     DoubleAnimation fadingAnimation = new DoubleAnimation();
-                    fadingAnimation.From = 0.4;
+                    fadingAnimation.From = 1;
                     fadingAnimation.To = 0;
                     fadingAnimation.Duration = new Duration(TimeSpan.FromSeconds(0.2));
                     fadingAnimation.Completed += (eSender, eArgs) =>
@@ -104,7 +104,7 @@ namespace LegendaryClient.Windows
                         ChampionImage.Source = Client.GetImage(uriSource);
                         fadingAnimation = new DoubleAnimation();
                         fadingAnimation.From = 0;
-                        fadingAnimation.To = 0.4;
+                        fadingAnimation.To = 1;
                         fadingAnimation.Duration = new Duration(TimeSpan.FromSeconds(0.5));
 
                         ChampionImage.BeginAnimation(Image.OpacityProperty, fadingAnimation);

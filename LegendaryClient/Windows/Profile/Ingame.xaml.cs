@@ -19,6 +19,8 @@ namespace LegendaryClient.Windows.Profile
     /// </summary>
     public partial class Ingame : Page
     {
+        PlatformGameLifecycleDTO Game;
+
         public Ingame()
         {
             InitializeComponent();
@@ -26,6 +28,7 @@ namespace LegendaryClient.Windows.Profile
 
         public void Update(PlatformGameLifecycleDTO CurrentGame)
         {
+            Game = CurrentGame;
             BlueBansLabel.Visibility = System.Windows.Visibility.Hidden;
             PurpleBansLabel.Visibility = System.Windows.Visibility.Hidden;
             PurpleBanListView.Items.Clear();
@@ -151,6 +154,14 @@ namespace LegendaryClient.Windows.Profile
                 MMRLabel.Content = "≈" + deserializedJSON["interestScore"];
             }
             catch { MMRLabel.Content = "N/A"; }
+        }
+
+        private void SpectateButton_Click(object sender, System.Windows.RoutedEventArgs e)
+        {
+            string IP = Game.PlayerCredentials.ObserverServerIp;
+            string Key = Game.PlayerCredentials.ObserverEncryptionKey;
+            double GameID = Game.PlayerCredentials.GameId;
+            Client.LaunchSpectatorGame(IP, Key, (int)GameID, Client.Region.InternalName);
         }
     }
 }

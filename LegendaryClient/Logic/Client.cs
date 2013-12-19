@@ -250,11 +250,11 @@ namespace LegendaryClient.Logic
             string Presence = s[0].Status;
             if (Presence == null)
                 return;
-            Debug.WriteLine(Presence);
             if (AllPlayers.ContainsKey(bare.User))
             {
                 UpdatePlayers = true;
                 ChatPlayerItem Player = AllPlayers[bare.User];
+                Player.RawPresence = Presence; //For debugging
                 using (XmlReader reader = XmlReader.Create(new StringReader(Presence)))
                 {
                     while (reader.Read())
@@ -835,6 +835,8 @@ namespace LegendaryClient.Logic
         public string Champion { get; set; }
 
         public string Status { get; set; }
+
+        public string RawPresence { get; set; }
 
         public bool UsingLegendary { get; set; }
 

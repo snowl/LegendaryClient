@@ -137,6 +137,7 @@ namespace LegendaryClient.Windows.Profile
             {
                 LeagueItem item = (LeagueItem)LeaguesListView.SelectedItem;
                 PlayerLabel.Content = item.PlayerLabel.Content;
+                TopChampionsListView.Items.Clear();
                 var x = await Client.PVPNet.GetSummonerByName((string)item.PlayerLabel.Content);
                 Client.PVPNet.GetAggregatedStats(x.AcctId, "CLASSIC", "3", new AggregatedStats.Callback(GotStats));
             }
@@ -149,10 +150,9 @@ namespace LegendaryClient.Windows.Profile
                 SelectedAggregatedStats = stats;
             
                 ViewAggregatedStatsButton.IsEnabled = false;
-                TopChampionsListView.Items.Clear();
                 List<AggregatedChampion> ChampionStats = new List<AggregatedChampion>();
                 int i = 0;
-            
+                TopChampionsListView.Items.Clear();
                 if (SelectedAggregatedStats.LifetimeStatistics.Count() > 0)
                 {
                     foreach (AggregatedStat stat in SelectedAggregatedStats.LifetimeStatistics)

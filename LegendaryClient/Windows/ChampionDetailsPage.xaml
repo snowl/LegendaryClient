@@ -12,7 +12,7 @@
             <TabControl HorizontalAlignment="Stretch" Margin="0,0,0,0" VerticalAlignment="Stretch">
                 <TabItem Header="Overview">
                     <Grid>
-                        <Image x:Name="ChampionImage" HorizontalAlignment="Stretch" Margin="0,0,0,0" VerticalAlignment="Stretch" Stretch="UniformToFill" />
+                        <Image x:Name="ChampionImage" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Stretch="UniformToFill" />
                         <Grid VerticalAlignment="Top" HorizontalAlignment="Left" Margin="10,10,0,0" Height="120" Background="#B2000000">
 
                             <Image x:Name="ChampionProfileImage" HorizontalAlignment="Left" Height="64" Margin="10,10,0,0" VerticalAlignment="Top" Width="64"/>

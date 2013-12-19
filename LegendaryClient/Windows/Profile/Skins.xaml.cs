@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media.Imaging;
 
@@ -67,9 +68,21 @@ namespace LegendaryClient.Windows.Profile
                     if (!skin.StillObtainable)
                         skinImage.LimitedLabel.Visibility = System.Windows.Visibility.Visible;
                     skinImage.SkinName.Content = championSkin.displayName;
+                    skinImage.Tag = championSkin;
                     skinImage.Margin = new System.Windows.Thickness(5, 0, 5, 0);
                     SkinSelectListView.Items.Add(skinImage);
                 }
+            }
+        }
+
+        private void SkinSelectListView_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (SkinSelectListView.SelectedIndex != -1)
+            {
+                ProfileSkinImage selectedSkin = (ProfileSkinImage)SkinSelectListView.SelectedItem;
+                championSkins skin = (championSkins)selectedSkin.Tag;
+                Client.OverlayContainer.Content = new ChampionDetailsPage(skin.championId, skin.id).Content;
+                Client.OverlayContainer.Visibility = Visibility.Visible;
             }
         }
     }
