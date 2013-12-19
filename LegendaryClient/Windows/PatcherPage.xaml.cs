@@ -119,7 +119,9 @@ namespace LegendaryClient.Windows
                 }
 
                 RiotPatcher patcher = new RiotPatcher();
-                string DDragonDownloadURL = "http:" + patcher.GetDragon();
+                string DDragonDownloadURL = patcher.GetDragon();
+                if (!DDragonDownloadURL.StartsWith("http:"))
+                    DDragonDownloadURL = "http:" + DDragonDownloadURL;
                 LogTextBox("DataDragon Version: " + patcher.DDragonVersion);
                 string DDragonVersion = File.ReadAllText(Path.Combine(Client.ExecutingDirectory, "Assets", "VERSION_DDragon"));
                 LogTextBox("Current DataDragon Version: " + DDragonVersion);
