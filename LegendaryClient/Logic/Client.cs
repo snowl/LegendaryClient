@@ -158,6 +158,7 @@ namespace LegendaryClient.Logic
 
         internal static void ChatClient_OnMessage(object sender, jabber.protocol.client.Message msg)
         {
+            MainWin.FlashWindow();
             MainWin.Dispatcher.BeginInvoke(DispatcherPriority.Input, new ThreadStart(() =>
             {
                 if (OnMessage != null)
@@ -189,7 +190,6 @@ namespace LegendaryClient.Logic
             {
                 ChatPlayerItem chatItem = AllPlayers[msg.From.User];
                 chatItem.Messages.Add(chatItem.Username + "|" + msg.Body);
-                MainWin.FlashWindow();
             }
         }
 

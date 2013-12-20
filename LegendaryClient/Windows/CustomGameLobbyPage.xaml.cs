@@ -118,7 +118,8 @@ namespace LegendaryClient.Windows
                     if (subject == ChatSubjects.PRACTICE_GAME_INVITE_ACCEPT)
                     {
                         invitePlayer.StatusLabel.Content = "Accepted";
-                        Client.Message(msg.From.User, msg.Body, ChatSubjects.PRACTICE_GAME_INVITE_ACCEPT_ACK);
+                        if (IsOwner)
+                            Client.Message(msg.From.User, msg.Body, ChatSubjects.PRACTICE_GAME_INVITE_ACCEPT_ACK);
                     }
 
                     if (subject == ChatSubjects.GAME_INVITE_REJECT)

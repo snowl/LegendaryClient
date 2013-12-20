@@ -116,6 +116,13 @@ namespace LegendaryClient.Controls
                 Client.SwitchPage(new CustomGameLobbyPage());
                 this.Visibility = System.Windows.Visibility.Hidden;
             }
+            else if (Subject == ChatSubjects.GAME_INVITE)
+            {
+                Client.Message(MessageData.From.User, MessageData.Body, ChatSubjects.GAME_INVITE_ACCEPT);
+
+                Client.SwitchPage(new TeamQueuePage(MessageData));
+                this.Visibility = System.Windows.Visibility.Hidden;
+            }
         }
     }
 }
