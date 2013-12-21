@@ -158,7 +158,6 @@ namespace LegendaryClient.Logic
 
         internal static void ChatClient_OnMessage(object sender, jabber.protocol.client.Message msg)
         {
-            MainWin.FlashWindow();
             MainWin.Dispatcher.BeginInvoke(DispatcherPriority.Input, new ThreadStart(() =>
             {
                 if (OnMessage != null)
@@ -173,6 +172,7 @@ namespace LegendaryClient.Logic
                     if (subject == ChatSubjects.PRACTICE_GAME_INVITE ||
                         subject == ChatSubjects.GAME_INVITE)
                     {
+                        MainWin.FlashWindow();
                         NotificationPopup pop = new NotificationPopup(subject, msg);
                         pop.Height = 230;
                         pop.HorizontalAlignment = HorizontalAlignment.Right;
@@ -190,6 +190,7 @@ namespace LegendaryClient.Logic
             {
                 ChatPlayerItem chatItem = AllPlayers[msg.From.User];
                 chatItem.Messages.Add(chatItem.Username + "|" + msg.Body);
+                MainWin.FlashWindow();
             }
         }
 
@@ -513,6 +514,7 @@ namespace LegendaryClient.Logic
 
         internal static bool AutoAcceptQueue = false;
         internal static object LastPageContent;
+        internal static bool IsInGame = false;
 
         /// <summary>
         /// Fix for champ select. Do not use this!
@@ -573,6 +575,18 @@ namespace LegendaryClient.Logic
                 else if (message is StoreFulfillmentNotification)
                 {
                     PlayerChampions = await PVPNet.GetAvailableChampions();
+                }
+                else if (message is GameDTO)
+                {
+                    if (!IsInGame)
+                    {
+                        GameDTO Queue = message as GameDTO;
+                        MainWin.Dispatcher.BeginInvoke(DispatcherPriority.Input, new ThreadStart(() =>
+                        {
+                            Client.OverlayContainer.Content = new QueuePopOverlay(Queue).Content;
+                            Client.OverlayContainer.Visibility = Visibility.Visible;
+                        }));
+                    }
                 }
             }));
         }
@@ -689,6 +703,7 @@ namespace LegendaryClient.Logic
 
             FixChampSelect();
             FixLobby();
+            IsInGame = false;
 
             await PVPNet.QuitGame();
             StatusGrid.Visibility = System.Windows.Visibility.Hidden;

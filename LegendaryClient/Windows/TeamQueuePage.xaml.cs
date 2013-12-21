@@ -29,14 +29,15 @@ namespace LegendaryClient.Windows
     public partial class TeamQueuePage : Page
     {
         Message MessageData;
-        int InviteId = 0;
+        long InviteId = 0;
         private Room newRoom;
+        bool IsOwner = false;
 
         /// <summary>
         /// When invited to a team
         /// </summary>
         /// <param name="Message"></param>
-        public TeamQueuePage(Message Message)
+        public TeamQueuePage(Message Message, bool IsCreator)
         {
             InitializeComponent();
             MessageData = Message;
@@ -54,7 +55,7 @@ namespace LegendaryClient.Windows
                         {
                             case "inviteId":
                                 reader.Read();
-                                InviteId = Convert.ToInt32(reader.Value);
+                                InviteId = Convert.ToInt64(reader.Value);
                                 break;
                         }
 
@@ -71,6 +72,19 @@ namespace LegendaryClient.Windows
             newRoom.OnParticipantJoin += newRoom_OnParticipantJoin;
             newRoom.Join();
 
+            IsOwner = IsCreator;
+
+            if (IsCreator)
+            {
+                InviteButton.IsEnabled = true;
+                StartGameButton.IsEnabled = true;
+            }
+            else
+            {
+                InviteButton.IsEnabled = false;
+                StartGameButton.IsEnabled = false;
+            }
+
             Client.OnMessage += Client_OnMessage;
         }
 
@@ -81,6 +95,7 @@ namespace LegendaryClient.Windows
                 TextRange tr = new TextRange(ChatText.Document.ContentEnd, ChatText.Document.ContentEnd);
                 tr.Text = participant.Nick + " joined the room." + Environment.NewLine;
                 tr.ApplyPropertyValue(TextElement.ForegroundProperty, Brushes.Yellow);
+                TeamListView.Items.Add(participant.NickJID);
             }));
         }
 
@@ -88,7 +103,12 @@ namespace LegendaryClient.Windows
         {
             Dispatcher.BeginInvoke(DispatcherPriority.Input, new ThreadStart(() =>
             {
-                //Ignore the message that is always sent when joining
+                if (msg.InnerText.Contains("invitelist"))
+                {
+                    ParseCurrentInvitees(msg.InnerText.Replace("<![CDATA[", "").Replace("]]>", ""));
+                    return;
+                }
+
                 if (msg.Body != "This room is not anonymous")
                 {
                     TextRange tr = new TextRange(ChatText.Document.ContentEnd, ChatText.Document.ContentEnd);
@@ -121,19 +141,53 @@ namespace LegendaryClient.Windows
                         }
                     }
 
-                    if (subject == ChatSubjects.PRACTICE_GAME_INVITE_ACCEPT)
+                    if (subject == ChatSubjects.GAME_INVITE_ACCEPT)
                     {
-                        invitePlayer.StatusLabel.Content = "Accepted";
+                        if (invitePlayer != null)
+                            invitePlayer.StatusLabel.Content = "Accepted";
+                        if (IsOwner)
+                            Client.Message("sum222908", "<body><inviteId>8649134</inviteId><userName>Snowl</userName><profileIconId>576</profileIconId><gameType>NORMAL_GAME</gameType><groupId></groupId><seasonRewards>-1</seasonRewards><mapId>1</mapId><queueId>2</queueId><gameMode>classic_pvp</gameMode><gameDifficulty></gameDifficulty></body>", ChatSubjects.GAME_INVITE_ACCEPT_ACK);
                     }
-
-                    if (subject == ChatSubjects.GAME_INVITE_REJECT)
+                    else if (subject == ChatSubjects.GAME_INVITE_REJECT)
                     {
-                        invitePlayer.StatusLabel.Content = "Rejected";
+                        if (invitePlayer != null)
+                            invitePlayer.StatusLabel.Content = "Rejected";
                     }
-
-                    if (subject == ChatSubjects.GAME_INVITE_LIST_STATUS)
+                    else if (subject == ChatSubjects.GAME_INVITE_LIST_STATUS)
                     {
                         ParseCurrentInvitees(msg.Body);
+                    }
+                    else if (subject == ChatSubjects.GAME_INVITE_ALLOW_SUGGESTIONS)
+                    {
+                        InviteButton.IsEnabled = true;
+                    }
+                    else if (subject == ChatSubjects.GAME_INVITE_DISALLOW_SUGGESTIONS)
+                    {
+                        InviteButton.IsEnabled = false;
+                    }
+                    else if (subject == ChatSubjects.GAME_INVITE_OWNER_CANCEL)
+                    {
+                        MessageOverlay messageOver = new MessageOverlay();
+                        messageOver.MessageTitle.Content = "Party Cancelled";
+                        messageOver.MessageTextBox.Text = "This party has been cancelled.";
+                        newRoom.Leave("Party Cancelled");
+                        Client.OverlayContainer.Content = messageOver.Content;
+                        Client.OverlayContainer.Visibility = Visibility.Visible;
+                        Client.QuitCurrentGame();
+                    }
+                    else if (subject == ChatSubjects.GAME_INVITE_CANCEL)
+                    {
+                        MessageOverlay messageOver = new MessageOverlay();
+                        messageOver.MessageTitle.Content = "Kicked";
+                        messageOver.MessageTextBox.Text = "You have been kicked from the party.";
+                        newRoom.Leave("Kicked");
+                        Client.OverlayContainer.Content = messageOver.Content;
+                        Client.OverlayContainer.Visibility = Visibility.Visible;
+                        Client.QuitCurrentGame();
+                    }
+                    else if (subject == ChatSubjects.VERIFY_INVITEE)
+                    {
+                        Client.Message(MessageData.From.User, MessageData.Body, ChatSubjects.VERIFY_INVITEE_ACK);
                     }
                 }));
             }
@@ -160,6 +214,11 @@ namespace LegendaryClient.Windows
                     }
                 }
             }
+        }
+
+        private void StartGameButton_Click(object sender, RoutedEventArgs e)
+        {
+            Client.Message("sum222908", "<body><inviteId>8649134</inviteId><userName>Snooowl</userName><profileIconId>576</profileIconId><gameType>NORMAL_GAME</gameType><groupId></groupId><seasonRewards>-1</seasonRewards><mapId>1</mapId><queueId>2</queueId><gameMode>classic_pvp</gameMode><gameDifficulty></gameDifficulty></body>", ChatSubjects.VERIFY_INVITEE);
         }
 
     }

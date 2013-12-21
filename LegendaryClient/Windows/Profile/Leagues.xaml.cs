@@ -193,5 +193,11 @@ namespace LegendaryClient.Windows.Profile
                 }
             }));
         }
+
+        private void ViewAggregatedStatsButton_Click(object sender, System.Windows.RoutedEventArgs e)
+        {
+            Client.OverlayContainer.Content = new AggregatedStatsOverlay(SelectedAggregatedStats, false).Content;
+            Client.OverlayContainer.Visibility = System.Windows.Visibility.Visible;
+        }
     }
 }

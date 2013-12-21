@@ -27,6 +27,7 @@ namespace LegendaryClient.Windows
         public QueuePopOverlay(GameDTO InitialDTO)
         {
             InitializeComponent();
+            Client.IsInGame = true;
             Client.FocusClient();
             InitializePop(InitialDTO);
             TimeLeft = InitialDTO.JoinTimerDuration;
@@ -58,6 +59,7 @@ namespace LegendaryClient.Windows
                     {
                         Client.OverlayContainer.Visibility = Visibility.Hidden;
                         Client.PVPNet.OnMessageReceived -= PVPNet_OnMessageReceived;
+                        Client.IsInGame = false;
                         return;
                     }
                     else if (QueueDTO.GameState == "CHAMP_SELECT")

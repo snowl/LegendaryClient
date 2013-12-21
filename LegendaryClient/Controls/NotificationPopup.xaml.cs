@@ -120,7 +120,7 @@ namespace LegendaryClient.Controls
             {
                 Client.Message(MessageData.From.User, MessageData.Body, ChatSubjects.GAME_INVITE_ACCEPT);
 
-                Client.SwitchPage(new TeamQueuePage(MessageData));
+                Client.SwitchPage(new TeamQueuePage(MessageData, false));
                 this.Visibility = System.Windows.Visibility.Hidden;
             }
         }

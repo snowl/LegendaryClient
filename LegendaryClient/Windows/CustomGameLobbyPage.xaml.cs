@@ -33,7 +33,7 @@ namespace LegendaryClient.Windows
         public CustomGameLobbyPage()
         {
             InitializeComponent();
-
+            Client.IsInGame = true;
             GameName.Content = Client.GameName;
             Client.OnFixLobby += GameLobby_OnMessageReceived;
             Client.PVPNet.OnMessageReceived += GameLobby_OnMessageReceived;

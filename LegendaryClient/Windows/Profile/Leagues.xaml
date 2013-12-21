@@ -38,7 +38,7 @@
             </ListView.ItemsPanel>
         </ListView>
 
-        <Button x:Name="ViewAggregatedStatsButton" Content="View Player Stats" FontSize="25" FontWeight="ExtraLight" HorizontalAlignment="Right" Margin="0,0,10,10" VerticalAlignment="Bottom" Height="50" Width="280" />
+        <Button x:Name="ViewAggregatedStatsButton" Content="View Player Stats" FontSize="25" FontWeight="ExtraLight" HorizontalAlignment="Right" Margin="0,0,10,10" VerticalAlignment="Bottom" Height="50" Width="280" Click="ViewAggregatedStatsButton_Click" />
 
     </Grid>
 </Page>

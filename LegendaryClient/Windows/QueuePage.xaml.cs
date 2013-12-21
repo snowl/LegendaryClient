@@ -13,6 +13,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using System.Xml;
 
 namespace LegendaryClient.Windows
 {
@@ -24,28 +25,19 @@ namespace LegendaryClient.Windows
         public QueuePage()
         {
             InitializeComponent();
-            Client.OnMessage += Client_OnMessage;
         }
 
-        void Client_OnMessage(object sender, jabber.protocol.client.Message e)
-        {
-            if (e.Subject == null)
-                return;
-
-            ChatSubjects subject = (ChatSubjects)Enum.Parse(typeof(ChatSubjects), e.Subject, true);
-
-            if (subject == ChatSubjects.GAME_INVITE_ACCEPT)
-                Client.Message("sum222908", "<body><inviteId>8649138254</inviteId><userName>Snowl</userName><profileIconId>576</profileIconId><gameType>NORMAL_GAME</gameType><groupId></groupId><seasonRewards>-1</seasonRewards><mapId>1</mapId><queueId>2</queueId><gameMode>classic_pvp</gameMode><gameDifficulty></gameDifficulty></body>", ChatSubjects.GAME_INVITE_ACCEPT_ACK);
-            else
-            {
-                ;
-            }
-        
-        }
 
         private void testbutton_Click(object sender, RoutedEventArgs e)
         {
-            Client.Message("sum222908", "<body><inviteId>8649138254</inviteId><userName>Snowl</userName><profileIconId>576</profileIconId><gameType>NORMAL_GAME</gameType><groupId></groupId><seasonRewards>-1</seasonRewards><mapId>1</mapId><queueId>2</queueId><gameMode>classic_pvp</gameMode><gameDifficulty></gameDifficulty></body>", ChatSubjects.GAME_INVITE);
+            Client.Message("sum222908", "<body><inviteId>8649134</inviteId><userName>Snowl</userName><profileIconId>576</profileIconId><gameType>NORMAL_GAME</gameType><groupId></groupId><seasonRewards>-1</seasonRewards><mapId>1</mapId><queueId>2</queueId><gameMode>classic_pvp</gameMode><gameDifficulty></gameDifficulty></body>", ChatSubjects.GAME_INVITE);
+
+            jabber.protocol.client.Message x = new jabber.protocol.client.Message(new XmlDocument());
+            x.Body = "<body><inviteId>8649134</inviteId><userName>Snowl</userName><profileIconId>576</profileIconId><gameType>NORMAL_GAME</gameType><groupId></groupId><seasonRewards>-1</seasonRewards><mapId>1</mapId><queueId>2</queueId><gameMode>classic_pvp</gameMode><gameDifficulty></gameDifficulty></body>";
+            x.From = new jabber.JID("sum222900");
+
+            Client.SwitchPage(new TeamQueuePage(x, true));
+            this.Visibility = System.Windows.Visibility.Hidden;
         }
     }
 }

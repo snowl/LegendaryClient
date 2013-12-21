@@ -98,6 +98,7 @@ namespace LegendaryClient.Windows
         {
             //Force client to popup once in champion select
             Client.FocusClient();
+            Client.IsInGame = true;
             //Get champions and sort alphabetically
             ChampList = new List<ChampionDTO>(Client.PlayerChampions);
             ChampList.Sort((x, y) => champions.GetChampion(x.ChampionId).displayName.CompareTo(champions.GetChampion(y.ChampionId).displayName));

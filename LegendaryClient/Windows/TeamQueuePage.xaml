@@ -9,13 +9,16 @@
 
     <Grid>
         <Label Content="Your Team" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" FontWeight="SemiBold" FontSize="22" />
-        <ListView x:Name="TeamListView" HorizontalAlignment="Stretch" ScrollViewer.HorizontalScrollBarVisibility="Disabled" Margin="10,50,420,200" VerticalAlignment="Stretch" Foreground="White" Background="#66505050" BorderBrush="{x:Null}">
+        <ListView x:Name="TeamListView" HorizontalAlignment="Stretch" ScrollViewer.HorizontalScrollBarVisibility="Disabled" Margin="10,50,420,230" VerticalAlignment="Stretch" Foreground="White" Background="#66505050" BorderBrush="{x:Null}">
             <ListView.ItemsPanel>
                 <ItemsPanelTemplate>
                     <WrapPanel />
                 </ItemsPanelTemplate>
             </ListView.ItemsPanel>
         </ListView>
+
+        <Button x:Name="CancelGameButton" Content="Cancel" HorizontalAlignment="Left" Margin="10,0,0,200" VerticalAlignment="Bottom" Width="200"/>
+        <Button x:Name="StartGameButton" Content="Start Game" HorizontalAlignment="Left" Margin="560,0,0,200" VerticalAlignment="Bottom" Width="300" Click="StartGameButton_Click"/>
 
         <ListView x:Name="InviteListView" HorizontalAlignment="Right" ScrollViewer.HorizontalScrollBarVisibility="Disabled" Height="170" Margin="0,0,10,230" VerticalAlignment="Bottom" Width="400" Foreground="White" Background="#66505050" BorderBrush="{x:Null}">
             <ListView.ItemsPanel>
