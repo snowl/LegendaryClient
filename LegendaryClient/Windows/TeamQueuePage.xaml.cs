@@ -20,6 +20,7 @@ using LegendaryClient.Controls;
 using System.Xml;
 using System.IO;
 using jabber.connection;
+using PVPNetConnect.RiotObjects.Platform.Matchmaking;
 
 namespace LegendaryClient.Windows
 {
