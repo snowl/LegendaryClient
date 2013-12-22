@@ -179,6 +179,14 @@ namespace LegendaryClient.Logic
                         pop.VerticalAlignment = VerticalAlignment.Bottom;
                         NotificationGrid.Children.Add(pop);
                     }
+                    else if (subject == ChatSubjects.GAME_MSG_OUT_OF_SYNC)
+                    {
+                        MessageOverlay messageOver = new MessageOverlay();
+                        messageOver.MessageTitle.Content = "Game no longer exists";
+                        messageOver.MessageTextBox.Text = "The game you are looking for no longer exists.";
+                        Client.OverlayContainer.Content = messageOver.Content;
+                        Client.OverlayContainer.Visibility = Visibility.Visible;
+                    }
                 }
             }));
 
@@ -555,10 +563,14 @@ namespace LegendaryClient.Logic
                             messageOver.MessageTitle.Content = "Banned from custom game";
                             messageOver.MessageTextBox.Text = "You have been banned from this custom game!";
                             break;
-
+                        case "PLAYER_QUIT":
+                            string[] Name = await PVPNet.GetSummonerNames(new double[1] { Convert.ToDouble((string)notification.MessageArgument) });
+                            messageOver.MessageTitle.Content = "Player has left the queue";
+                            messageOver.MessageTextBox.Text = Name[0] + " has left the queue";
+                            break;
                         default:
                             messageOver.MessageTextBox.Text = notification.MessageCode + Environment.NewLine;
-                            messageOver.MessageTextBox.Text = Convert.ToString(notification.MessageArgument);
+                            messageOver.MessageTextBox.Text += Convert.ToString(notification.MessageArgument);
                             break;
                     }
                     OverlayContainer.Content = messageOver.Content;

@@ -21,6 +21,7 @@ using System.Xml;
 using System.IO;
 using jabber.connection;
 using PVPNetConnect.RiotObjects.Platform.Matchmaking;
+using System.Collections;
 
 namespace LegendaryClient.Windows
 {
@@ -64,6 +65,8 @@ namespace LegendaryClient.Windows
                     }
                 }
             }
+
+            Client.PVPNet.AcceptInviteForMatchmakingGame(InviteId.ToString());
 
             string ObfuscatedName = Client.GetObfuscatedChatroomName(InviteId.ToString(), ChatPrefixes.Arranging_Game);
             string JID = Client.GetChatroomJID(ObfuscatedName, "0", true);
@@ -174,7 +177,6 @@ namespace LegendaryClient.Windows
                         newRoom.Leave("Party Cancelled");
                         Client.OverlayContainer.Content = messageOver.Content;
                         Client.OverlayContainer.Visibility = Visibility.Visible;
-                        Client.QuitCurrentGame();
                     }
                     else if (subject == ChatSubjects.GAME_INVITE_CANCEL)
                     {
@@ -184,7 +186,6 @@ namespace LegendaryClient.Windows
                         newRoom.Leave("Kicked");
                         Client.OverlayContainer.Content = messageOver.Content;
                         Client.OverlayContainer.Visibility = Visibility.Visible;
-                        Client.QuitCurrentGame();
                     }
                     else if (subject == ChatSubjects.VERIFY_INVITEE)
                     {
@@ -217,9 +218,31 @@ namespace LegendaryClient.Windows
             }
         }
 
-        private void StartGameButton_Click(object sender, RoutedEventArgs e)
+        private async void StartGameButton_Click(object sender, RoutedEventArgs e)
         {
+            MatchMakerParams pareams = new MatchMakerParams();
+            pareams.InvitationId = 8649134;
+            pareams.QueueIds = new int[1] { 2 };
+            pareams.Team = new List<int>();
+            pareams.Team.Add(222908);
+            pareams.Team.Add(499467);
+            SearchingForMatchNotification par = await Client.PVPNet.AttachTeamToQueue(pareams);
+
             Client.Message("sum222908", "<body><inviteId>8649134</inviteId><userName>Snooowl</userName><profileIconId>576</profileIconId><gameType>NORMAL_GAME</gameType><groupId></groupId><seasonRewards>-1</seasonRewards><mapId>1</mapId><queueId>2</queueId><gameMode>classic_pvp</gameMode><gameDifficulty></gameDifficulty></body>", ChatSubjects.VERIFY_INVITEE);
+        }
+
+
+
+        private void ChatButton_Click(object sender, RoutedEventArgs e)
+        {
+            TextRange tr = new TextRange(ChatText.Document.ContentEnd, ChatText.Document.ContentEnd);
+            tr.Text = Client.LoginPacket.AllSummonerData.Summoner.Name + ": ";
+            tr.ApplyPropertyValue(TextElement.ForegroundProperty, Brushes.Yellow);
+            tr = new TextRange(ChatText.Document.ContentEnd, ChatText.Document.ContentEnd);
+            tr.Text = ChatTextBox.Text + Environment.NewLine;
+            tr.ApplyPropertyValue(TextElement.ForegroundProperty, Brushes.White);
+            newRoom.PublicMessage(ChatTextBox.Text);
+            ChatTextBox.Text = "";
         }
 
     }

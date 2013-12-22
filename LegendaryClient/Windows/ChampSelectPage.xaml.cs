@@ -692,7 +692,7 @@ namespace LegendaryClient.Windows
                 control.TradeButton.Visibility = System.Windows.Visibility.Visible;
             }
             //If this player is duo/trio/quadra queued with players
-            if (player.TeamParticipantId != null)
+            if (player.TeamParticipantId != null && (int)player.TeamParticipantId != 0)
             {
                 //Byte hack to get individual hex colors
                 byte[] values = BitConverter.GetBytes((double)player.TeamParticipantId);
