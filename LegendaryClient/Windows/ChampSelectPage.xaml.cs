@@ -338,6 +338,10 @@ namespace LegendaryClient.Windows
                         DodgeButton.IsEnabled = false; //Cannot dodge past this point!
                         counter = 1;
                     }
+                    else if (ChampDTO.GameState == "TERMINATED")
+                    {
+                        //TODO
+                    }
 
                     #region Display players
 
@@ -693,7 +697,7 @@ namespace LegendaryClient.Windows
                 control.TradeButton.Visibility = System.Windows.Visibility.Visible;
             }
             //If this player is duo/trio/quadra queued with players
-            if (player.TeamParticipantId != null && (int)player.TeamParticipantId != 0)
+            if (player.TeamParticipantId != null && (double)player.TeamParticipantId != 0)
             {
                 //Byte hack to get individual hex colors
                 byte[] values = BitConverter.GetBytes((double)player.TeamParticipantId);

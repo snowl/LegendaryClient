@@ -39,7 +39,7 @@ Still-in Progress Screenshots
 ![Chat](http://puu.sh/5FVHS.png)
 ![Queue](http://i.imgur.com/ZpZiyJ5.png)
 ![QueuePop](http://i.imgur.com/KAt5KXR.png)
-![ChampSelect](http://puu.sh/5Q7wZ.jpg)
+![ChampSelect](http://puu.sh/5VVMd.jpg)
 ![ChampSelect2](http://puu.sh/5Q7xO.jpg)
 ![CustomGameCreate](http://puu.sh/5Q7yH.jpg)
 ![SearchCustomGames](http://puu.sh/5Q7zE.png)
