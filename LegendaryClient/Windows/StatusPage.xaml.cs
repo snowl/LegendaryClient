@@ -156,5 +156,12 @@ namespace LegendaryClient.Windows
         {
             Client.QuitCurrentGame();
         }
+
+        private void BackButton_Click(object sender, RoutedEventArgs e)
+        {
+            FakePage fakePage = new FakePage();
+            fakePage.Content = Client.LastPageContent;
+            Client.SwitchPage(fakePage);
+        }
     }
 }

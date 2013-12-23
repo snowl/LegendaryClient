@@ -522,6 +522,7 @@ namespace LegendaryClient.Logic
 
         internal static bool AutoAcceptQueue = false;
         internal static object LastPageContent;
+        internal static object LobbyContent;
         internal static bool IsInGame = false;
 
         /// <summary>
@@ -720,6 +721,8 @@ namespace LegendaryClient.Logic
             await PVPNet.QuitGame();
             StatusGrid.Visibility = System.Windows.Visibility.Hidden;
             PlayButton.Visibility = System.Windows.Visibility.Visible;
+            LobbyContent = null;
+            LastPageContent = null;
             GameStatus = "outOfGame";
             SetChatHover();
             SwitchPage(new MainPage());

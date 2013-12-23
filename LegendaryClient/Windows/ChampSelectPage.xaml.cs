@@ -89,6 +89,7 @@ namespace LegendaryClient.Windows
         {
             InitializeComponent();
             StartChampSelect();
+            Client.LastPageContent = this.Content;
         }
 
         /// <summary>
@@ -252,7 +253,7 @@ namespace LegendaryClient.Windows
                         }
                         Client.FixChampSelect();
                         FakePage fakePage = new FakePage();
-                        fakePage.Content = Client.LastPageContent;
+                        fakePage.Content = Client.LobbyContent;
                         Client.SwitchPage(fakePage);
                         return;
                     }
