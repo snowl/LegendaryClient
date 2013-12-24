@@ -591,9 +591,9 @@ namespace LegendaryClient.Logic
                 }
                 else if (message is GameDTO)
                 {
-                    if (!IsInGame)
+                    GameDTO Queue = message as GameDTO;
+                    if (!IsInGame && Queue.GameState != "TERMINATED")
                     {
-                        GameDTO Queue = message as GameDTO;
                         MainWin.Dispatcher.BeginInvoke(DispatcherPriority.Input, new ThreadStart(() =>
                         {
                             Client.OverlayContainer.Content = new QueuePopOverlay(Queue).Content;

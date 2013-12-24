@@ -691,6 +691,16 @@ namespace LegendaryClient.Windows
                 string uriSource = "/LegendaryClient;component/Locked.png";
                 control.LockedInIcon.Source = Client.GetImage(uriSource);
             }
+            //Make obvious whos pick turn it is
+            if (player.PickTurn != LatestDto.PickTurn && (LatestDto.GameState == "CHAMP_SELECT" || LatestDto.GameState == "PRE_CHAMP_SELECT"))
+            {
+                control.Opacity = 0.5;
+            }
+            else
+            {
+                //Full opacity when not picking or banning
+                control.Opacity = 1;
+            }
             //If trading with this player is possible
             if (CanTradeWith != null && (CanTradeWith.PotentialTraders.Contains(player.SummonerInternalName) || DevMode))
             {

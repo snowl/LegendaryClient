@@ -159,9 +159,17 @@ namespace LegendaryClient.Windows
 
         private void BackButton_Click(object sender, RoutedEventArgs e)
         {
-            FakePage fakePage = new FakePage();
-            fakePage.Content = Client.LastPageContent;
-            Client.SwitchPage(fakePage);
+            if (Client.LastPageContent != null)
+            {
+                Grid testGrid = (Grid)Client.LastPageContent;
+                //Already on this page
+                if (testGrid.Parent != null)
+                    return;
+                FakePage fakePage = new FakePage();
+                fakePage.Content = Client.LastPageContent;
+                Client.SwitchPage(fakePage);
+            }
         }
+
     }
 }
