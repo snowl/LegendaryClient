@@ -97,6 +97,7 @@ namespace LegendaryClient.Windows.Profile
                         break;
                 }
 
+                //TODO: Remove hardcoded masteries (mastery.json has null values for this)
                 //Add spaces
                 if (Mastery.id == 4152 ||
                     Mastery.id == 4222 ||

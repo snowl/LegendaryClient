@@ -572,10 +572,9 @@ namespace LegendaryClient.Windows
             foreach (Spell ability in Champion.Spells)
             {
                 ChampionAbility championAbility = new ChampionAbility();
+                championAbility.DataContext = ability;
                 uriSource = Path.Combine(Client.ExecutingDirectory, "Assets", "spell", ability.Image);
                 championAbility.AbilityImage.Source = Client.GetImage(uriSource);
-                championAbility.AbilityName.Content = ability.Name;
-                championAbility.AbilityDescription.Text = ability.Tooltip;
                 championAbility.Width = 375;
                 championAbility.Height = 75;
                 AbilityListView.Items.Add(championAbility);

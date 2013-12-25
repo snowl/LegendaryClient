@@ -76,10 +76,4 @@ namespace LegendaryClient.Windows
             }
         }
     }
-
-    public class Buddy
-    {
-        public string name;
-        public string summonerId;
-    }
 }

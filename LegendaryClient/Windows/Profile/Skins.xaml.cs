@@ -48,14 +48,10 @@ namespace LegendaryClient.Windows.Profile
             List<ChampionSkinDTO> skinList = new List<ChampionSkinDTO>();
 
             foreach (ChampionDTO champion in tempList)
-            {
                 skinList.AddRange(champion.ChampionSkins);
-            }
 
             if (!String.IsNullOrEmpty(SearchTextBox.Text))
-            {
                 skinList = skinList.Where(x => championSkins.GetSkin(x.SkinId).displayName.ToLower().Contains(SearchTextBox.Text.ToLower())).ToList();
-            }
 
             foreach (ChampionSkinDTO skin in skinList)
             {
@@ -63,11 +59,11 @@ namespace LegendaryClient.Windows.Profile
                 {
                     ProfileSkinImage skinImage = new ProfileSkinImage();
                     championSkins championSkin = championSkins.GetSkin(skin.SkinId);
+                    skinImage.DataContext = championSkin;
                     var uriSource = Path.Combine(Client.ExecutingDirectory, "Assets", "champions", championSkins.GetSkin(skin.SkinId).portraitPath);
                     skinImage.SkinImage.Source = Client.GetImage(uriSource);
                     if (!skin.StillObtainable)
                         skinImage.LimitedLabel.Visibility = System.Windows.Visibility.Visible;
-                    skinImage.SkinName.Content = championSkin.displayName;
                     skinImage.Tag = championSkin;
                     skinImage.Margin = new System.Windows.Thickness(5, 0, 5, 0);
                     SkinSelectListView.Items.Add(skinImage);

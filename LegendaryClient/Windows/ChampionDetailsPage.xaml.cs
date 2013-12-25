@@ -72,8 +72,7 @@ namespace LegendaryClient.Windows
             foreach (Spell Sp in Champ.Spells)
             {
                 ChampionDetailAbility detailAbility = new ChampionDetailAbility();
-                detailAbility.AbilityDescription.Text = Sp.Tooltip;
-                detailAbility.AbilityName.Content = Sp.Name;
+                detailAbility.DataContext = Sp;
                 var uriSource = Path.Combine(Client.ExecutingDirectory, "Assets", "spell", Sp.Image);
                 detailAbility.AbilityImage.Source = Client.GetImage(uriSource);
                 AbilityListView.Items.Add(detailAbility);

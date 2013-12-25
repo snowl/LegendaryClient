@@ -93,14 +93,14 @@ namespace LegendaryClient.Windows.Profile
                 {
                     ProfileChampionImage championImage = new ProfileChampionImage();
                     champions champion = champions.GetChampion(champ.ChampionId);
-                    championImage.ChampImage.Source = champion.icon;
+                    championImage.DataContext = champion;
+
                     if (champ.FreeToPlay)
                         championImage.FreeToPlayLabel.Visibility = System.Windows.Visibility.Visible;
-                    championImage.ChampName.Content = champion.displayName;
+
                     if (!champ.Owned && !champ.FreeToPlay)
-                    {
                         championImage.ChampImage.Opacity = 0.5;
-                    }
+
                     championImage.Tag = champ.ChampionId;
                     ChampionSelectListView.Items.Add(championImage);
                 }

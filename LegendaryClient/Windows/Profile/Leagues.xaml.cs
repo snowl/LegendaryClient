@@ -35,9 +35,7 @@ namespace LegendaryClient.Windows.Profile
             foreach (LeagueListDTO leagues in MyLeagues.SummonerLeagues)
             {
                 if (leagues.Queue == "RANKED_SOLO_5x5")
-                {
                     SelectedRank = leagues.RequestorsRank;
-                }
             }
             Queue = "RANKED_SOLO_5x5";
             RenderLeague();
@@ -75,28 +73,15 @@ namespace LegendaryClient.Windows.Profile
                     {
                         i++;
                         LeagueItem item = new LeagueItem();
+                        item.DataContext = player;
+
                         item.PlayerRankLabel.Content = i;
                         if (i - player.PreviousDayLeaguePosition != 0)
-                        {
                             item.RankChangeLabel.Content = i - player.PreviousDayLeaguePosition;
-                        }
-
-                        item.PlayerLabel.Content = player.PlayerOrTeamName;
-                        if (player.FreshBlood)
-                            item.RecruitLabel.Visibility = System.Windows.Visibility.Visible;
-                        if (player.Veteran)
-                            item.VeteranLabel.Visibility = System.Windows.Visibility.Visible;
-                        if (player.HotStreak)
-                            item.HotStreakLabel.Visibility = System.Windows.Visibility.Visible;
-
-                        item.WinsLabel.Content = player.Wins;
-                        item.LPLabel.Content = player.LeaguePoints;
 
                         TypedObject miniSeries = player.MiniSeries as TypedObject;
                         if (miniSeries != null)
-                        {
                             item.LPLabel.Content = ((string)miniSeries["progress"]).Replace('N', '-');
-                        }
 
                         LeaguesListView.Items.Add(item);
                     }
@@ -176,6 +161,7 @@ namespace LegendaryClient.Windows.Profile
             
                     foreach (AggregatedChampion info in ChampionStats)
                     {
+                        //Show the top 6 champions
                         if (i++ > 6)
                             break;
                         ViewAggregatedStatsButton.IsEnabled = true;

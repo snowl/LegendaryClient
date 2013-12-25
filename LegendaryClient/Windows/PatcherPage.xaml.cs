@@ -18,6 +18,8 @@ namespace LegendaryClient.Windows
     /// </summary>
     public partial class PatcherPage : Page
     {
+        Thread bgThread;
+
         public PatcherPage()
         {
             InitializeComponent();
@@ -26,12 +28,12 @@ namespace LegendaryClient.Windows
 
         private void SkipPatchButton_Click(object sender, RoutedEventArgs e)
         {
-            FinishPatching();
+            FinishPatching(true);
         }
 
         private void StartPatcher()
         {
-            Thread bgThread = new Thread(() =>
+            bgThread = new Thread(() =>
             {
                 LogTextBox("Starting Patcher");
 
@@ -303,8 +305,10 @@ namespace LegendaryClient.Windows
             bgThread.Start();
         }
 
-        private void FinishPatching()
+        private void FinishPatching(bool Force = false)
         {
+            if (Force)
+                bgThread.Abort();
             Dispatcher.BeginInvoke(DispatcherPriority.Input, new ThreadStart(() =>
             {
                 Client.SwitchPage(new LoginPage());

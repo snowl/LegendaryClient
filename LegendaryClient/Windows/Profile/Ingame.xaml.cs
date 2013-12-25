@@ -132,13 +132,9 @@ namespace LegendaryClient.Windows.Profile
                 champImage.Width = 58;
                 champImage.Source = champions.GetChampion(x.ChampionId).icon;
                 if (x.TeamId == 100)
-                {
                     BlueBanListView.Items.Add(champImage);
-                }
                 else
-                {
                     PurpleBanListView.Items.Add(champImage);
-                }
             }
 
             try
@@ -146,9 +142,7 @@ namespace LegendaryClient.Windows.Profile
                 string mmrJSON = "";
                 string url = Client.Region.SpectatorLink + "consumer/getGameMetaData/" + Client.Region.InternalName + "/" + CurrentGame.Game.Id + "/token";
                 using (WebClient client = new WebClient())
-                {
                     mmrJSON = client.DownloadString(url);
-                }
                 JavaScriptSerializer serializer = new JavaScriptSerializer();
                 Dictionary<string, object> deserializedJSON = serializer.Deserialize<Dictionary<string, object>>(mmrJSON);
                 MMRLabel.Content = "≈" + deserializedJSON["interestScore"];
