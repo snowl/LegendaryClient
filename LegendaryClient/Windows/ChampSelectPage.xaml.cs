@@ -2,6 +2,7 @@
 using LegendaryClient.Controls;
 using LegendaryClient.Logic;
 using LegendaryClient.Logic.PlayerSpell;
+using LegendaryClient.Logic.Riot;
 using LegendaryClient.Logic.Riot.Platform;
 using LegendaryClient.Logic.SQLite;
 using System;
@@ -133,9 +134,9 @@ namespace LegendaryClient.Windows
             QuickLoad = true;
 
             //Signal to the server we are in champion select
-            //await Client.PVPNet.SetClientReceivedGameMessage(Client.GameID, "CHAMP_SELECT_CLIENT");
+            await RiotCalls.SetClientReceivedGameMessage(Client.GameID, "CHAMP_SELECT_CLIENT");
             //Retrieve the latest GameDTO
-            /*GameDTO latestDTO = await Client.PVPNet.GetLatestGameTimerState(Client.GameID, Client.ChampSelectDTO.GameState, Client.ChampSelectDTO.PickTurn);
+            GameDTO latestDTO = await RiotCalls.GetLatestGameTimerState(Client.GameID, Client.ChampSelectDTO.GameState, Client.ChampSelectDTO.PickTurn);
             //Find the game config for timers
             configType = Client.LoginPacket.GameTypeConfigs.Find(x => x.Id == latestDTO.GameTypeConfigId);
             if (configType == null) //Invalid config... abort!
@@ -157,7 +158,7 @@ namespace LegendaryClient.Windows
 
             LatestDto = latestDTO;
             //Get the champions for the other team to ban & sort alpabetically
-            ChampionBanInfoDTO[] ChampsForBan = await Client.PVPNet.GetChampionsForBan();
+            ChampionBanInfoDTO[] ChampsForBan = await RiotCalls.GetChampionsForBan();
             ChampionsForBan = new List<ChampionBanInfoDTO>(ChampsForBan);
             ChampionsForBan.Sort((x, y) => champions.GetChampion(x.ChampionId).displayName.CompareTo(champions.GetChampion(y.ChampionId).displayName));
 
@@ -173,9 +174,9 @@ namespace LegendaryClient.Windows
             RenderChamps(false);
 
             //Start recieving champ select
-            ChampSelect_OnMessageReceived(this, latestDTO);*/
+            ChampSelect_OnMessageReceived(this, latestDTO);
             //Client.OnFixChampSelect += ChampSelect_OnMessageReceived;
-            //Client.PVPNet.OnMessageReceived += ChampSelect_OnMessageReceived;
+            //Client.RtmpConnection.MessageReceived += ChampSelect_OnMessageReceived;
         }
 
         private void CountdownTimer_Tick(object sender, EventArgs e)
@@ -728,7 +729,7 @@ namespace LegendaryClient.Windows
         private async void TradeButton_Click(object sender, RoutedEventArgs e)
         {
             KeyValuePair<PlayerChampionSelectionDTO, PlayerParticipant> p = (KeyValuePair<PlayerChampionSelectionDTO, PlayerParticipant>)((Button)sender).Tag;
-            //await Client.PVPNet.AttemptTrade(p.Value.SummonerInternalName, p.Key.ChampionId);
+            await RiotCalls.AttemptTrade(p.Value.SummonerInternalName, p.Key.ChampionId);
 
             PlayerTradeControl.Visibility = System.Windows.Visibility.Visible;
             champions MyChampion = champions.GetChampion((int)MyChampId);
@@ -751,7 +752,7 @@ namespace LegendaryClient.Windows
                 {
                     if (item.Tag != null)
                     {
-                        //await Client.PVPNet.SelectChampion((int)item.Tag);
+                        await RiotCalls.SelectChampion((int)item.Tag);
 
                         //TODO: Fix stupid animation glitch on left hand side
                         DoubleAnimation fadingAnimation = new DoubleAnimation();
@@ -777,7 +778,7 @@ namespace LegendaryClient.Windows
                 {
                     if (item.Tag != null)
                     {
-                        //await Client.PVPNet.BanChampion((int)item.Tag);
+                        await RiotCalls.BanChampion((int)item.Tag);
                     }
                 }
             }
@@ -795,7 +796,7 @@ namespace LegendaryClient.Windows
                         string[] splitItem = ((string)item.Tag).Split(':');
                         int championId = Convert.ToInt32(splitItem[1]);
                         champions Champion = champions.GetChampion(championId);
-                        //await Client.PVPNet.SelectChampionSkin(championId, 0);
+                        await RiotCalls.SelectChampionSkin(championId, 0);
                         TextRange tr = new TextRange(ChatText.Document.ContentEnd, ChatText.Document.ContentEnd);
                         tr.Text = "Selected Default " + Champion.name + " as skin" + Environment.NewLine;
                         tr.ApplyPropertyValue(TextElement.ForegroundProperty, Brushes.White);
@@ -803,7 +804,7 @@ namespace LegendaryClient.Windows
                     else
                     {
                         championSkins skin = championSkins.GetSkin((int)item.Tag);
-                        //await Client.PVPNet.SelectChampionSkin(skin.championId, skin.id);
+                        await RiotCalls.SelectChampionSkin(skin.championId, skin.id);
                         TextRange tr = new TextRange(ChatText.Document.ContentEnd, ChatText.Document.ContentEnd);
                         tr.Text = "Selected " + skin.displayName + " as skin" + Environment.NewLine;
                         tr.ApplyPropertyValue(TextElement.ForegroundProperty, Brushes.White);
@@ -823,7 +824,7 @@ namespace LegendaryClient.Windows
             //TODO: Aram Reroll
             if (ChampionSelectListView.SelectedItems.Count > 0)
             {
-                //await Client.PVPNet.ChampionSelectCompleted();
+                await RiotCalls.ChampionSelectCompleted();
                 HasLockedIn = true;
             }
         }
@@ -882,7 +883,7 @@ namespace LegendaryClient.Windows
             }
             if (HasChanged)
             {
-                //await Client.PVPNet.SaveMasteryBook(bookDTO);
+                await RiotCalls.SaveMasteryBook(bookDTO);
             }
         }
 
@@ -914,7 +915,7 @@ namespace LegendaryClient.Windows
             }
             if (HasChanged)
             {
-                //await Client.PVPNet.SelectDefaultSpellBookPage(SelectedRunePage);
+                await RiotCalls.SelectDefaultSpellBookPage(SelectedRunePage);
             }
         }
 

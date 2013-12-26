@@ -1,4 +1,5 @@
 ﻿using LegendaryClient.Logic;
+using LegendaryClient.Logic.Riot;
 using LegendaryClient.Logic.Riot.Platform;
 using LegendaryClient.Windows.Profile;
 using System;
@@ -45,7 +46,7 @@ namespace LegendaryClient.Windows
 
         public async void GetSummonerProfile(string s)
         {
-            /*PublicSummoner Summoner = await Client.PVPNet.GetSummonerByName(String.IsNullOrWhiteSpace(s) ? Client.LoginPacket.AllSummonerData.Summoner.Name : s);
+            PublicSummoner Summoner = await RiotCalls.GetSummonerByName(String.IsNullOrWhiteSpace(s) ? Client.LoginPacket.AllSummonerData.Summoner.Name : s);
             if (String.IsNullOrWhiteSpace(Summoner.Name))
             {
                 MessageOverlay overlay = new MessageOverlay();
@@ -64,14 +65,15 @@ namespace LegendaryClient.Windows
             }
             else
             {
-                //Client.PVPNet.GetAllLeaguesForPlayer(Summoner.SummonerId, new SummonerLeaguesDTO.Callback(GotLeaguesForPlayer));
+                SummonerLeaguesDTO dto = await RiotCalls.GetAllLeaguesForPlayer(Summoner.SummonerId);
+                GotLeaguesForPlayer(dto);
             }
 
             int ProfileIconID = Summoner.ProfileIconId;
             var uriSource = Path.Combine(Client.ExecutingDirectory, "Assets", "profileicon", ProfileIconID + ".png");
             ProfileImage.Source = Client.GetImage(uriSource);
 
-            PlatformGameLifecycleDTO n = await Client.PVPNet.RetrieveInProgressSpectatorGameInfo(s);
+            PlatformGameLifecycleDTO n = await RiotCalls.RetrieveInProgressSpectatorGameInfo(s);
             if (n.GameName != null)
             {
                 InGameHeader.Visibility = Visibility.Visible;
@@ -100,7 +102,7 @@ namespace LegendaryClient.Windows
             history.Update(Summoner.AcctId);
 
             Overview overview = OverviewContainer.Content as Overview;
-            overview.Update(Summoner.SummonerId, Summoner.AcctId);*/
+            overview.Update(Summoner.SummonerId, Summoner.AcctId);
         }
 
         private void GotLeaguesForPlayer(SummonerLeaguesDTO result)

@@ -1,12 +1,14 @@
 ﻿using System;
 using RtmpSharp.IO;
 using System.Collections.Generic;
+using RtmpSharp.IO.AMF3;
+using System.Text;
 
 namespace LegendaryClient.Logic.Riot.Platform
 {
     [Serializable]
     [SerializedName("com.riotgames.platform.systemstate.ClientSystemStatesNotification")]
-    public class ClientSystemStatesNotification
+    public class ClientSystemStatesNotification : IExternalizable
     {
         [SerializedName("championTradeThroughLCDS")]
         public Boolean ChampionTradeThroughLCDS { get; set; }
@@ -133,5 +135,20 @@ namespace LegendaryClient.Logic.Riot.Platform
 
         [SerializedName("leaguesDecayMessagingEnabled")]
         public Boolean LeaguesDecayMessagingEnabled { get; set; }
+
+        public string Json { get; set; }
+
+        public void ReadExternal(IDataInput input)
+        {
+            Json = input.ReadUtf((int)input.ReadUInt32());
+        }
+
+        public void WriteExternal(IDataOutput output)
+        {
+            var bytes = Encoding.UTF8.GetBytes(Json);
+
+            output.WriteInt32(bytes.Length);
+            output.WriteBytes(bytes);
+        }
     }
 }

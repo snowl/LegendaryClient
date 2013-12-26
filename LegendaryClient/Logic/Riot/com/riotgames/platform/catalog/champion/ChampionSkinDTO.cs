@@ -32,9 +32,9 @@ namespace LegendaryClient.Logic.Riot.Platform
         public Int32 WinCountRemaining { get; set; }
 
         [SerializedName("purchaseDate")]
-        public Int32 PurchaseDate { get; set; }
+        public Double PurchaseDate { get; set; }
 
         [SerializedName("endDate")]
-        public Int32 EndDate { get; set; }
+        public Double EndDate { get; set; }
     }
 }

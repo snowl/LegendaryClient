@@ -123,8 +123,7 @@ namespace LegendaryClient.Windows
 
             var context = RiotCalls.RegisterObjects();
             Client.RtmpConnection = new RtmpClient(new Uri("rtmps://" + SelectedRegion.Server + ":2099"), context, ObjectEncoding.Amf3);
-            Client.RtmpConnection.CallbackException += client_CallbackException;
-            Client.RtmpConnection.MessageReceived += client_MessageReceived;
+            Client.RtmpConnection.MessageReceived += Client.OnMessageReceived;
             await Client.RtmpConnection.ConnectAsync();
 
             AuthenticationCredentials newCredentials = new AuthenticationCredentials();
@@ -137,27 +136,17 @@ namespace LegendaryClient.Windows
             newCredentials.AuthToken = RiotCalls.GetAuthKey(LoginUsernameBox.Text, LoginPasswordBox.Password, SelectedRegion.LoginQueue);
 
             Session login = await RiotCalls.Login(newCredentials);
-            /*await Client.RtmpConnection.SubscribeAsync("my-rtmps", "messagingDestination", "bc", "bc-" + login.AccountSummary.AccountId.ToString());
+            await Client.RtmpConnection.SubscribeAsync("my-rtmps", "messagingDestination", "bc", "bc-" + login.AccountSummary.AccountId.ToString());
             await Client.RtmpConnection.SubscribeAsync("my-rtmps", "messagingDestination", "gn-" + login.AccountSummary.AccountId.ToString(), "gn-" + login.AccountSummary.AccountId.ToString());
-            await Client.RtmpConnection.SubscribeAsync("my-rtmps", "messagingDestination", "cn-" + login.AccountSummary.AccountId.ToString(), "cn-" + login.AccountSummary.AccountId.ToString());*/
+            await Client.RtmpConnection.SubscribeAsync("my-rtmps", "messagingDestination", "cn-" + login.AccountSummary.AccountId.ToString(), "cn-" + login.AccountSummary.AccountId.ToString());
             bool LoggedIn = await Client.RtmpConnection.LoginAsync(LoginUsernameBox.Text.ToLower(), login.Token);
             LoginDataPacket packet = await RiotCalls.GetLoginDataPacketForUser();
-
-        }
-
-        void client_MessageReceived(object sender, MessageReceivedEventArgs e)
-        {
-            ;
+            GotLoginPacket(packet);
         }
 
         void client_CallbackException(object sender, Exception e)
         {
             throw e;
-        }
-
-        private void PVPNet_OnLogin(object sender, string username, string ipAddress)
-        {
-            //Client.PVPNet.GetLoginDataPacketForUser(new LoginDataPacket.Callback(GotLoginPacket));
         }
 
         /*private void PVPNet_OnError(object sender, PVPNetConnect.Error error)
@@ -176,12 +165,9 @@ namespace LegendaryClient.Windows
         private async void GotLoginPacket(LoginDataPacket packet)
         {
             Client.LoginPacket = packet;
-            //Client.PlayerChampions = await Client.PVPNet.GetAvailableChampions();
+            Client.PlayerChampions = await RiotCalls.GetAvailableChampions();
             //Client.PVPNet.OnError -= PVPNet_OnError;
-            //Client.GameConfigs = packet.GameTypeConfigs;
-            //Client.PVPNet.Subscribe("bc", packet.AllSummonerData.Summoner.AcctId);
-            //Client.PVPNet.Subscribe("cn", packet.AllSummonerData.Summoner.AcctId);
-            //Client.PVPNet.Subscribe("gn", packet.AllSummonerData.Summoner.AcctId);
+            Client.GameConfigs = packet.GameTypeConfigs;
             Client.IsLoggedIn = true;
 
             Dispatcher.BeginInvoke(DispatcherPriority.Input, new ThreadStart(() =>
@@ -192,7 +178,7 @@ namespace LegendaryClient.Windows
                 //Setup chat
                 Client.ChatClient.AutoReconnect = 30;
                 Client.ChatClient.KeepAlive = 10;
-                Client.ChatClient.NetworkHost = "chat." + Client.Region.ChatName + ".lol.riotgames.com";
+                Client.ChatClient.NetworkHost = "192.64.169.22";//"chat." + Client.Region.ChatName + ".lol.riotgames.com";
                 Client.ChatClient.Port = 5223;
                 Client.ChatClient.Server = "pvp.net";
                 Client.ChatClient.SSL = true;

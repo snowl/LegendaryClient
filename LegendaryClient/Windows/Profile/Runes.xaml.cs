@@ -11,6 +11,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.ComponentModel;
 using LegendaryClient.Logic.Riot.Platform;
+using LegendaryClient.Logic.Riot;
 
 namespace LegendaryClient.Windows.Profile
 {
@@ -136,13 +137,13 @@ namespace LegendaryClient.Windows.Profile
         }
         private async void GetAvailableRunes()
         {
-            /*PVPNetConnect.RiotObjects.Platform.Summoner.Runes.SummonerRuneInventory runeInven = 
-                await Client.PVPNet.GetSummonerRuneInventory(Client.LoginPacket.AllSummonerData.Summoner.SumId);
+            SummonerRuneInventory runeInven = 
+                await RiotCalls.GetSummonerRuneInventory(Client.LoginPacket.AllSummonerData.Summoner.SumId);
             runes = runeInven.SummonerRunes;
             runes.Sort((x, y) => x.Rune.Name.CompareTo(y.Rune.Name));
             RuneFilterComboBox.SelectedIndex = 0;
             RunePageListView.SelectedIndex = Client.LoginPacket.AllSummonerData.SpellBook.BookPages.IndexOf(
-                Client.LoginPacket.AllSummonerData.SpellBook.BookPages.Find(x => x.Current == true));*/
+                Client.LoginPacket.AllSummonerData.SpellBook.BookPages.Find(x => x.Current == true));
         }
 
         public void RenderRunes()
@@ -387,7 +388,7 @@ namespace LegendaryClient.Windows.Profile
                     RunePage.Name = RuneTextBox.Text;
                 }
             }
-            //await Client.PVPNet.SaveSpellBook(Client.LoginPacket.AllSummonerData.SpellBook);
+            //await RiotCalls.SaveSpellBook(Client.LoginPacket.AllSummonerData.SpellBook);
         }
 
         private void ClearRunes_Click(object sender, RoutedEventArgs e)

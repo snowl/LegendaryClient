@@ -20,7 +20,7 @@ namespace LegendaryClient.Logic.Riot.Platform
         public DateTime ModifyDate { get; set; }
 
         [SerializedName("leaves")]
-        public Int32 Leaves { get; set; }
+        public object Leaves { get; set; }
 
         [SerializedName("playerStatSummaryType")]
         public String PlayerStatSummaryType { get; set; }

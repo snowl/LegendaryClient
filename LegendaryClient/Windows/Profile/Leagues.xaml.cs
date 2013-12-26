@@ -9,6 +9,7 @@ using System.Windows.Threading;
 using System.Threading;
 using LegendaryClient.Logic.Riot.Platform;
 using LegendaryClient.Logic.Riot.Leagues;
+using LegendaryClient.Logic.Riot;
 
 namespace LegendaryClient.Windows.Profile
 {
@@ -121,8 +122,9 @@ namespace LegendaryClient.Windows.Profile
                 LeagueItem item = (LeagueItem)LeaguesListView.SelectedItem;
                 PlayerLabel.Content = item.PlayerLabel.Content;
                 TopChampionsListView.Items.Clear();
-                //var x = await Client.PVPNet.GetSummonerByName((string)item.PlayerLabel.Content);
-                //Client.PVPNet.GetAggregatedStats(x.AcctId, "CLASSIC", "3", new AggregatedStats.Callback(GotStats));
+                var x = await RiotCalls.GetSummonerByName((string)item.PlayerLabel.Content);
+                AggregatedStats stats = await RiotCalls.GetAggregatedStats(x.AcctId, "CLASSIC", "3");
+                GotStats(stats);
             }
         }
 

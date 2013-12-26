@@ -1,5 +1,6 @@
 ﻿using LegendaryClient.Logic;
 using LegendaryClient.Logic.Maps;
+using LegendaryClient.Logic.Riot;
 using LegendaryClient.Logic.Riot.Platform;
 using System;
 using System.Collections.Generic;
@@ -35,7 +36,7 @@ namespace LegendaryClient.Windows
         {
             CustomGameListView.Items.Clear();
             allItems.Clear();
-            /*PracticeGameSearchResult[] Games = await Client.PVPNet.ListAllPracticeGames();
+            PracticeGameSearchResult[] Games = await RiotCalls.ListAllPracticeGames();
             foreach (PracticeGameSearchResult game in Games)
             {
                 GameItem item = new GameItem
@@ -52,7 +53,7 @@ namespace LegendaryClient.Windows
                 CustomGameListView.Items.Add(item);
                 allItems.Add(item);
             }
-            LimitGames();*/
+            LimitGames();
         }
 
         private void LimitGames()
@@ -100,10 +101,10 @@ namespace LegendaryClient.Windows
                 GameID = item.Id;
                 GameName = item.GameName;
             }
-            /*if (!String.IsNullOrEmpty(PasswordTextBox.Text))
-                Client.PVPNet.JoinGame(GameID, PasswordTextBox.Text);
+            if (!String.IsNullOrEmpty(PasswordTextBox.Text))
+                RiotCalls.JoinGame(GameID, PasswordTextBox.Text);
             else
-                Client.PVPNet.JoinGame(GameID);*/
+                RiotCalls.JoinGame(GameID);
 
             Client.InGame = true;
             Client.GameID = GameID;

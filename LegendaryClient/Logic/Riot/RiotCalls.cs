@@ -601,7 +601,7 @@ namespace LegendaryClient.Logic.Riot
         }
 
         /// <summary>
-        /// Send after champion select is completed
+        /// Lock in your champion selection
         /// </summary>
         public static Task<object> ChampionSelectCompleted()
         {

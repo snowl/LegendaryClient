@@ -1,4 +1,5 @@
 ﻿using LegendaryClient.Logic;
+using LegendaryClient.Logic.Riot;
 using LegendaryClient.Logic.Riot.Platform;
 using System;
 using System.Collections.Generic;
@@ -23,11 +24,12 @@ namespace LegendaryClient.Windows
             NameTextBox.Text = Client.LoginPacket.AllSummonerData.Summoner.Name + "'s game";
         }
 
-        private void CreateGameButton_Click(object sender, RoutedEventArgs e)
+        private async void CreateGameButton_Click(object sender, RoutedEventArgs e)
         {
             NameInvalidLabel.Visibility = Visibility.Hidden;
             PracticeGameConfig gameConfig = GenerateGameConfig();
-            //Client.PVPNet.CreatePracticeGame(gameConfig, new GameDTO.Callback(CreatedGame));
+            GameDTO dto = await RiotCalls.CreatePracticeGame(gameConfig);
+            CreatedGame(dto);
         }
 
         private PracticeGameConfig GenerateGameConfig()

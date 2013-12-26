@@ -1,6 +1,7 @@
 ﻿using LegendaryClient.Controls;
 using LegendaryClient.Logic;
 using LegendaryClient.Logic.Maps;
+using LegendaryClient.Logic.Riot;
 using LegendaryClient.Logic.Riot.Platform;
 using LegendaryClient.Logic.SQLite;
 using System;
@@ -32,9 +33,10 @@ namespace LegendaryClient.Windows.Profile
             InitializeComponent();
         }
 
-        public void Update(double AccountId)
+        public async void Update(double AccountId)
         {
-            //Client.PVPNet.GetRecentGames(AccountId, new RecentGames.Callback(GotRecentGames));
+            RecentGames games = await RiotCalls.GetRecentGames(AccountId);
+            GotRecentGames(games);
         }
 
         public void GotRecentGames(RecentGames result)

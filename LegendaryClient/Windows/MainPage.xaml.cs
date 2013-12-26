@@ -48,7 +48,7 @@ namespace LegendaryClient.Windows
 
         private void GotPlayerData(LoginDataPacket packet)
         {
-            //Client.PVPNet.OnMessageReceived += PVPNet_OnMessageReceived;
+            Client.RtmpConnection.MessageReceived += OnMessageReceived;
             AllSummonerData PlayerData = packet.AllSummonerData;
             SummonerNameLabel.Content = PlayerData.Summoner.Name;
             if (Client.LoginPacket.AllSummonerData.SummonerLevel.Level < 30)
@@ -60,7 +60,7 @@ namespace LegendaryClient.Windows
             }
             else
             {
-                //Client.PVPNet.GetAllLeaguesForPlayer(PlayerData.Summoner.SumId, new SummonerLeaguesDTO.Callback(GotLeaguesForPlayer));
+                //RiotCalls.GetAllLeaguesForPlayer(PlayerData.Summoner.SumId, new SummonerLeaguesDTO.Callback(GotLeaguesForPlayer));
             }
 
             if (packet.BroadcastNotification.BroadcastMessages != null)
@@ -491,7 +491,7 @@ namespace LegendaryClient.Windows
             HoverLabel.Opacity = 0;
         }
 
-        private void PVPNet_OnMessageReceived(object sender, object message)
+        private void OnMessageReceived(object sender, object message)
         {
             Dispatcher.BeginInvoke(DispatcherPriority.Input, new ThreadStart(() =>
             {

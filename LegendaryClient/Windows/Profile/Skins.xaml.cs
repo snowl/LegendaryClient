@@ -1,5 +1,6 @@
 ﻿using LegendaryClient.Controls;
 using LegendaryClient.Logic;
+using LegendaryClient.Logic.Riot;
 using LegendaryClient.Logic.Riot.Platform;
 using LegendaryClient.Logic.SQLite;
 using System;
@@ -26,13 +27,13 @@ namespace LegendaryClient.Windows.Profile
 
         public async void Update()
         {
-            /*ChampionDTO[] champList = await Client.PVPNet.GetAvailableChampions();
+            ChampionDTO[] champList = await RiotCalls.GetAvailableChampions();
 
             ChampionList = new List<ChampionDTO>(champList);
 
             ChampionList.Sort((x, y) => champions.GetChampion(x.ChampionId).displayName.CompareTo(champions.GetChampion(y.ChampionId).displayName));
 
-            FilterSkins();*/
+            FilterSkins();
         }
 
         private void SearchTextBox_TextChanged(object sender, TextChangedEventArgs e)

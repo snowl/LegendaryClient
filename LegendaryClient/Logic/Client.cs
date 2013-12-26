@@ -3,9 +3,11 @@ using jabber.connection;
 using jabber.protocol.client;
 using LegendaryClient.Controls;
 using LegendaryClient.Logic.Region;
+using LegendaryClient.Logic.Riot;
 using LegendaryClient.Logic.Riot.Platform;
 using LegendaryClient.Logic.SQLite;
 using LegendaryClient.Windows;
+using RtmpSharp.Messaging;
 using RtmpSharp.Net;
 using SQLite;
 using System;
@@ -534,9 +536,9 @@ namespace LegendaryClient.Logic
             Log(error.Type + " " + error.Message, "RTMPSERROR");
         }*/
 
-        internal static void OnMessageReceived(object sender, object message)
+        internal static void OnMessageReceived(object sender, MessageReceivedEventArgs message)
         {
-            MainWin.Dispatcher.BeginInvoke(DispatcherPriority.Input, new ThreadStart(async () =>
+            /*MainWin.Dispatcher.BeginInvoke(DispatcherPriority.Input, new ThreadStart(async () =>
             {
                 if (message is StoreAccountBalanceNotification)
                 {
@@ -557,9 +559,9 @@ namespace LegendaryClient.Logic
                             messageOver.MessageTextBox.Text = "You have been banned from this custom game!";
                             break;
                         case "PLAYER_QUIT":
-                            /*string[] Name = await PVPNet.GetSummonerNames(new double[1] { Convert.ToDouble((string)notification.MessageArgument) });
+                            string[] Name = await PVPNet.GetSummonerNames(new double[1] { Convert.ToDouble((string)notification.MessageArgument) });
                             messageOver.MessageTitle.Content = "Player has left the queue";
-                            messageOver.MessageTextBox.Text = Name[0] + " has left the queue;*/
+                            messageOver.MessageTextBox.Text = Name[0] + " has left the queue;
                             break;
                         default:
                             messageOver.MessageTextBox.Text = notification.MessageCode + Environment.NewLine;
@@ -579,7 +581,7 @@ namespace LegendaryClient.Logic
                 }
                 else if (message is StoreFulfillmentNotification)
                 {
-                    //PlayerChampions = await PVPNet.GetAvailableChampions();
+                    PlayerChampions = await RiotCalls.GetAvailableChampions();
                 }
                 else if (message is GameDTO)
                 {
@@ -593,7 +595,7 @@ namespace LegendaryClient.Logic
                         }));
                     }
                 }
-            }));
+            }));*/
         }
 
         internal static string InternalQueueToPretty(string InternalQueue)
@@ -710,7 +712,7 @@ namespace LegendaryClient.Logic
             FixLobby();
             IsInGame = false;
 
-            //await PVPNet.QuitGame();
+            await RiotCalls.QuitGame();
             StatusGrid.Visibility = System.Windows.Visibility.Hidden;
             PlayButton.Visibility = System.Windows.Visibility.Visible;
             LobbyContent = null;

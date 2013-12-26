@@ -1,5 +1,6 @@
 ﻿using LegendaryClient.Controls;
 using LegendaryClient.Logic;
+using LegendaryClient.Logic.Riot;
 using LegendaryClient.Logic.Riot.Platform;
 using LegendaryClient.Logic.SQLite;
 using System;
@@ -27,18 +28,19 @@ namespace LegendaryClient.Windows.Profile
         public async void Update(double SummonerId, double AccountId)
         {
             AccId = AccountId;
-            /*LcdsResponseString TotalKudos = await Client.PVPNet.CallKudos("{\"commandName\":\"TOTALS\",\"summonerId\": " + SummonerId + "}");
+            string TotalKudos = await RiotCalls.CallKudos("{\"commandName\":\"TOTALS\",\"summonerId\": " + SummonerId + "}");
             RenderKudos(TotalKudos);
-            ChampionStatInfo[] TopChampions = await Client.PVPNet.RetrieveTopPlayedChampions(AccountId, "CLASSIC");
-            RenderTopPlayedChampions(TopChampions);*/
-            //Client.PVPNet.RetrievePlayerStatsByAccountId(AccountId, "3", new PlayerLifetimeStats.Callback(GotPlayerStats));
+            ChampionStatInfo[] TopChampions = await RiotCalls.RetrieveTopPlayedChampions(AccountId, "CLASSIC");
+            RenderTopPlayedChampions(TopChampions);
+            PlayerLifetimeStats stats = await RiotCalls.RetrievePlayerStatsByAccountId(AccountId, "3");
+            GotPlayerStats(stats);
         }
 
-        public void RenderKudos(LcdsResponseString TotalKudos)
+        public void RenderKudos(string TotalKudos)
         {
             KudosListView.Items.Clear();
-            TotalKudos.Value = TotalKudos.Value.Replace("{\"totals\":[0,", "").Replace("]}", "");
-            string[] Kudos = TotalKudos.Value.Split(',');
+            TotalKudos = TotalKudos.Replace("{\"totals\":[0,", "").Replace("]}", "");
+            string[] Kudos = TotalKudos.Split(',');
             KudosItem item = new KudosItem("Friendly", Kudos[0]);
             KudosListView.Items.Add(item);
             item = new KudosItem("Helpful", Kudos[1]);
