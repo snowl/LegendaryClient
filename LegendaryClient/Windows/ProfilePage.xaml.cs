@@ -1,9 +1,6 @@
 ﻿using LegendaryClient.Logic;
+using LegendaryClient.Logic.Riot.Platform;
 using LegendaryClient.Windows.Profile;
-using PVPNetConnect.RiotObjects.Platform.Game;
-using PVPNetConnect.RiotObjects.Platform.Leagues.Client.Dto;
-using PVPNetConnect.RiotObjects.Platform.Statistics;
-using PVPNetConnect.RiotObjects.Platform.Summoner;
 using System;
 using System.IO;
 using System.Threading;
@@ -48,7 +45,7 @@ namespace LegendaryClient.Windows
 
         public async void GetSummonerProfile(string s)
         {
-            PublicSummoner Summoner = await Client.PVPNet.GetSummonerByName(String.IsNullOrWhiteSpace(s) ? Client.LoginPacket.AllSummonerData.Summoner.Name : s);
+            /*PublicSummoner Summoner = await Client.PVPNet.GetSummonerByName(String.IsNullOrWhiteSpace(s) ? Client.LoginPacket.AllSummonerData.Summoner.Name : s);
             if (String.IsNullOrWhiteSpace(Summoner.Name))
             {
                 MessageOverlay overlay = new MessageOverlay();
@@ -67,7 +64,7 @@ namespace LegendaryClient.Windows
             }
             else
             {
-                Client.PVPNet.GetAllLeaguesForPlayer(Summoner.SummonerId, new SummonerLeaguesDTO.Callback(GotLeaguesForPlayer));
+                //Client.PVPNet.GetAllLeaguesForPlayer(Summoner.SummonerId, new SummonerLeaguesDTO.Callback(GotLeaguesForPlayer));
             }
 
             int ProfileIconID = Summoner.ProfileIconId;
@@ -103,7 +100,7 @@ namespace LegendaryClient.Windows
             history.Update(Summoner.AcctId);
 
             Overview overview = OverviewContainer.Content as Overview;
-            overview.Update(Summoner.SummonerId, Summoner.AcctId);
+            overview.Update(Summoner.SummonerId, Summoner.AcctId);*/
         }
 
         private void GotLeaguesForPlayer(SummonerLeaguesDTO result)

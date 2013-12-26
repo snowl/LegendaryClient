@@ -107,7 +107,7 @@ namespace LegendaryClient.Controls
             if (Subject == ChatSubjects.PRACTICE_GAME_INVITE)
             {
                 Client.Message(MessageData.From.User, MessageData.Body, ChatSubjects.PRACTICE_GAME_INVITE_ACCEPT);
-                Client.PVPNet.JoinGame(GameId);
+                //Client.PVPNet.JoinGame(GameId);
 
                 Client.InGame = true;
                 Client.GameID = GameId;

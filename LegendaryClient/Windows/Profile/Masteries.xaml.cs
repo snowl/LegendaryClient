@@ -1,7 +1,7 @@
 ﻿using LegendaryClient.Controls;
 using LegendaryClient.Logic;
+using LegendaryClient.Logic.Riot.Platform;
 using LegendaryClient.Logic.SQLite;
-using PVPNetConnect.RiotObjects.Platform.Summoner.Masterybook;
 using System;
 using System.Collections.Generic;
 using System.Windows;
@@ -320,7 +320,7 @@ namespace LegendaryClient.Windows.Profile
                     MasteryPage.Name = MasteryTextBox.Text;
                 }
             }
-            await Client.PVPNet.SaveMasteryBook(Client.LoginPacket.AllSummonerData.MasteryBook);
+            //await Client.PVPNet.SaveMasteryBook(Client.LoginPacket.AllSummonerData.MasteryBook);
         }
 
         private void MasteryPageListView_SelectionChanged(object sender, SelectionChangedEventArgs e)

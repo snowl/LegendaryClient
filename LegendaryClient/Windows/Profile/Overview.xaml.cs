@@ -1,8 +1,7 @@
 ﻿using LegendaryClient.Controls;
 using LegendaryClient.Logic;
+using LegendaryClient.Logic.Riot.Platform;
 using LegendaryClient.Logic.SQLite;
-using PVPNetConnect.RiotObjects.Platform.Harassment;
-using PVPNetConnect.RiotObjects.Platform.Statistics;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -28,11 +27,11 @@ namespace LegendaryClient.Windows.Profile
         public async void Update(double SummonerId, double AccountId)
         {
             AccId = AccountId;
-            LcdsResponseString TotalKudos = await Client.PVPNet.CallKudos("{\"commandName\":\"TOTALS\",\"summonerId\": " + SummonerId + "}");
+            /*LcdsResponseString TotalKudos = await Client.PVPNet.CallKudos("{\"commandName\":\"TOTALS\",\"summonerId\": " + SummonerId + "}");
             RenderKudos(TotalKudos);
             ChampionStatInfo[] TopChampions = await Client.PVPNet.RetrieveTopPlayedChampions(AccountId, "CLASSIC");
-            RenderTopPlayedChampions(TopChampions);
-            Client.PVPNet.RetrievePlayerStatsByAccountId(AccountId, "3", new PlayerLifetimeStats.Callback(GotPlayerStats));
+            RenderTopPlayedChampions(TopChampions);*/
+            //Client.PVPNet.RetrievePlayerStatsByAccountId(AccountId, "3", new PlayerLifetimeStats.Callback(GotPlayerStats));
         }
 
         public void RenderKudos(LcdsResponseString TotalKudos)
@@ -131,8 +130,8 @@ namespace LegendaryClient.Windows.Profile
 
         private async void ViewAggregatedStatsButton_Click(object sender, System.Windows.RoutedEventArgs e)
         {
-            AggregatedStats x = await Client.PVPNet.GetAggregatedStats(AccId, "CLASSIC", "3");
-            Client.OverlayContainer.Content = new AggregatedStatsOverlay(x, AccId == Client.LoginPacket.AllSummonerData.Summoner.AcctId).Content;
+            //AggregatedStats x = await Client.PVPNet.GetAggregatedStats(AccId, "CLASSIC", "3");
+            //Client.OverlayContainer.Content = new AggregatedStatsOverlay(x, AccId == Client.LoginPacket.AllSummonerData.Summoner.AcctId).Content;
             Client.OverlayContainer.Visibility = System.Windows.Visibility.Visible;
         }
     }

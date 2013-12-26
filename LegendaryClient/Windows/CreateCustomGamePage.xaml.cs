@@ -1,6 +1,5 @@
 ﻿using LegendaryClient.Logic;
-using PVPNetConnect.RiotObjects.Platform.Game;
-using PVPNetConnect.RiotObjects.Platform.Game.Map;
+using LegendaryClient.Logic.Riot.Platform;
 using System;
 using System.Collections.Generic;
 using System.Threading;
@@ -28,7 +27,7 @@ namespace LegendaryClient.Windows
         {
             NameInvalidLabel.Visibility = Visibility.Hidden;
             PracticeGameConfig gameConfig = GenerateGameConfig();
-            Client.PVPNet.CreatePracticeGame(gameConfig, new GameDTO.Callback(CreatedGame));
+            //Client.PVPNet.CreatePracticeGame(gameConfig, new GameDTO.Callback(CreatedGame));
         }
 
         private PracticeGameConfig GenerateGameConfig()

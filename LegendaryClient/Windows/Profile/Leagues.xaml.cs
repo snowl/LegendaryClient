@@ -1,16 +1,14 @@
-﻿using PVPNetConnect.RiotObjects.Leagues.Pojo;
-using PVPNetConnect.RiotObjects.Platform.Leagues.Client.Dto;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Windows.Controls;
 using System.Linq;
-using PVPNetConnect;
 using LegendaryClient.Controls;
-using PVPNetConnect.RiotObjects.Platform.Statistics;
 using LegendaryClient.Logic;
 using LegendaryClient.Logic.SQLite;
 using System;
 using System.Windows.Threading;
 using System.Threading;
+using LegendaryClient.Logic.Riot.Platform;
+using LegendaryClient.Logic.Riot.Leagues;
 
 namespace LegendaryClient.Windows.Profile
 {
@@ -79,9 +77,9 @@ namespace LegendaryClient.Windows.Profile
                         if (i - player.PreviousDayLeaguePosition != 0)
                             item.RankChangeLabel.Content = i - player.PreviousDayLeaguePosition;
 
-                        TypedObject miniSeries = player.MiniSeries as TypedObject;
-                        if (miniSeries != null)
-                            item.LPLabel.Content = ((string)miniSeries["progress"]).Replace('N', '-');
+                        //TypedObject miniSeries = player.MiniSeries as TypedObject;
+                        //if (miniSeries != null)
+                        //    item.LPLabel.Content = ((string)miniSeries["progress"]).Replace('N', '-');
 
                         LeaguesListView.Items.Add(item);
                     }
@@ -123,8 +121,8 @@ namespace LegendaryClient.Windows.Profile
                 LeagueItem item = (LeagueItem)LeaguesListView.SelectedItem;
                 PlayerLabel.Content = item.PlayerLabel.Content;
                 TopChampionsListView.Items.Clear();
-                var x = await Client.PVPNet.GetSummonerByName((string)item.PlayerLabel.Content);
-                Client.PVPNet.GetAggregatedStats(x.AcctId, "CLASSIC", "3", new AggregatedStats.Callback(GotStats));
+                //var x = await Client.PVPNet.GetSummonerByName((string)item.PlayerLabel.Content);
+                //Client.PVPNet.GetAggregatedStats(x.AcctId, "CLASSIC", "3", new AggregatedStats.Callback(GotStats));
             }
         }
 

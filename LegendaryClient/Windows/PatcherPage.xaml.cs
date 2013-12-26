@@ -1,7 +1,7 @@
 ﻿using ICSharpCode.SharpZipLib.GZip;
 using ICSharpCode.SharpZipLib.Tar;
 using LegendaryClient.Logic;
-using LegendaryClient.Logic.Patcher;
+using LegendaryClient.Logic.Riot;
 using System;
 using System.IO;
 using System.Net;

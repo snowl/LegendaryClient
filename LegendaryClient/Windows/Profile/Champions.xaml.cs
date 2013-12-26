@@ -1,12 +1,12 @@
 ﻿using LegendaryClient.Controls;
 using LegendaryClient.Logic;
 using LegendaryClient.Logic.SQLite;
-using PVPNetConnect.RiotObjects.Platform.Catalog.Champion;
 using System;
 using System.Windows;
 using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Controls;
+using LegendaryClient.Logic.Riot.Platform;
 
 namespace LegendaryClient.Windows.Profile
 {
@@ -25,9 +25,9 @@ namespace LegendaryClient.Windows.Profile
 
         public async void Update()
         {
-            ChampionDTO[] champList = await Client.PVPNet.GetAvailableChampions();
+            //ChampionDTO[] champList = await Client.PVPNet.GetAvailableChampions();
 
-            ChampionList = new List<ChampionDTO>(champList);
+            //ChampionList = new List<ChampionDTO>(champList);
 
             ChampionList.Sort((x, y) => champions.GetChampion(x.ChampionId).displayName.CompareTo(champions.GetChampion(y.ChampionId).displayName));
 

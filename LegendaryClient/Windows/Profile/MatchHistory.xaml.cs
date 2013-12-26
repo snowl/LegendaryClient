@@ -1,8 +1,8 @@
 ﻿using LegendaryClient.Controls;
 using LegendaryClient.Logic;
 using LegendaryClient.Logic.Maps;
+using LegendaryClient.Logic.Riot.Platform;
 using LegendaryClient.Logic.SQLite;
-using PVPNetConnect.RiotObjects.Platform.Statistics;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -34,7 +34,7 @@ namespace LegendaryClient.Windows.Profile
 
         public void Update(double AccountId)
         {
-            Client.PVPNet.GetRecentGames(AccountId, new RecentGames.Callback(GotRecentGames));
+            //Client.PVPNet.GetRecentGames(AccountId, new RecentGames.Callback(GotRecentGames));
         }
 
         public void GotRecentGames(RecentGames result)

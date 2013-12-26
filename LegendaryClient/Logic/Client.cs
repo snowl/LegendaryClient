@@ -3,15 +3,10 @@ using jabber.connection;
 using jabber.protocol.client;
 using LegendaryClient.Controls;
 using LegendaryClient.Logic.Region;
+using LegendaryClient.Logic.Riot.Platform;
 using LegendaryClient.Logic.SQLite;
 using LegendaryClient.Windows;
-using PVPNetConnect;
-using PVPNetConnect.RiotObjects.Platform.Catalog.Champion;
-using PVPNetConnect.RiotObjects.Platform.Clientfacade.Domain;
-using PVPNetConnect.RiotObjects.Platform.Game;
-using PVPNetConnect.RiotObjects.Platform.Game.Message;
-using PVPNetConnect.RiotObjects.Platform.Messaging;
-using PVPNetConnect.RiotObjects.Platform.Statistics;
+using RtmpSharp.Net;
 using SQLite;
 using System;
 using System.Collections.Generic;
@@ -464,10 +459,7 @@ namespace LegendaryClient.Logic
 
         #region League Of Legends Logic
 
-        /// <summary>
-        /// Main connection to the League of Legends server
-        /// </summary>
-        internal static PVPNetConnection PVPNet;
+        internal static RtmpClient RtmpConnection;
 
         /// <summary>
         /// Packet recieved when initially logged on. Cached so the packet doesn't
@@ -525,7 +517,7 @@ namespace LegendaryClient.Logic
         internal static object LobbyContent;
         internal static bool IsInGame = false;
 
-        /// <summary>
+        /*/// <summary>
         /// Fix for champ select. Do not use this!
         /// </summary>
         internal static event PVPNetConnection.OnMessageReceivedHandler OnFixChampSelect;
@@ -540,7 +532,7 @@ namespace LegendaryClient.Logic
         internal static void PVPNet_OnError(object sender, PVPNetConnect.Error error)
         {
             Log(error.Type + " " + error.Message, "RTMPSERROR");
-        }
+        }*/
 
         internal static void OnMessageReceived(object sender, object message)
         {
@@ -565,9 +557,9 @@ namespace LegendaryClient.Logic
                             messageOver.MessageTextBox.Text = "You have been banned from this custom game!";
                             break;
                         case "PLAYER_QUIT":
-                            string[] Name = await PVPNet.GetSummonerNames(new double[1] { Convert.ToDouble((string)notification.MessageArgument) });
+                            /*string[] Name = await PVPNet.GetSummonerNames(new double[1] { Convert.ToDouble((string)notification.MessageArgument) });
                             messageOver.MessageTitle.Content = "Player has left the queue";
-                            messageOver.MessageTextBox.Text = Name[0] + " has left the queue";
+                            messageOver.MessageTextBox.Text = Name[0] + " has left the queue;*/
                             break;
                         default:
                             messageOver.MessageTextBox.Text = notification.MessageCode + Environment.NewLine;
@@ -587,7 +579,7 @@ namespace LegendaryClient.Logic
                 }
                 else if (message is StoreFulfillmentNotification)
                 {
-                    PlayerChampions = await PVPNet.GetAvailableChampions();
+                    //PlayerChampions = await PVPNet.GetAvailableChampions();
                 }
                 else if (message is GameDTO)
                 {
@@ -718,7 +710,7 @@ namespace LegendaryClient.Logic
             FixLobby();
             IsInGame = false;
 
-            await PVPNet.QuitGame();
+            //await PVPNet.QuitGame();
             StatusGrid.Visibility = System.Windows.Visibility.Hidden;
             PlayButton.Visibility = System.Windows.Visibility.Visible;
             LobbyContent = null;
@@ -730,26 +722,26 @@ namespace LegendaryClient.Logic
 
         internal static void FixLobby()
         {
-            if (OnFixLobby != null)
+            /*if (OnFixLobby != null)
             {
                 foreach (Delegate d in OnFixLobby.GetInvocationList())
                 {
                     PVPNet.OnMessageReceived -= (PVPNetConnection.OnMessageReceivedHandler)d;
                     OnFixLobby -= (PVPNetConnection.OnMessageReceivedHandler)d;
                 }
-            }
+            }*/
         }
 
         internal static void FixChampSelect()
         {
-            if (OnFixChampSelect != null)
+            /*if (OnFixChampSelect != null)
             {
                 foreach (Delegate d in OnFixChampSelect.GetInvocationList())
                 {
                     PVPNet.OnMessageReceived -= (PVPNetConnection.OnMessageReceivedHandler)d;
                     OnFixChampSelect -= (PVPNetConnection.OnMessageReceivedHandler)d;
                 }
-            }
+            }*/
         }
         #endregion League Of Legends Logic
 
@@ -816,9 +808,9 @@ namespace LegendaryClient.Logic
 
         public static void Log(String lines, String type = "LOG")
         {
-            System.IO.StreamWriter file = new System.IO.StreamWriter(Path.Combine(ExecutingDirectory, "lcdebug.log"), true);
+            /*System.IO.StreamWriter file = new System.IO.StreamWriter(Path.Combine(ExecutingDirectory, "lcdebug.log"), true);
             file.WriteLine(string.Format("({0} {1}) [{2}]: {3}", DateTime.Now.ToShortDateString(), DateTime.Now.ToShortTimeString(), type, lines));
-            file.Close();
+            file.Close();*/
         }
 
         public static BitmapImage GetImage(string Address)
