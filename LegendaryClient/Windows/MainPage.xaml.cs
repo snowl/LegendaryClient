@@ -3,14 +3,10 @@ using LegendaryClient.Logic;
 using LegendaryClient.Logic.Maps;
 using LegendaryClient.Logic.PlayerSpell;
 using LegendaryClient.Logic.Region;
+using LegendaryClient.Logic.Riot;
+using LegendaryClient.Logic.Riot.Leagues;
+using LegendaryClient.Logic.Riot.Platform;
 using LegendaryClient.Logic.SQLite;
-using PVPNetConnect;
-using PVPNetConnect.RiotObjects.Leagues.Pojo;
-using PVPNetConnect.RiotObjects.Platform.Broadcast;
-using PVPNetConnect.RiotObjects.Platform.Clientfacade.Domain;
-using PVPNetConnect.RiotObjects.Platform.Leagues.Client.Dto;
-using PVPNetConnect.RiotObjects.Platform.Statistics;
-using PVPNetConnect.RiotObjects.Platform.Summoner;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -52,7 +48,7 @@ namespace LegendaryClient.Windows
 
         private void GotPlayerData(LoginDataPacket packet)
         {
-            Client.PVPNet.OnMessageReceived += PVPNet_OnMessageReceived;
+            Client.RtmpConnection.MessageReceived += OnMessageReceived;
             AllSummonerData PlayerData = packet.AllSummonerData;
             SummonerNameLabel.Content = PlayerData.Summoner.Name;
             if (Client.LoginPacket.AllSummonerData.SummonerLevel.Level < 30)
@@ -64,7 +60,7 @@ namespace LegendaryClient.Windows
             }
             else
             {
-                Client.PVPNet.GetAllLeaguesForPlayer(PlayerData.Summoner.SumId, new SummonerLeaguesDTO.Callback(GotLeaguesForPlayer));
+                //RiotCalls.GetAllLeaguesForPlayer(PlayerData.Summoner.SumId, new SummonerLeaguesDTO.Callback(GotLeaguesForPlayer));
             }
 
             if (packet.BroadcastNotification.BroadcastMessages != null)
@@ -136,13 +132,13 @@ namespace LegendaryClient.Windows
                             {
                                 if (player.PlayerOrTeamName == Client.LoginPacket.AllSummonerData.Summoner.Name)
                                 {
-                                    TypedObject miniSeries = player.MiniSeries as TypedObject;
+                                    //TypedObject miniSeries = player.MiniSeries as TypedObject;
                                     string Series = "";
-                                    if (miniSeries != null)
+                                    /*if (miniSeries != null)
                                     {
                                         Series = ((string)miniSeries["progress"]).Replace('N', '-');
                                         InPromo = true;
-                                    }
+                                    }*/
                                     CurrentLP = (player.LeaguePoints == 100 ? Series : Convert.ToString(player.LeaguePoints));
                                 }
                             }
@@ -495,7 +491,7 @@ namespace LegendaryClient.Windows
             HoverLabel.Opacity = 0;
         }
 
-        private void PVPNet_OnMessageReceived(object sender, object message)
+        private void OnMessageReceived(object sender, object message)
         {
             Dispatcher.BeginInvoke(DispatcherPriority.Input, new ThreadStart(() =>
             {
@@ -520,7 +516,7 @@ namespace LegendaryClient.Windows
 
         private void fakeend_Click(object sender, RoutedEventArgs e)
         {
-            Client.PVPNet.SimulateEndOfGame();
+            //Client.PVPNet.SimulateEndOfGame();
         }
     }
 }

@@ -19,23 +19,19 @@ You need these DLLS:
 * MahApps.Metro
 * SharpZipLib
 * Sqlite
+* rtmps-sharp
 
 You must compile these DLLS yourself:
 
 * https://github.com/bladecoding/Jabber-net
-* https://github.com/Snowl/PVPNetConnect
 
-In-Client Screenshots (90-100)% complete
+In-Client Screenshots
 =====================
 
 ![Login](http://puu.sh/5Q7jT.jpg)
 ![News Screen](http://puu.sh/5Q7vd.jpg)
 ![Featured Games](http://puu.sh/5Q7tZ.jpg)
 ![Store](http://i.imgur.com/raXcBfv.png)
-
-Still-in Progress Screenshots 
-=============================
-
 ![Chat](http://puu.sh/5FVHS.png)
 ![Queue](http://i.imgur.com/ZpZiyJ5.png)
 ![QueuePop](http://i.imgur.com/KAt5KXR.png)

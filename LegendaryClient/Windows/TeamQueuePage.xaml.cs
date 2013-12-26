@@ -20,8 +20,9 @@ using LegendaryClient.Controls;
 using System.Xml;
 using System.IO;
 using jabber.connection;
-using PVPNetConnect.RiotObjects.Platform.Matchmaking;
 using System.Collections;
+using LegendaryClient.Logic.Riot.Platform;
+using LegendaryClient.Logic.Riot;
 
 namespace LegendaryClient.Windows
 {
@@ -66,7 +67,7 @@ namespace LegendaryClient.Windows
                 }
             }
 
-            Client.PVPNet.AcceptInviteForMatchmakingGame(InviteId.ToString());
+            RiotCalls.AcceptInviteForMatchmakingGame(InviteId.ToString());
 
             string ObfuscatedName = Client.GetObfuscatedChatroomName(InviteId.ToString(), ChatPrefixes.Arranging_Game);
             string JID = Client.GetChatroomJID(ObfuscatedName, "0", true);
@@ -131,7 +132,7 @@ namespace LegendaryClient.Windows
             {
                 ChatSubjects subject = (ChatSubjects)Enum.Parse(typeof(ChatSubjects), msg.Subject, true);
                 double[] Double = new double[1] { Convert.ToDouble(msg.From.User.Replace("sum", "")) };
-                string[] Name = await Client.PVPNet.GetSummonerNames(Double);
+                string[] Name = await RiotCalls.GetSummonerNames(Double);
                 Dispatcher.BeginInvoke(DispatcherPriority.Input, new ThreadStart(() =>
                 {
                     InvitePlayer invitePlayer = null;
@@ -226,7 +227,7 @@ namespace LegendaryClient.Windows
             pareams.Team = new List<int>();
             pareams.Team.Add(222908);
             pareams.Team.Add(499467);
-            SearchingForMatchNotification par = await Client.PVPNet.AttachTeamToQueue(pareams);
+            //SearchingForMatchNotification par = await RiotCalls.AttachTeamToQueue(pareams);
 
             Client.Message("sum222908", "<body><inviteId>8649134</inviteId><userName>Snooowl</userName><profileIconId>576</profileIconId><gameType>NORMAL_GAME</gameType><groupId></groupId><seasonRewards>-1</seasonRewards><mapId>1</mapId><queueId>2</queueId><gameMode>classic_pvp</gameMode><gameDifficulty></gameDifficulty></body>", ChatSubjects.VERIFY_INVITEE);
         }

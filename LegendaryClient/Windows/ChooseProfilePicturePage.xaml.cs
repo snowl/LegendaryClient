@@ -1,6 +1,6 @@
 ﻿using LegendaryClient.Logic;
-using PVPNetConnect.RiotObjects.Platform.Catalog.Icon;
-using PVPNetConnect.RiotObjects.Platform.Summoner.Icon;
+using LegendaryClient.Logic.Riot;
+using LegendaryClient.Logic.Riot.Platform;
 using System;
 using System.IO;
 using System.Windows;
@@ -22,7 +22,7 @@ namespace LegendaryClient.Windows
 
         private async void GetIcons()
         {
-            SummonerIconInventoryDTO PlayerIcons = await Client.PVPNet.GetSummonerIconInventory(Client.LoginPacket.AllSummonerData.Summoner.SumId);
+            SummonerIconInventoryDTO PlayerIcons = await RiotCalls.GetSummonerIconInventory(Client.LoginPacket.AllSummonerData.Summoner.SumId);
             foreach (Icon ic in PlayerIcons.SummonerIcons)
             {
                 Image champImage = new Image();
@@ -58,7 +58,7 @@ namespace LegendaryClient.Windows
             {
                 Image m = (Image)SummonerIconListView.SelectedItem;
                 int SummonerIcon = Convert.ToInt32(m.Tag);
-                await Client.PVPNet.UpdateProfileIconId(SummonerIcon);
+                await RiotCalls.UpdateProfileIconId(SummonerIcon);
                 Client.LoginPacket.AllSummonerData.Summoner.ProfileIconId = SummonerIcon;
                 Client.SetChatHover();
                 var uriSource = Path.Combine(Client.ExecutingDirectory, "Assets", "profileicon", SummonerIcon + ".png");

@@ -25,9 +25,19 @@ namespace LegendaryClient.Logic.Region
             get { return new Uri("http://ll.leagueoflegends.com/landingpage/data/br/en_US.js"); } //This returns english (not spanish) characters
         }
 
-        public override PVPNetConnect.Region PVPRegion
+        public override string Server
         {
-            get { return PVPNetConnect.Region.BR; }
+            get { return "prod.br.lol.riotgames.com"; }
+        }
+
+        public override string LoginQueue
+        {
+            get { return "https://lq.br.lol.riotgames.com/"; }
+        }
+
+        public override string Locale
+        {
+            get { return "en_US"; }
         }
 
         public override IPAddress[] PingAddresses

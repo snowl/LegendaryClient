@@ -2,7 +2,8 @@
 using LegendaryClient.Controls;
 using LegendaryClient.Logic;
 using LegendaryClient.Logic.Maps;
-using PVPNetConnect.RiotObjects.Platform.Game;
+using LegendaryClient.Logic.Riot;
+using LegendaryClient.Logic.Riot.Platform;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -35,8 +36,8 @@ namespace LegendaryClient.Windows
             InitializeComponent();
             Client.IsInGame = true;
             GameName.Content = Client.GameName;
-            Client.OnFixLobby += GameLobby_OnMessageReceived;
-            Client.PVPNet.OnMessageReceived += GameLobby_OnMessageReceived;
+            //Client.OnFixLobby += GameLobby_OnMessageReceived;
+            Client.RtmpConnection.MessageReceived += GameLobby_OnMessageReceived;
             //If client has created game use initial DTO
             if (Client.GameLobbyDTO != null)
             {
@@ -103,7 +104,7 @@ namespace LegendaryClient.Windows
             {
                 ChatSubjects subject = (ChatSubjects)Enum.Parse(typeof(ChatSubjects), msg.Subject, true);
                 double[] Double = new double[1] { Convert.ToDouble(msg.From.User.Replace("sum", "")) };
-                string[] Name = await Client.PVPNet.GetSummonerNames(Double);
+                string[] Name = await RiotCalls.GetSummonerNames(Double);
                 Dispatcher.BeginInvoke(DispatcherPriority.Input, new ThreadStart(() =>
                 {
                     InvitePlayer invitePlayer = null;
@@ -194,7 +195,7 @@ namespace LegendaryClient.Windows
                                 {
                                     if (!Client.Whitelist.Contains(player.SummonerName.ToLower()) && player.SummonerId != Client.LoginPacket.AllSummonerData.Summoner.SumId && IsOwner)
                                     {
-                                        await Client.PVPNet.BanUserFromGame(Client.GameID, player.AccountId);
+                                        await RiotCalls.BanUserFromGame(Client.GameID, player.AccountId);
                                     }
                                 }
                             }
@@ -302,19 +303,19 @@ namespace LegendaryClient.Windows
 
         private async void SwitchTeamsButton_Click(object sender, RoutedEventArgs e)
         {
-            await Client.PVPNet.SwitchTeams(Client.GameID);
+            await RiotCalls.SwitchTeams(Client.GameID);
         }
 
         private async void KickAndBan_Click(object sender, RoutedEventArgs e)
         {
             var button = sender as Button;
             PlayerParticipant BanPlayer = (PlayerParticipant)button.Tag;
-            await Client.PVPNet.BanUserFromGame(Client.GameID, BanPlayer.AccountId);
+            await RiotCalls.BanUserFromGame(Client.GameID, BanPlayer.AccountId);
         }
 
         private async void StartGameButton_Click(object sender, RoutedEventArgs e)
         {
-            await Client.PVPNet.StartChampionSelection(Client.GameID, OptomisticLock);
+            await RiotCalls.StartChampionSelection(Client.GameID, OptomisticLock);
         }
 
         private void InviteButton_Click(object sender, RoutedEventArgs e)

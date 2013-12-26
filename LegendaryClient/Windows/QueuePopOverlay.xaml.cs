@@ -1,8 +1,7 @@
 ﻿using LegendaryClient.Controls;
 using LegendaryClient.Logic;
-using PVPNetConnect.RiotObjects.Leagues.Pojo;
-using PVPNetConnect.RiotObjects.Platform.Game;
-using PVPNetConnect.RiotObjects.Platform.Leagues.Client.Dto;
+using LegendaryClient.Logic.Riot.Leagues;
+using LegendaryClient.Logic.Riot.Platform;
 using System;
 using System.Collections.Generic;
 using System.Threading;
@@ -31,7 +30,7 @@ namespace LegendaryClient.Windows
             Client.FocusClient();
             InitializePop(InitialDTO);
             TimeLeft = InitialDTO.JoinTimerDuration;
-            Client.PVPNet.OnMessageReceived += PVPNet_OnMessageReceived;
+            //Client.PVPNet.OnMessageReceived += PVPNet_OnMessageReceived;
             QueueTimer = new System.Timers.Timer(1000);
             QueueTimer.Elapsed += new ElapsedEventHandler(QueueElapsed);
             QueueTimer.Enabled = true;
@@ -58,14 +57,14 @@ namespace LegendaryClient.Windows
                     if (QueueDTO.GameState == "TERMINATED")
                     {
                         Client.OverlayContainer.Visibility = Visibility.Hidden;
-                        Client.PVPNet.OnMessageReceived -= PVPNet_OnMessageReceived;
+                        //Client.PVPNet.OnMessageReceived -= PVPNet_OnMessageReceived;
                         Client.IsInGame = false;
                         return;
                     }
                     else if (QueueDTO.GameState == "CHAMP_SELECT")
                     {
                         HasStartedChampSelect = true;
-                        Client.PVPNet.OnMessageReceived -= PVPNet_OnMessageReceived;
+                        //Client.PVPNet.OnMessageReceived -= PVPNet_OnMessageReceived;
                         string s = QueueDTO.GameState;
                         Client.ChampSelectDTO = QueueDTO;
                         Client.GameID = QueueDTO.Id;
@@ -155,7 +154,7 @@ namespace LegendaryClient.Windows
                 {
                     QueuePopPlayer player = (QueuePopPlayer)Team1ListBox.Items[i];
                     PlayerParticipant playerPart = (PlayerParticipant)p;
-                    SummonerLeaguesDTO playerLeagues = await Client.PVPNet.GetAllLeaguesForPlayer(playerPart.SummonerId);
+                    /*SummonerLeaguesDTO playerLeagues = await Client.PVPNet.GetAllLeaguesForPlayer(playerPart.SummonerId);
                     foreach (LeagueListDTO x in playerLeagues.SummonerLeagues)
                     {
                         if (x.Queue == "RANKED_SOLO_5x5")
@@ -167,20 +166,20 @@ namespace LegendaryClient.Windows
                     if (String.IsNullOrEmpty((string)player.RankLabel.Content))
                     {
                         player.RankLabel.Content = "Unranked";
-                    }
+                    }*/
                     i++;
                 }
             }
 
             if (Client.AutoAcceptQueue)
             {
-                await Client.PVPNet.AcceptPoppedGame(true);
+                //await Client.PVPNet.AcceptPoppedGame(true);
             }
         }
 
         private async void AcceptButton_Click(object sender, RoutedEventArgs e)
         {
-            await Client.PVPNet.AcceptPoppedGame(true);
+            //await Client.PVPNet.AcceptPoppedGame(true);
         }
     }
 }

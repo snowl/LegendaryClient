@@ -4,7 +4,7 @@ using System.IO;
 using System.Net;
 using System.Web.Script.Serialization;
 
-namespace LegendaryClient.Logic.Patcher
+namespace LegendaryClient.Logic.Riot
 {
     public class RiotPatcher
     {

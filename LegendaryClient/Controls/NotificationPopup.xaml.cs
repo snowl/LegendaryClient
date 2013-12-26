@@ -1,6 +1,7 @@
 ﻿using jabber.protocol.client;
 using LegendaryClient.Logic;
 using LegendaryClient.Logic.Maps;
+using LegendaryClient.Logic.Riot;
 using LegendaryClient.Windows;
 using System;
 using System.IO;
@@ -107,7 +108,7 @@ namespace LegendaryClient.Controls
             if (Subject == ChatSubjects.PRACTICE_GAME_INVITE)
             {
                 Client.Message(MessageData.From.User, MessageData.Body, ChatSubjects.PRACTICE_GAME_INVITE_ACCEPT);
-                Client.PVPNet.JoinGame(GameId);
+                RiotCalls.JoinGame(GameId);
 
                 Client.InGame = true;
                 Client.GameID = GameId;

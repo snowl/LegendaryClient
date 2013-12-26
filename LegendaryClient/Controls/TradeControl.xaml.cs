@@ -1,5 +1,6 @@
 ﻿using LegendaryClient.Logic;
-using PVPNetConnect.RiotObjects.Platform.Trade;
+using LegendaryClient.Logic.Riot;
+using LegendaryClient.Logic.Riot.Platform;
 using System.Windows;
 using System.Windows.Controls;
 
@@ -18,12 +19,12 @@ namespace LegendaryClient.Controls
         private async void AcceptButton_Click(object sender, RoutedEventArgs e)
         {
             TradeContractDTO TradeDTO = this.Tag as TradeContractDTO;
-            await Client.PVPNet.AcceptTrade(TradeDTO.RequesterInternalSummonerName, (int)TradeDTO.RequesterChampionId);
+            await RiotCalls.AcceptTrade(TradeDTO.RequesterInternalSummonerName, (int)TradeDTO.RequesterChampionId);
         }
 
         private async void DeclineButton_Click(object sender, RoutedEventArgs e)
         {
-            await Client.PVPNet.DeclineTrade();
+            await RiotCalls.DeclineTrade();
             this.Visibility = System.Windows.Visibility.Hidden;
         }
     }
