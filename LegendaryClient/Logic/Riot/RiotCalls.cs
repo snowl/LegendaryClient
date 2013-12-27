@@ -122,16 +122,6 @@ namespace LegendaryClient.Logic.Riot
         }
 
         /// <summary>
-        /// Get the summoner names for an array of Summoner IDs.
-        /// </summary>
-        /// <param name="SummonerIds">Array of Summoner IDs</param>
-        /// <returns>Returns an array of Summoner Names</returns>
-        public static Task<String[]> GetSummonerNames(Double[] SummonerIds)
-        {
-            return InvokeAsync<String[]>("summonerRuneService", "getSummonerRuneInventory", SummonerIds);
-        }
-
-        /// <summary>
         /// Gets the runes for a user
         /// </summary>
         /// <param name="SummonerId">The summoner ID for the user</param>
@@ -336,6 +326,16 @@ namespace LegendaryClient.Logic.Riot
         public static Task<object> UpdateProfileIconId(Int32 IconId)
         {
             return InvokeAsync<object>("summonerService", "updateProfileIconId", IconId);
+        }
+
+        /// <summary>
+        /// Get the summoner names for an array of Summoner IDs.
+        /// </summary>
+        /// <param name="SummonerIds">Array of Summoner IDs</param>
+        /// <returns>Returns an array of Summoner Names</returns>
+        public static Task<String[]> GetSummonerNames(Double[] SummonerIds)
+        {
+            return InvokeAsync<String[]>("summonerService", "getSummonerNames", SummonerIds);
         }
 
         /// <summary>
@@ -754,8 +754,8 @@ namespace LegendaryClient.Logic.Riot
             }
             catch (InvocationException e)
             {
-                ;
-                OnInvocationError(null, e);
+                if (OnInvocationError != null)
+                    OnInvocationError(null, e);
                 return null;
             }
         }
@@ -836,6 +836,7 @@ namespace LegendaryClient.Logic.Riot
                 context.Register(Team);
 
             context.Register(typeof(PendingKudosDTO));
+            context.RegisterAlias(typeof(Icon), "com.riotgames.platform.summoner.icon.SummonerIcon", true);
 
             return context;
         }

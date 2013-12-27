@@ -526,15 +526,15 @@ namespace LegendaryClient.Logic
         /// <summary>
         /// Allow lobby to still have a connection. Do not use this!
         /// </summary>
-        internal static event PVPNetConnection.OnMessageReceivedHandler OnFixLobby;
+        internal static event PVPNetConnection.OnMessageReceivedHandler OnFixLobby;*/
 
         /// <summary>
         /// When an error occurs while connected. Currently un-used
         /// </summary>
-        internal static void PVPNet_OnError(object sender, PVPNetConnect.Error error)
+        public static void CallbackException(object sender, Exception e)
         {
-            Log(error.Type + " " + error.Message, "RTMPSERROR");
-        }*/
+            ;
+        }
 
         internal static void OnMessageReceived(object sender, MessageReceivedEventArgs message)
         {
