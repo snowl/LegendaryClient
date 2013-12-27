@@ -47,7 +47,7 @@ namespace LegendaryClient.Windows
         public async void GetSummonerProfile(string s)
         {
             PublicSummoner Summoner = await RiotCalls.GetSummonerByName(String.IsNullOrWhiteSpace(s) ? Client.LoginPacket.AllSummonerData.Summoner.Name : s);
-            if (String.IsNullOrWhiteSpace(Summoner.Name))
+            if (Summoner == null)
             {
                 MessageOverlay overlay = new MessageOverlay();
                 overlay.MessageTitle.Content = "No Summoner Found";
@@ -73,21 +73,21 @@ namespace LegendaryClient.Windows
             var uriSource = Path.Combine(Client.ExecutingDirectory, "Assets", "profileicon", ProfileIconID + ".png");
             ProfileImage.Source = Client.GetImage(uriSource);
 
-            PlatformGameLifecycleDTO n = await RiotCalls.RetrieveInProgressSpectatorGameInfo(s);
-            if (n.GameName != null)
+            try
             {
+                PlatformGameLifecycleDTO n = await RiotCalls.RetrieveInProgressSpectatorGameInfo(s);
                 InGameHeader.Visibility = Visibility.Visible;
                 InGameHeader.IsSelected = true;
                 Ingame ingame = InGameContainer.Content as Ingame;
                 ingame.Update(n);
             }
-            else
+            catch
             {
                 InGameHeader.Visibility = Visibility.Collapsed;
                 OverviewHeader.IsSelected = true;
             }
 
-            if (Summoner.InternalName == Client.LoginPacket.AllSummonerData.Summoner.InternalName)
+            if (Summoner.Name == Client.LoginPacket.AllSummonerData.Summoner.Name)
             {
                 ChampionsTab.Visibility = System.Windows.Visibility.Visible;
                 SkinsTab.Visibility = System.Windows.Visibility.Visible;

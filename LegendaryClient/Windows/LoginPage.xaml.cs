@@ -14,6 +14,7 @@ using RtmpSharp.Net;
 using System;
 using System.IO;
 using System.Linq;
+using System.Net;
 using System.Threading;
 using System.Windows;
 using System.Windows.Controls;
@@ -98,7 +99,7 @@ namespace LegendaryClient.Windows
             }
         }
 
-        private async void LoginButton_Click(object sender, RoutedEventArgs e)
+        private async void LoginButton_Click(object sender, RoutedEventArgs args)
         {
             if (RememberPasswordCheckbox.IsChecked == true)
                 Properties.Settings.Default.SavedPassword = LoginPasswordBox.Password;
@@ -133,7 +134,26 @@ namespace LegendaryClient.Windows
             newCredentials.IpAddress = RiotCalls.GetIpAddress();
             newCredentials.Locale = SelectedRegion.Locale;
             newCredentials.Domain = "lolclient.lol.riotgames.com";
-            newCredentials.AuthToken = RiotCalls.GetAuthKey(LoginUsernameBox.Text, LoginPasswordBox.Password, SelectedRegion.LoginQueue);
+            try
+            {
+                newCredentials.AuthToken = RiotCalls.GetAuthKey(LoginUsernameBox.Text, LoginPasswordBox.Password, SelectedRegion.LoginQueue);
+            }
+            catch (Exception e)
+            {
+                HideGrid.Visibility = Visibility.Visible;
+                ErrorTextBox.Visibility = Visibility.Visible;
+                LoggingInProgressRing.Visibility = Visibility.Hidden;
+                LoggingInLabel.Visibility = Visibility.Hidden;
+                if (e.Message.Contains("The remote name could not be resolved"))
+                    ErrorTextBox.Text = "Please make sure you are connected the internet!";
+                else if (e.Message.Contains("(403) Forbidden"))
+                    ErrorTextBox.Text = "Your username or password is incorrect!";
+                else
+                    ErrorTextBox.Text = "Unable to get Auth Key";
+
+                ErrorTextBox.Text += Environment.NewLine + e.StackTrace;
+                return;
+            }
 
             Session login = await RiotCalls.Login(newCredentials);
             await Client.RtmpConnection.SubscribeAsync("my-rtmps", "messagingDestination", "bc", "bc-" + login.AccountSummary.AccountId.ToString());
@@ -148,19 +168,6 @@ namespace LegendaryClient.Windows
         {
             throw e;
         }
-
-        /*private void PVPNet_OnError(object sender, PVPNetConnect.Error error)
-        {
-            //Display error message
-            Dispatcher.BeginInvoke(DispatcherPriority.Input, new ThreadStart(() =>
-            {
-                HideGrid.Visibility = Visibility.Visible;
-                ErrorTextBox.Visibility = Visibility.Visible;
-                LoggingInProgressRing.Visibility = Visibility.Hidden;
-                LoggingInLabel.Visibility = Visibility.Hidden;
-                ErrorTextBox.Text = error.Message;
-            }));
-        }*/
 
         private async void GotLoginPacket(LoginDataPacket packet)
         {
@@ -178,7 +185,7 @@ namespace LegendaryClient.Windows
                 //Setup chat
                 Client.ChatClient.AutoReconnect = 30;
                 Client.ChatClient.KeepAlive = 10;
-                Client.ChatClient.NetworkHost = "192.64.169.22";//"chat." + Client.Region.ChatName + ".lol.riotgames.com";
+                Client.ChatClient.NetworkHost = Dns.GetHostAddresses("chat." + Client.Region.ChatName + ".lol.riotgames.com")[0].ToString();
                 Client.ChatClient.Port = 5223;
                 Client.ChatClient.Server = "pvp.net";
                 Client.ChatClient.SSL = true;

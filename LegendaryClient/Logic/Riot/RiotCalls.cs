@@ -69,9 +69,9 @@ namespace LegendaryClient.Logic.Riot
         /// </summary>
         /// <param name="JSONInformation"></param>
         /// <returns>Json Data about kudos</returns>
-        public static Task<String> CallKudos(String JSONInformation)
+        public static Task<LcdsResponseString> CallKudos(String JSONInformation)
         {
-            return InvokeAsync<String>("clientFacadeService", "callKudos", JSONInformation);
+            return InvokeAsync<LcdsResponseString>("clientFacadeService", "callKudos", JSONInformation);
         }
 
         /// <summary>
@@ -787,6 +787,13 @@ namespace LegendaryClient.Logic.Riot
 
             JavaScriptSerializer serializer = new JavaScriptSerializer();
             Dictionary<string, object> deserializedJSON = serializer.Deserialize<Dictionary<string, object>>(sb.ToString());
+
+            string Status = (string)deserializedJSON["status"];
+
+            if (Status == "QUEUE")
+            {
+
+            }
 
             return (string)deserializedJSON["token"];
         }

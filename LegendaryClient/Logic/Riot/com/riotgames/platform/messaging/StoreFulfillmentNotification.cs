@@ -4,7 +4,7 @@ using RtmpSharp.IO;
 namespace LegendaryClient.Logic.Riot.Platform
 {
     [Serializable]
-    [SerializedName("com.riotgames.platform..StoreFulfillmentNotification")]
+    [SerializedName("com.riotgames.platform.messaging.StoreFulfillmentNotification")]
     public class StoreFulfillmentNotification
     {
         [SerializedName("rp")]

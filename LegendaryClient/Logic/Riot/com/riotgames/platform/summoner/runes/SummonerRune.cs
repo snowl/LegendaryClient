@@ -4,7 +4,7 @@ using RtmpSharp.IO;
 namespace LegendaryClient.Logic.Riot.Platform
 {
     [Serializable]
-    [SerializedName("com.riotgames.platform..SummonerRune")]
+    [SerializedName("com.riotgames.platform.summoner.runes.SummonerRune")]
     public class SummonerRune
     {
         [SerializedName("purchased")]

@@ -73,6 +73,7 @@ namespace LegendaryClient.Windows.Profile
                         i++;
                         LeagueItem item = new LeagueItem();
                         item.DataContext = player;
+                        item.PlayerLabel.Content = player.PlayerOrTeamName;
 
                         item.PlayerRankLabel.Content = i;
                         if (i - player.PreviousDayLeaguePosition != 0)
@@ -120,11 +121,11 @@ namespace LegendaryClient.Windows.Profile
             if (LeaguesListView.SelectedItem != null)
             {
                 LeagueItem item = (LeagueItem)LeaguesListView.SelectedItem;
-                PlayerLabel.Content = item.PlayerLabel.Content;
                 TopChampionsListView.Items.Clear();
-                var x = await RiotCalls.GetSummonerByName((string)item.PlayerLabel.Content);
+                PublicSummoner x = await RiotCalls.GetSummonerByName((string)item.PlayerLabel.Content);
                 AggregatedStats stats = await RiotCalls.GetAggregatedStats(x.AcctId, "CLASSIC", "3");
                 GotStats(stats);
+                PlayerLabel.Content = item.PlayerLabel.Content;
             }
         }
 

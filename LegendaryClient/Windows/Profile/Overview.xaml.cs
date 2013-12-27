@@ -28,7 +28,7 @@ namespace LegendaryClient.Windows.Profile
         public async void Update(double SummonerId, double AccountId)
         {
             AccId = AccountId;
-            string TotalKudos = await RiotCalls.CallKudos("{\"commandName\":\"TOTALS\",\"summonerId\": " + SummonerId + "}");
+            LcdsResponseString TotalKudos = await RiotCalls.CallKudos("{\"commandName\":\"TOTALS\",\"summonerId\": " + SummonerId + "}");
             RenderKudos(TotalKudos);
             ChampionStatInfo[] TopChampions = await RiotCalls.RetrieveTopPlayedChampions(AccountId, "CLASSIC");
             RenderTopPlayedChampions(TopChampions);
@@ -36,11 +36,11 @@ namespace LegendaryClient.Windows.Profile
             GotPlayerStats(stats);
         }
 
-        public void RenderKudos(string TotalKudos)
+        public void RenderKudos(LcdsResponseString TotalKudos)
         {
             KudosListView.Items.Clear();
-            TotalKudos = TotalKudos.Replace("{\"totals\":[0,", "").Replace("]}", "");
-            string[] Kudos = TotalKudos.Split(',');
+            TotalKudos.Value = TotalKudos.Value.Replace("{\"totals\":[0,", "").Replace("]}", "");
+            string[] Kudos = TotalKudos.Value.Split(',');
             KudosItem item = new KudosItem("Friendly", Kudos[0]);
             KudosListView.Items.Add(item);
             item = new KudosItem("Helpful", Kudos[1]);
@@ -132,8 +132,8 @@ namespace LegendaryClient.Windows.Profile
 
         private async void ViewAggregatedStatsButton_Click(object sender, System.Windows.RoutedEventArgs e)
         {
-            //AggregatedStats x = await Client.PVPNet.GetAggregatedStats(AccId, "CLASSIC", "3");
-            //Client.OverlayContainer.Content = new AggregatedStatsOverlay(x, AccId == Client.LoginPacket.AllSummonerData.Summoner.AcctId).Content;
+            AggregatedStats x = await RiotCalls.GetAggregatedStats(AccId, "CLASSIC", "3");
+            Client.OverlayContainer.Content = new AggregatedStatsOverlay(x, AccId == Client.LoginPacket.AllSummonerData.Summoner.AcctId).Content;
             Client.OverlayContainer.Visibility = System.Windows.Visibility.Visible;
         }
     }
