@@ -125,6 +125,8 @@ namespace LegendaryClient.Windows
             var context = RiotCalls.RegisterObjects();
             Client.RtmpConnection = new RtmpClient(new Uri("rtmps://" + SelectedRegion.Server + ":2099"), context, ObjectEncoding.Amf3);
             Client.RtmpConnection.MessageReceived += Client.OnMessageReceived;
+            Client.RtmpConnection.CallbackException += Client.CallbackException;
+            RiotCalls.OnInvocationError += Client.CallbackException;
             await Client.RtmpConnection.ConnectAsync();
 
             AuthenticationCredentials newCredentials = new AuthenticationCredentials();

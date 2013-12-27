@@ -5,6 +5,7 @@ using LegendaryClient.Logic.PlayerSpell;
 using LegendaryClient.Logic.Riot;
 using LegendaryClient.Logic.Riot.Platform;
 using LegendaryClient.Logic.SQLite;
+using RtmpSharp.Messaging;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -175,8 +176,8 @@ namespace LegendaryClient.Windows
 
             //Start recieving champ select
             ChampSelect_OnMessageReceived(this, latestDTO);
-            //Client.OnFixChampSelect += ChampSelect_OnMessageReceived;
-            //Client.RtmpConnection.MessageReceived += ChampSelect_OnMessageReceived;
+            Client.OnFixChampSelect += ChampSelect_OnMessageReceived;
+            Client.RtmpConnection.MessageReceived += ChampSelect_OnMessageReceived;
         }
 
         private void CountdownTimer_Tick(object sender, EventArgs e)
@@ -194,11 +195,17 @@ namespace LegendaryClient.Windows
         /// <param name="message"></param>
         private void ChampSelect_OnMessageReceived(object sender, object message)
         {
-            if (message.GetType() == typeof(GameDTO))
+            if (message.GetType() == typeof(GameDTO) || ((MessageReceivedEventArgs)message).Body.GetType() == typeof(GameDTO))
             {
                 #region In Champion Select
 
-                GameDTO ChampDTO = message as GameDTO;
+                GameDTO ChampDTO = null;
+
+                if (message.GetType() == typeof(GameDTO))
+                    ChampDTO = message as GameDTO;
+                else
+                    ChampDTO = ((MessageReceivedEventArgs)message).Body as GameDTO;
+
                 LatestDto = ChampDTO;
                 Dispatcher.BeginInvoke(DispatcherPriority.Input, new ThreadStart(async () =>
                 {
@@ -320,7 +327,7 @@ namespace LegendaryClient.Windows
                     else if (ChampDTO.GameState == "POST_CHAMP_SELECT")
                     {
                         //Post game has started. Allow trading
-                        //CanTradeWith = await Client.PVPNet.GetPotentialTraders();
+                        CanTradeWith = await RiotCalls.GetPotentialTraders();
                         HasLockedIn = true;
                         GameStatusLabel.Content = "All players have picked!";
                         if (configType != null)
@@ -475,11 +482,11 @@ namespace LegendaryClient.Windows
 
                 #endregion In Champion Select
             }
-            else if (message.GetType() == typeof(PlayerCredentialsDto))
+            else if (((MessageReceivedEventArgs)message).Body.GetType() == typeof(PlayerCredentialsDto))
             {
                 #region Launching Game
 
-                PlayerCredentialsDto dto = message as PlayerCredentialsDto;
+                PlayerCredentialsDto dto = ((MessageReceivedEventArgs)message).Body as PlayerCredentialsDto;
                 Client.CurrentGame = dto;
 
                 if (!HasLaunchedGame)
@@ -498,11 +505,11 @@ namespace LegendaryClient.Windows
 
                 #endregion Launching Game
             }
-            else if (message.GetType() == typeof(TradeContractDTO))
+            else if (((MessageReceivedEventArgs)message).Body.GetType() == typeof(TradeContractDTO))
             {
                 Dispatcher.BeginInvoke(DispatcherPriority.Input, new ThreadStart(() =>
                 {
-                    TradeContractDTO TradeDTO = message as TradeContractDTO;
+                    TradeContractDTO TradeDTO = ((MessageReceivedEventArgs)message).Body as TradeContractDTO;
                     if (TradeDTO.State == "PENDING")
                     {
                         PlayerTradeControl.Visibility = System.Windows.Visibility.Visible;

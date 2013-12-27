@@ -123,7 +123,7 @@ namespace LegendaryClient.Windows.Profile
                 LeagueItem item = (LeagueItem)LeaguesListView.SelectedItem;
                 TopChampionsListView.Items.Clear();
                 PublicSummoner x = await RiotCalls.GetSummonerByName((string)item.PlayerLabel.Content);
-                AggregatedStats stats = await RiotCalls.GetAggregatedStats(x.AcctId, "CLASSIC", "3");
+                AggregatedStats stats = await RiotCalls.GetAggregatedStats(x.AcctId, "CLASSIC", Client.LoginPacket.ClientSystemStates.currentSeason.ToString());
                 GotStats(stats);
                 PlayerLabel.Content = item.PlayerLabel.Content;
             }

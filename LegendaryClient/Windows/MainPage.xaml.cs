@@ -63,9 +63,9 @@ namespace LegendaryClient.Windows
                 //RiotCalls.GetAllLeaguesForPlayer(PlayerData.Summoner.SumId, new SummonerLeaguesDTO.Callback(GotLeaguesForPlayer));
             }
 
-            if (packet.BroadcastNotification.BroadcastMessages != null)
+            if (packet.BroadcastNotification.broadcastMessages != null)
             {
-                Dictionary<string, object> Message = packet.BroadcastNotification.BroadcastMessages[0] as Dictionary<string, object>;
+                Dictionary<string, object> Message = packet.BroadcastNotification.broadcastMessages[0] as Dictionary<string, object>;
                 BroadcastMessage.Text = Convert.ToString(Message["content"]);
             }
 
@@ -498,9 +498,9 @@ namespace LegendaryClient.Windows
                 if (message is BroadcastNotification)
                 {
                     BroadcastNotification notif = message as BroadcastNotification;
-                    if (notif.BroadcastMessages != null)
+                    if (notif.broadcastMessages != null)
                     {
-                        Dictionary<string, object> Message = notif.BroadcastMessages[0] as Dictionary<string, object>;
+                        Dictionary<string, object> Message = notif.broadcastMessages[0] as Dictionary<string, object>;
                         if ((bool)Message["active"] == true)
                         {
                             BroadcastMessage.Text = Convert.ToString(Message["content"]);

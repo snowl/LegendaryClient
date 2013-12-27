@@ -132,7 +132,7 @@ namespace LegendaryClient.Windows.Profile
 
         private async void ViewAggregatedStatsButton_Click(object sender, System.Windows.RoutedEventArgs e)
         {
-            AggregatedStats x = await RiotCalls.GetAggregatedStats(AccId, "CLASSIC", "3");
+            AggregatedStats x = await RiotCalls.GetAggregatedStats(AccId, "CLASSIC", Client.LoginPacket.ClientSystemStates.currentSeason.ToString());
             Client.OverlayContainer.Content = new AggregatedStatsOverlay(x, AccId == Client.LoginPacket.AllSummonerData.Summoner.AcctId).Content;
             Client.OverlayContainer.Visibility = System.Windows.Visibility.Visible;
         }

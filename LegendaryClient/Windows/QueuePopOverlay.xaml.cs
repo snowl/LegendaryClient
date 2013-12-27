@@ -1,5 +1,6 @@
 ﻿using LegendaryClient.Controls;
 using LegendaryClient.Logic;
+using LegendaryClient.Logic.Riot;
 using LegendaryClient.Logic.Riot.Leagues;
 using LegendaryClient.Logic.Riot.Platform;
 using System;
@@ -154,7 +155,7 @@ namespace LegendaryClient.Windows
                 {
                     QueuePopPlayer player = (QueuePopPlayer)Team1ListBox.Items[i];
                     PlayerParticipant playerPart = (PlayerParticipant)p;
-                    /*SummonerLeaguesDTO playerLeagues = await Client.PVPNet.GetAllLeaguesForPlayer(playerPart.SummonerId);
+                    SummonerLeaguesDTO playerLeagues = await RiotCalls.GetAllLeaguesForPlayer(playerPart.SummonerId);
                     foreach (LeagueListDTO x in playerLeagues.SummonerLeagues)
                     {
                         if (x.Queue == "RANKED_SOLO_5x5")
@@ -166,20 +167,20 @@ namespace LegendaryClient.Windows
                     if (String.IsNullOrEmpty((string)player.RankLabel.Content))
                     {
                         player.RankLabel.Content = "Unranked";
-                    }*/
+                    }
                     i++;
                 }
             }
 
             if (Client.AutoAcceptQueue)
             {
-                //await Client.PVPNet.AcceptPoppedGame(true);
+                await RiotCalls.AcceptPoppedGame(true);
             }
         }
 
         private async void AcceptButton_Click(object sender, RoutedEventArgs e)
         {
-            //await Client.PVPNet.AcceptPoppedGame(true);
+            await RiotCalls.AcceptPoppedGame(true);
         }
     }
 }

@@ -4,6 +4,7 @@ using LegendaryClient.Logic;
 using LegendaryClient.Logic.Maps;
 using LegendaryClient.Logic.Riot;
 using LegendaryClient.Logic.Riot.Platform;
+using RtmpSharp.Messaging;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -36,7 +37,7 @@ namespace LegendaryClient.Windows
             InitializeComponent();
             Client.IsInGame = true;
             GameName.Content = Client.GameName;
-            //Client.OnFixLobby += GameLobby_OnMessageReceived;
+            Client.OnFixLobby += GameLobby_OnMessageReceived;
             Client.RtmpConnection.MessageReceived += GameLobby_OnMessageReceived;
             //If client has created game use initial DTO
             if (Client.GameLobbyDTO != null)
@@ -140,9 +141,15 @@ namespace LegendaryClient.Windows
 
         private void GameLobby_OnMessageReceived(object sender, object message)
         {
-            if (message.GetType() == typeof(GameDTO))
+            if (message.GetType() == typeof(GameDTO) || ((MessageReceivedEventArgs)message).Body.GetType() == typeof(GameDTO))
             {
-                GameDTO dto = message as GameDTO;
+                GameDTO dto = null;
+
+                if (message.GetType() == typeof(GameDTO))
+                    dto = message as GameDTO;
+                else
+                    dto = ((MessageReceivedEventArgs)message).Body as GameDTO;
+
                 Dispatcher.BeginInvoke(DispatcherPriority.Input, new ThreadStart(async () =>
                 {
                     MapId = dto.MapId;

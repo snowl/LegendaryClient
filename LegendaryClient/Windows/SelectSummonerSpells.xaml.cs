@@ -1,5 +1,6 @@
 ﻿using LegendaryClient.Logic;
 using LegendaryClient.Logic.PlayerSpell;
+using LegendaryClient.Logic.Riot;
 using System;
 using System.Windows;
 using System.Windows.Controls;
@@ -51,7 +52,7 @@ namespace LegendaryClient.Windows
                 else
                 {
                     SummonerSpell2.Source = Client.GetImage(uriSource);
-                    //await Client.PVPNet.SelectSpells(SelectedSpell1, spellId);
+                    await RiotCalls.SelectSpells(SelectedSpell1, spellId);
                     Client.OverlayContainer.Visibility = Visibility.Hidden;
                 }
             }

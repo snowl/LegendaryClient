@@ -11,7 +11,7 @@ namespace LegendaryClient.Logic.Riot.Platform
         [SerializedName("seasonTwoTier")]
         public String SeasonTwoTier { get; set; }
 
-        [SerializedName("publicName")]
+        [SerializedName("internalName")]
         public String InternalName { get; set; }
 
         [SerializedName("acctId")]

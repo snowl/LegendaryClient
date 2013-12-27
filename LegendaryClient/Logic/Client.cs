@@ -519,37 +519,37 @@ namespace LegendaryClient.Logic
         internal static object LobbyContent;
         internal static bool IsInGame = false;
 
-        /*/// <summary>
+        /// <summary>
         /// Fix for champ select. Do not use this!
         /// </summary>
-        internal static event PVPNetConnection.OnMessageReceivedHandler OnFixChampSelect;
+        internal static event EventHandler<MessageReceivedEventArgs> OnFixChampSelect;
         /// <summary>
         /// Allow lobby to still have a connection. Do not use this!
         /// </summary>
-        internal static event PVPNetConnection.OnMessageReceivedHandler OnFixLobby;
+        internal static event EventHandler<MessageReceivedEventArgs> OnFixLobby;
 
         /// <summary>
         /// When an error occurs while connected. Currently un-used
         /// </summary>
-        internal static void PVPNet_OnError(object sender, PVPNetConnect.Error error)
+        public static void CallbackException(object sender, Exception e)
         {
-            Log(error.Type + " " + error.Message, "RTMPSERROR");
-        }*/
+            ;
+        }
 
         internal static void OnMessageReceived(object sender, MessageReceivedEventArgs message)
         {
-            /*MainWin.Dispatcher.BeginInvoke(DispatcherPriority.Input, new ThreadStart(async () =>
+            MainWin.Dispatcher.BeginInvoke(DispatcherPriority.Input, new ThreadStart(async () =>
             {
-                if (message is StoreAccountBalanceNotification)
+                if (message.Body is StoreAccountBalanceNotification)
                 {
-                    StoreAccountBalanceNotification newBalance = (StoreAccountBalanceNotification)message;
+                    StoreAccountBalanceNotification newBalance = (StoreAccountBalanceNotification)message.Body;
                     InfoLabel.Content = "IP: " + newBalance.Ip + " ∙ RP: " + newBalance.Rp;
                     LoginPacket.IpBalance = newBalance.Ip;
                     LoginPacket.RpBalance = newBalance.Rp;
                 }
-                else if (message is GameNotification)
+                else if (message.Body is GameNotification)
                 {
-                    GameNotification notification = (GameNotification)message;
+                    GameNotification notification = (GameNotification)message.Body;
                     MessageOverlay messageOver = new MessageOverlay();
                     messageOver.MessageTitle.Content = notification.Type;
                     switch (notification.Type)
@@ -559,9 +559,9 @@ namespace LegendaryClient.Logic
                             messageOver.MessageTextBox.Text = "You have been banned from this custom game!";
                             break;
                         case "PLAYER_QUIT":
-                            string[] Name = await PVPNet.GetSummonerNames(new double[1] { Convert.ToDouble((string)notification.MessageArgument) });
+                            string[] Name = await RiotCalls.GetSummonerNames(new double[1] { Convert.ToDouble((string)notification.MessageArgument) });
                             messageOver.MessageTitle.Content = "Player has left the queue";
-                            messageOver.MessageTextBox.Text = Name[0] + " has left the queue;
+                            messageOver.MessageTextBox.Text = Name[0] + " has left the queue";
                             break;
                         default:
                             messageOver.MessageTextBox.Text = notification.MessageCode + Environment.NewLine;
@@ -572,20 +572,20 @@ namespace LegendaryClient.Logic
                     OverlayContainer.Visibility = Visibility.Visible;
                     QuitCurrentGame();
                 }
-                else if (message is EndOfGameStats)
+                else if (message.Body is EndOfGameStats)
                 {
-                    EndOfGameStats stats = message as EndOfGameStats;
+                    EndOfGameStats stats = message.Body as EndOfGameStats;
                     EndOfGamePage EndOfGame = new EndOfGamePage(stats);
                     OverlayContainer.Visibility = Visibility.Visible;
                     OverlayContainer.Content = EndOfGame.Content;
                 }
-                else if (message is StoreFulfillmentNotification)
+                else if (message.Body is StoreFulfillmentNotification)
                 {
                     PlayerChampions = await RiotCalls.GetAvailableChampions();
                 }
-                else if (message is GameDTO)
+                else if (message.Body is GameDTO)
                 {
-                    GameDTO Queue = message as GameDTO;
+                    GameDTO Queue = message.Body as GameDTO;
                     if (!IsInGame && Queue.GameState != "TERMINATED")
                     {
                         MainWin.Dispatcher.BeginInvoke(DispatcherPriority.Input, new ThreadStart(() =>
@@ -595,7 +595,7 @@ namespace LegendaryClient.Logic
                         }));
                     }
                 }
-            }));*/
+            }));
         }
 
         internal static string InternalQueueToPretty(string InternalQueue)
@@ -724,26 +724,26 @@ namespace LegendaryClient.Logic
 
         internal static void FixLobby()
         {
-            /*if (OnFixLobby != null)
+            if (OnFixLobby != null)
             {
                 foreach (Delegate d in OnFixLobby.GetInvocationList())
                 {
-                    PVPNet.OnMessageReceived -= (PVPNetConnection.OnMessageReceivedHandler)d;
-                    OnFixLobby -= (PVPNetConnection.OnMessageReceivedHandler)d;
+                    RtmpConnection.MessageReceived -= (EventHandler<MessageReceivedEventArgs>)d;
+                    OnFixLobby -= (EventHandler<MessageReceivedEventArgs>)d;
                 }
-            }*/
+            }
         }
 
         internal static void FixChampSelect()
         {
-            /*if (OnFixChampSelect != null)
+            if (OnFixChampSelect != null)
             {
                 foreach (Delegate d in OnFixChampSelect.GetInvocationList())
                 {
-                    PVPNet.OnMessageReceived -= (PVPNetConnection.OnMessageReceivedHandler)d;
-                    OnFixChampSelect -= (PVPNetConnection.OnMessageReceivedHandler)d;
+                    RtmpConnection.MessageReceived -= (EventHandler<MessageReceivedEventArgs>)d;
+                    OnFixChampSelect -= (EventHandler<MessageReceivedEventArgs>)d;
                 }
-            }*/
+            }
         }
         #endregion League Of Legends Logic
 
