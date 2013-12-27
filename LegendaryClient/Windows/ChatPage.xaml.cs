@@ -74,7 +74,7 @@ namespace LegendaryClient.Windows
                 {
                     Client.UpdatePlayers = false;
 
-                    ChatListView.Items.Clear();
+                    ChatListView.Children.Clear();
 
                     foreach (Group g in Client.Groups)
                     {
@@ -86,6 +86,7 @@ namespace LegendaryClient.Windows
                         PlayersListView.Background = null;
                         PlayersListView.BorderBrush = null;
                         PlayersListView.SelectionChanged += ChatListView_SelectionChanged;
+                        PlayersListView.PreviewMouseWheel += PlayersListView_PreviewMouseWheel;
 
                         int Players = 0;
 
@@ -160,10 +161,23 @@ namespace LegendaryClient.Windows
                             GroupControl.ExpandLabel.Content = "-";
                             GroupControl.GroupListView.Visibility = System.Windows.Visibility.Visible;
                         }
-                        ChatListView.Items.Add(GroupControl);
+                        ChatListView.Children.Add(GroupControl);
                     }
                 }
             }));
+        }
+
+        void PlayersListView_PreviewMouseWheel(object sender, MouseWheelEventArgs e)
+        {
+            if (!e.Handled)
+            {
+                e.Handled = true;
+                var eventArg = new MouseWheelEventArgs(e.MouseDevice, e.Timestamp, e.Delta);
+                eventArg.RoutedEvent = UIElement.MouseWheelEvent;
+                eventArg.Source = sender;
+                var parent = ((Control)sender).Parent as UIElement;
+                parent.RaiseEvent(eventArg);
+            }
         }
 
         private void player_MouseLeave(object sender, MouseEventArgs e)
@@ -257,7 +271,7 @@ namespace LegendaryClient.Windows
             if (e.AddedItems.Count > 0)
             {
                 ChatPlayer player = (ChatPlayer)e.AddedItems[0];
-                ChatListView.SelectedIndex = -1;
+                //ChatListView.SelectedIndex = -1;
                 ChatPlayerItem playerItem = (ChatPlayerItem)player.Tag;
                 LastPlayerItem = playerItem;
                 foreach (NotificationChatPlayer x in Client.ChatListView.Items)
