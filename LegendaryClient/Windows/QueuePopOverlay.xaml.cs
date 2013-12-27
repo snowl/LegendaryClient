@@ -3,6 +3,7 @@ using LegendaryClient.Logic;
 using LegendaryClient.Logic.Riot;
 using LegendaryClient.Logic.Riot.Leagues;
 using LegendaryClient.Logic.Riot.Platform;
+using RtmpSharp.Messaging;
 using System;
 using System.Collections.Generic;
 using System.Threading;
@@ -31,7 +32,7 @@ namespace LegendaryClient.Windows
             Client.FocusClient();
             InitializePop(InitialDTO);
             TimeLeft = InitialDTO.JoinTimerDuration;
-            //Client.PVPNet.OnMessageReceived += PVPNet_OnMessageReceived;
+            Client.RtmpConnection.MessageReceived += OnMessageReceived;
             QueueTimer = new System.Timers.Timer(1000);
             QueueTimer.Elapsed += new ElapsedEventHandler(QueueElapsed);
             QueueTimer.Enabled = true;
@@ -48,24 +49,24 @@ namespace LegendaryClient.Windows
             }));
         }
 
-        private void PVPNet_OnMessageReceived(object sender, object message)
+        private void OnMessageReceived(object sender, MessageReceivedEventArgs message)
         {
-            if (message.GetType() == typeof(GameDTO))
+            if (message.Body.GetType() == typeof(GameDTO))
             {
                 Dispatcher.BeginInvoke(DispatcherPriority.Input, new ThreadStart(() =>
                 {
-                    GameDTO QueueDTO = message as GameDTO;
-                    if (QueueDTO.GameState == "TERMINATED")
+                    GameDTO QueueDTO = message.Body as GameDTO;
+                    if (QueueDTO.GameState == "TERMINATED" || QueueDTO.GameState == "TERMINATED_IN_ERROR")
                     {
                         Client.OverlayContainer.Visibility = Visibility.Hidden;
-                        //Client.PVPNet.OnMessageReceived -= PVPNet_OnMessageReceived;
+                        Client.RtmpConnection.MessageReceived -= OnMessageReceived;
                         Client.IsInGame = false;
                         return;
                     }
                     else if (QueueDTO.GameState == "CHAMP_SELECT")
                     {
                         HasStartedChampSelect = true;
-                        //Client.PVPNet.OnMessageReceived -= PVPNet_OnMessageReceived;
+                        Client.RtmpConnection.MessageReceived -= OnMessageReceived;
                         string s = QueueDTO.GameState;
                         Client.ChampSelectDTO = QueueDTO;
                         Client.GameID = QueueDTO.Id;

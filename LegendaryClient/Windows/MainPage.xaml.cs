@@ -46,7 +46,7 @@ namespace LegendaryClient.Windows
             GetNews(region);
         }
 
-        private void GotPlayerData(LoginDataPacket packet)
+        private async void GotPlayerData(LoginDataPacket packet)
         {
             Client.RtmpConnection.MessageReceived += OnMessageReceived;
             AllSummonerData PlayerData = packet.AllSummonerData;
@@ -60,7 +60,8 @@ namespace LegendaryClient.Windows
             }
             else
             {
-                //RiotCalls.GetAllLeaguesForPlayer(PlayerData.Summoner.SumId, new SummonerLeaguesDTO.Callback(GotLeaguesForPlayer));
+                SummonerLeaguesDTO MyLeagues = await RiotCalls.GetAllLeaguesForPlayer(PlayerData.Summoner.SumId);
+                GotLeaguesForPlayer(MyLeagues);
             }
 
             if (packet.BroadcastNotification.broadcastMessages != null)
@@ -132,13 +133,12 @@ namespace LegendaryClient.Windows
                             {
                                 if (player.PlayerOrTeamName == Client.LoginPacket.AllSummonerData.Summoner.Name)
                                 {
-                                    //TypedObject miniSeries = player.MiniSeries as TypedObject;
                                     string Series = "";
-                                    /*if (miniSeries != null)
+                                    if (player.MiniSeries != null)
                                     {
-                                        Series = ((string)miniSeries["progress"]).Replace('N', '-');
+                                        Series = player.MiniSeries.Progress.Replace('N', '-');
                                         InPromo = true;
-                                    }*/
+                                    }
                                     CurrentLP = (player.LeaguePoints == 100 ? Series : Convert.ToString(player.LeaguePoints));
                                 }
                             }

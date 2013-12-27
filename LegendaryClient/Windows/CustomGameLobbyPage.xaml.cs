@@ -51,7 +51,6 @@ namespace LegendaryClient.Windows
             }
 
             Client.LastPageContent = this.Content;
-            Client.LobbyContent = this.Content;
             Client.InviteListView = InviteListView;
             Client.InviteListView.Items.Clear();
             Client.OnMessage += Client_OnMessage;

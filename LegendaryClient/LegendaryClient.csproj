@@ -109,6 +109,9 @@
     <Compile Include="Controls\ChampionImage.xaml.cs">
       <DependentUpon>ChampionImage.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controls\ChatGroup.xaml.cs">
+      <DependentUpon>ChatGroup.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Controls\ChatItem.xaml.cs">
       <DependentUpon>ChatItem.xaml</DependentUpon>
     </Compile>
@@ -435,6 +438,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Controls\ChampionImage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\ChatGroup.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

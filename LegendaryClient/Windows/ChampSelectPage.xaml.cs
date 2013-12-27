@@ -255,9 +255,9 @@ namespace LegendaryClient.Windows
                             CountdownTimer.Stop();
                         }
                         Client.FixChampSelect();
-                        FakePage fakePage = new FakePage();
-                        fakePage.Content = Client.LobbyContent;
-                        Client.SwitchPage(fakePage);
+                        CustomGameLobbyPage page = new CustomGameLobbyPage();
+                        Client.GameLobbyDTO = ChampDTO;
+                        Client.SwitchPage(page);
                         return;
                     }
                     else if (ChampDTO.GameState == "PRE_CHAMP_SELECT")
@@ -341,7 +341,7 @@ namespace LegendaryClient.Windows
                         DodgeButton.IsEnabled = false; //Cannot dodge past this point!
                         counter = 1;
                     }
-                    else if (ChampDTO.GameState == "TERMINATED")
+                    else if (ChampDTO.GameState == "TERMINATED" || ChampDTO.GameState == "TERMINATED_IN_ERROR")
                     {
                         //TODO
                     }
@@ -363,10 +363,10 @@ namespace LegendaryClient.Windows
                         i++;
                         ChampSelectPlayer control = new ChampSelectPlayer();
                         //Cast AramPlayers as PlayerParticipants. This removes reroll data
-                        /*if (tempParticipant is AramPlayerParticipant)
+                        if (tempParticipant is AramPlayerParticipant)
                         {
-                            tempParticipant = new PlayerParticipant(tempParticipant);
-                        }*/
+                            tempParticipant = Convert.ChangeType(tempParticipant, typeof(PlayerParticipant)) as AramPlayerParticipant;
+                        }
                         
                         if (tempParticipant is PlayerParticipant)
                         {
@@ -688,7 +688,7 @@ namespace LegendaryClient.Windows
                 MyChampId = selection.ChampionId;
             }
             //Has locked in
-            if (player.PickMode == 2)
+            if (player.PickMode == 2 || LatestDto.GameState == "POST_CHAMP_SELECT" || LatestDto.GameState == "START_REQUESTED")
             {
                 string uriSource = "/LegendaryClient;component/Locked.png";
                 control.LockedInIcon.Source = Client.GetImage(uriSource);

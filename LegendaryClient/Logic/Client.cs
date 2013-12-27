@@ -19,6 +19,7 @@ using System.Security.Cryptography;
 using System.Security.Cryptography.X509Certificates;
 using System.Text.RegularExpressions;
 using System.Threading;
+using System.Timers;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media.Imaging;
@@ -147,6 +148,7 @@ namespace LegendaryClient.Logic
         internal static bool UpdatePlayers = true;
 
         internal static Dictionary<string, ChatPlayerItem> AllPlayers = new Dictionary<string, ChatPlayerItem>();
+        internal static List<Group> Groups = new List<Group>();
 
         internal static bool ChatClient_OnInvalidCertificate(object sender, X509Certificate certificate, X509Chain chain, SslPolicyErrors sslPolicyErrors)
         {
@@ -201,6 +203,38 @@ namespace LegendaryClient.Logic
 
         internal static void ChatClientConnect(object sender)
         {
+            Groups.Add(new Group("Online"));
+
+            //Get all groups
+            RosterManager manager = sender as RosterManager;
+            string ParseString = manager.ToString();
+            List<string> StringHackOne = new List<string>(ParseString.Split(new string[] { "@pvp.net=" }, StringSplitOptions.None));
+            StringHackOne.RemoveAt(0);
+            foreach (string StringHack in StringHackOne)
+            {
+                string[] StringHackTwo = StringHack.Split(',');
+                string Parse = StringHackTwo[0];
+                using (XmlReader reader = XmlReader.Create(new StringReader(Parse)))
+                {
+                    while (reader.Read())
+                    {
+                        if (reader.IsStartElement())
+                        {
+                            switch (reader.Name)
+                            {
+                                case "group":
+                                    reader.Read();
+                                    string Group = reader.Value;
+                                    if (Group != "**Default" && Groups.Find(e => e.GroupName == Group) == null)
+                                        Groups.Add(new Group(Group));
+                                    break;
+                            }
+                        }
+                    }
+                }
+            }
+
+            Groups.Add(new Group("Offline"));
             SetChatHover();
         }
 
@@ -238,10 +272,30 @@ namespace LegendaryClient.Logic
         internal static void RostManager_OnRosterItem(object sender, jabber.protocol.iq.Item ri)
         {
             UpdatePlayers = true;
+
             if (!AllPlayers.ContainsKey(ri.JID.User))
             {
                 ChatPlayerItem player = new ChatPlayerItem();
                 player.Id = ri.JID.User;
+                player.Group = "Online";
+                using (XmlReader reader = XmlReader.Create(new StringReader(ri.OuterXml)))
+                {
+                    while (reader.Read())
+                    {
+                        if (reader.IsStartElement())
+                        {
+                            switch (reader.Name)
+                            {
+                                case "group":
+                                    reader.Read();
+                                    string TempGroup = reader.Value;
+                                    if (TempGroup != "**Default")
+                                        player.Group = TempGroup;
+                                    break;
+                            }
+                        }
+                    }
+                }
                 player.Username = ri.Nickname;
                 bool PlayerPresence = PresManager.IsAvailable(ri.JID);
                 AllPlayers.Add(ri.JID.User, player);
@@ -250,17 +304,19 @@ namespace LegendaryClient.Logic
 
         internal static void PresManager_OnPrimarySessionChange(object sender, jabber.JID bare)
         {
-            jabber.protocol.client.Presence[] s = PresManager.GetAll(bare);
-            if (s.Length == 0)
-                return;
-            string Presence = s[0].Status;
-            if (Presence == null)
-                return;
             if (AllPlayers.ContainsKey(bare.User))
             {
-                UpdatePlayers = true;
                 ChatPlayerItem Player = AllPlayers[bare.User];
+                Player.IsOnline = false;
+                UpdatePlayers = true;
+                jabber.protocol.client.Presence[] s = PresManager.GetAll(bare);
+                if (s.Length == 0)
+                    return;
+                string Presence = s[0].Status;
+                if (Presence == null)
+                    return;
                 Player.RawPresence = Presence; //For debugging
+                Player.IsOnline = true;
                 using (XmlReader reader = XmlReader.Create(new StringReader(Presence)))
                 {
                     while (reader.Read())
@@ -340,6 +396,7 @@ namespace LegendaryClient.Logic
                         }
                     }
                 }
+
                 if (String.IsNullOrWhiteSpace(Player.Status))
                 {
                     Player.Status = "Online";
@@ -514,9 +571,10 @@ namespace LegendaryClient.Logic
         /// </summary>
         internal static PlayerCredentialsDto CurrentGame;
 
+        internal static Session PlayerSession;
+
         internal static bool AutoAcceptQueue = false;
         internal static object LastPageContent;
-        internal static object LobbyContent;
         internal static bool IsInGame = false;
 
         /// <summary>
@@ -534,6 +592,28 @@ namespace LegendaryClient.Logic
         public static void CallbackException(object sender, Exception e)
         {
             ;
+        }
+
+        internal static System.Timers.Timer HeartbeatTimer;
+        internal static int HeartbeatCount;
+
+        internal static void StartHeartbeat()
+        {
+            HeartbeatTimer = new System.Timers.Timer();
+            HeartbeatTimer.Elapsed += new ElapsedEventHandler(DoHeartbeat);
+            HeartbeatTimer.Interval = 120000; // in milliseconds
+            HeartbeatTimer.Start();
+        }
+
+        internal async static void DoHeartbeat(object sender, ElapsedEventArgs e)
+        {
+            if (IsLoggedIn)
+            {
+                string result = await RiotCalls.PerformLCDSHeartBeat(Convert.ToInt32(LoginPacket.AllSummonerData.Summoner.AcctId), PlayerSession.Token, HeartbeatCount,
+                            DateTime.Now.ToString("ddd MMM d yyyy HH:mm:ss 'GMT-0700'"));
+
+                HeartbeatCount++;
+            }
         }
 
         internal static void OnMessageReceived(object sender, MessageReceivedEventArgs message)
@@ -586,7 +666,7 @@ namespace LegendaryClient.Logic
                 else if (message.Body is GameDTO)
                 {
                     GameDTO Queue = message.Body as GameDTO;
-                    if (!IsInGame && Queue.GameState != "TERMINATED")
+                    if (!IsInGame && Queue.GameState != "TERMINATED" && Queue.GameState != "TERMINATED_IN_ERROR")
                     {
                         MainWin.Dispatcher.BeginInvoke(DispatcherPriority.Input, new ThreadStart(() =>
                         {
@@ -715,7 +795,6 @@ namespace LegendaryClient.Logic
             await RiotCalls.QuitGame();
             StatusGrid.Visibility = System.Windows.Visibility.Hidden;
             PlayButton.Visibility = System.Windows.Visibility.Visible;
-            LobbyContent = null;
             LastPageContent = null;
             GameStatus = "outOfGame";
             SetChatHover();
@@ -862,8 +941,24 @@ namespace LegendaryClient.Logic
 
         public string RawPresence { get; set; }
 
+        public string Group { get; set; }
+
         public bool UsingLegendary { get; set; }
 
+        public bool IsOnline { get; set; }
+
         public List<string> Messages = new List<string>();
+    }
+
+    public class Group
+    {
+        public Group(string s)
+        {
+            GroupName = s;
+        }
+
+        public string GroupName { get; set; }
+
+        public bool IsOpen { get; set; }
     }
 }

@@ -158,6 +158,7 @@ namespace LegendaryClient.Windows
             }
 
             Session login = await RiotCalls.Login(newCredentials);
+            Client.PlayerSession = login;
             await Client.RtmpConnection.SubscribeAsync("my-rtmps", "messagingDestination", "bc", "bc-" + login.AccountSummary.AccountId.ToString());
             await Client.RtmpConnection.SubscribeAsync("my-rtmps", "messagingDestination", "gn-" + login.AccountSummary.AccountId.ToString(), "gn-" + login.AccountSummary.AccountId.ToString());
             await Client.RtmpConnection.SubscribeAsync("my-rtmps", "messagingDestination", "cn-" + login.AccountSummary.AccountId.ToString(), "cn-" + login.AccountSummary.AccountId.ToString());

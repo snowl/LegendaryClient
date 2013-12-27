@@ -32,7 +32,7 @@ In-Client Screenshots
 ![News Screen](http://puu.sh/5Q7vd.jpg)
 ![Featured Games](http://puu.sh/5Q7tZ.jpg)
 ![Store](http://i.imgur.com/raXcBfv.png)
-![Chat](http://puu.sh/5FVHS.png)
+![Chat](http://i.imgur.com/vFKxkq1.png)
 ![Queue](http://i.imgur.com/ZpZiyJ5.png)
 ![QueuePop](http://i.imgur.com/KAt5KXR.png)
 ![ChampSelect](http://puu.sh/5VVMd.jpg)

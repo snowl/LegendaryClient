@@ -20,7 +20,7 @@ namespace LegendaryClient.Logic.Riot.Leagues
         public String LeagueName { get; set; }
 
         [SerializedName("miniSeries")]
-        public object MiniSeries { get; set; }
+        public MiniSeriesDTO MiniSeries { get; set; }
 
         [SerializedName("tier")]
         public String Tier { get; set; }

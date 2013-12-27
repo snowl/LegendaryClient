@@ -32,6 +32,7 @@ namespace LegendaryClient
             }
 
             Client.InfoLabel = InfoLabel;
+            Client.StartHeartbeat();
 
             Steel = new Accent("Steel", new Uri("pack://application:,,,/LegendaryClient;component/Controls/Steel.xaml"));
             if (Properties.Settings.Default.DarkTheme)
