@@ -1,1 +1,0 @@
-"<body><inviteId>190608647</inviteId><userName>Only Kogmaw</userName><profileIconId>0</profileIconId><gameType>PRACTICE_GAME</gameType><groupId></groupId><seasonRewards>-1</seasonRewards><gameTypeIndex>practiceGame_gameMode_GAME_CFG_PICK_BLIND</gameTypeIndex><gameId>24103025</gameId><mapId>1</mapId><gamePassword></gamePassword></body>"

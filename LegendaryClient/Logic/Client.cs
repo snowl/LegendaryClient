@@ -114,7 +114,7 @@ namespace LegendaryClient.Logic
                     {
                         if (ChatClient.IsAuthenticated)
                         {
-                            ChatClientConnect(null);
+                            SetChatHover();
                         }
                     }
                 }
@@ -135,7 +135,7 @@ namespace LegendaryClient.Logic
                     {
                         if (ChatClient.IsAuthenticated)
                         {
-                            ChatClientConnect(null);
+                            SetChatHover();
                         }
                     }
                 }

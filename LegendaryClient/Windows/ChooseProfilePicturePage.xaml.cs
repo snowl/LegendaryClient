@@ -3,6 +3,7 @@ using LegendaryClient.Logic.Riot;
 using LegendaryClient.Logic.Riot.Platform;
 using System;
 using System.IO;
+using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media.Imaging;
@@ -23,6 +24,7 @@ namespace LegendaryClient.Windows
         private async void GetIcons()
         {
             SummonerIconInventoryDTO PlayerIcons = await RiotCalls.GetSummonerIconInventory(Client.LoginPacket.AllSummonerData.Summoner.SumId);
+            PlayerIcons.SummonerIcons = PlayerIcons.SummonerIcons.OrderBy(x => x.PurchaseDate).Reverse().ToList();
             foreach (Icon ic in PlayerIcons.SummonerIcons)
             {
                 Image champImage = new Image();
