@@ -38,14 +38,30 @@ namespace LegendaryClient.Controls
 
         private void CloseButton_Click(object sender, RoutedEventArgs e)
         {
+            Client.ChatListView.Items.Remove(this);
+            Client.ChatListView.UpdateLayout();
+
             if (Client.ChatItem != null)
             {
-                Client.MainGrid.Children.Remove(Client.ChatItem);
-                Client.ChatClient.OnMessage -= Client.ChatItem.ChatClient_OnMessage;
-                Client.ChatItem = null;
-            }
+                if ((string)Client.ChatItem.PlayerLabelName.Content == (string)PlayerLabelName.Content)
+                {
+                    Client.MainGrid.Children.Remove(Client.ChatItem);
+                    Client.ChatClient.OnMessage -= Client.ChatItem.ChatClient_OnMessage;
+                    Client.ChatItem = null;
+                }
+                else
+                {
+                    foreach (NotificationChatPlayer x in Client.ChatListView.Items)
+                    {
+                        if ((string)x.PlayerLabelName.Content == (string)Client.ChatItem.PlayerLabelName.Content)
+                        {
+                            Point relativePoint = x.TransformToAncestor(Client.MainWin).Transform(new Point(0, 0));
 
-            Client.ChatListView.Items.Remove(this);
+                            Client.ChatItem.Margin = new System.Windows.Thickness(relativePoint.X, 0, 0, 40);
+                        }
+                    }
+                }
+            }
         }
     }
 }

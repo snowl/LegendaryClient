@@ -271,7 +271,7 @@ namespace LegendaryClient.Windows
             if (e.AddedItems.Count > 0)
             {
                 ChatPlayer player = (ChatPlayer)e.AddedItems[0];
-                //ChatListView.SelectedIndex = -1;
+                ((ListView)e.Source).SelectedIndex = -1;
                 ChatPlayerItem playerItem = (ChatPlayerItem)player.Tag;
                 LastPlayerItem = playerItem;
                 foreach (NotificationChatPlayer x in Client.ChatListView.Items)

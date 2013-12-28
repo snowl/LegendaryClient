@@ -234,7 +234,7 @@ namespace LegendaryClient.Logic
                 }
             }
 
-            Groups.Add(new Group("Offline"));
+            Groups.Add(new Group("Offline", false));
             SetChatHover();
         }
 
@@ -952,9 +952,10 @@ namespace LegendaryClient.Logic
 
     public class Group
     {
-        public Group(string s)
+        public Group(string s, bool Open = true)
         {
             GroupName = s;
+            IsOpen = Open;
         }
 
         public string GroupName { get; set; }

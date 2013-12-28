@@ -120,6 +120,7 @@ namespace LegendaryClient.Windows
             if (ChatListView.SelectedIndex != -1)
             {
                 NotificationChatPlayer item = (NotificationChatPlayer)ChatListView.SelectedItem;
+                ChatListView.SelectedIndex = -1;
                 if (Client.ChatItem == null)
                 {
                     Client.ChatItem = new ChatItem();
@@ -127,11 +128,19 @@ namespace LegendaryClient.Windows
                 }
                 else
                 {
+                    string CurrentName = (string)Client.ChatItem.PlayerLabelName.Content;
                     Client.MainGrid.Children.Remove(Client.ChatItem);
                     Client.ChatClient.OnMessage -= Client.ChatItem.ChatClient_OnMessage;
                     Client.ChatItem = null;
-                    ChatListView.SelectedIndex = -1;
-                    return;
+                    if (CurrentName != (string)item.PlayerLabelName.Content)
+                    {
+                        Client.ChatItem = new ChatItem();
+                        Client.MainGrid.Children.Add(Client.ChatItem);
+                    }
+                    else
+                    {
+                        return;
+                    }
                 }
 
                 item.BlinkRectangle.Visibility = System.Windows.Visibility.Hidden;
@@ -148,7 +157,6 @@ namespace LegendaryClient.Windows
                 Point relativePoint = item.TransformToAncestor(Client.MainWin).Transform(new Point(0, 0));
 
                 Client.ChatItem.Margin = new System.Windows.Thickness(relativePoint.X, 0, 0, 40);
-                ChatListView.SelectedIndex = -1;
             }
         }
 

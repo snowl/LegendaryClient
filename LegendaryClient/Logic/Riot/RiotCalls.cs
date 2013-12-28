@@ -837,6 +837,7 @@ namespace LegendaryClient.Logic.Riot
 
             context.Register(typeof(PendingKudosDTO));
             context.RegisterAlias(typeof(Icon), "com.riotgames.platform.summoner.icon.SummonerIcon", true);
+            context.RegisterAlias(typeof(StoreAccountBalanceNotification), "com.riotgames.platform.messaging.StoreAccountBalanceNotification", true);
 
             return context;
         }
