@@ -232,7 +232,6 @@
     <Compile Include="Logic\Riot\com\riotgames\platform\matchmaking\QueueInfo.cs" />
     <Compile Include="Logic\Riot\com\riotgames\platform\matchmaking\SearchingForMatchNotification.cs" />
     <Compile Include="Logic\Riot\com\riotgames\platform\messaging\StoreFulfillmentNotification.cs" />
-    <Compile Include="Logic\Riot\com\riotgames\platform\reroll\pojo\AramPlayerParticipant.cs" />
     <Compile Include="Logic\Riot\com\riotgames\platform\reroll\pojo\EogPointChangeBreakdown.cs" />
     <Compile Include="Logic\Riot\com\riotgames\platform\reroll\pojo\PointSummary.cs" />
     <Compile Include="Logic\Riot\com\riotgames\platform\reroll\pojo\SimpleDialogMessage.cs" />

@@ -368,12 +368,7 @@ namespace LegendaryClient.Windows
                         Participant tempParticipant = participant;
                         i++;
                         ChampSelectPlayer control = new ChampSelectPlayer();
-                        //Cast AramPlayers as PlayerParticipants. This removes reroll data
-                        if (tempParticipant is AramPlayerParticipant)
-                        {
-                            tempParticipant = Convert.ChangeType(tempParticipant, typeof(PlayerParticipant)) as PlayerParticipant;
-                        }
-                        
+                       
                         if (tempParticipant is PlayerParticipant)
                         {
                             PlayerParticipant player = tempParticipant as PlayerParticipant;

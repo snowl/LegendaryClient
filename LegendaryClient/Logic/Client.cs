@@ -675,6 +675,23 @@ namespace LegendaryClient.Logic
                         }));
                     }
                 }
+                else if (message.Body is SearchingForMatchNotification)
+                {
+                    SearchingForMatchNotification Notification = message.Body as SearchingForMatchNotification;
+                    if (Notification.PlayerJoinFailures != null && Notification.PlayerJoinFailures.Count > 0)
+                    {
+                        MessageOverlay messageOver = new MessageOverlay();
+                        messageOver.MessageTitle.Content = "Could not join the queue";
+                        foreach (QueueDodger x in Notification.PlayerJoinFailures)
+                        {
+                            messageOver.MessageTextBox.Text += x.Summoner.Name + " is unable to join the queue as they recently dodged a game." + Environment.NewLine;
+                            TimeSpan time = TimeSpan.FromMilliseconds(x.PenaltyRemainingTime);
+                            messageOver.MessageTextBox.Text += "You have " + string.Format("{0:D2}m:{1:D2}s", time.Minutes, time.Seconds) + " remaining until you may queue again";
+                        }
+                        OverlayContainer.Content = messageOver.Content;
+                        OverlayContainer.Visibility = Visibility.Visible;
+                    }
+                }
             }));
         }
 

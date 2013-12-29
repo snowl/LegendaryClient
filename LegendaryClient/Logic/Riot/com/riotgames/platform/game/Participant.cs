@@ -1,4 +1,5 @@
-﻿namespace LegendaryClient.Logic.Riot.Platform
+﻿using System;
+namespace LegendaryClient.Logic.Riot.Platform
 {
     public class Participant
     {
