@@ -364,7 +364,7 @@ namespace LegendaryClient.Windows.Profile
             int i = 0;
             foreach (MasteryBookPageDTO MasteryPage in Client.LoginPacket.AllSummonerData.MasteryBook.BookPages)
             {
-                if (MasteryPage.Name == MasteryTextBox.Text)
+                if (MasteryPage.Current)
                     break;
                 i++;
             }
@@ -392,7 +392,7 @@ namespace LegendaryClient.Windows.Profile
             int i = 0;
             foreach (MasteryBookPageDTO MasteryPage in Client.LoginPacket.AllSummonerData.MasteryBook.BookPages)
             {
-                if (MasteryPage.Name == MasteryTextBox.Text)
+                if (MasteryPage.Current)
                     break;
                 i++;
             }
