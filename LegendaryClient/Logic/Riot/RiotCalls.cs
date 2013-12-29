@@ -347,6 +347,11 @@ namespace LegendaryClient.Logic.Riot
             return InvokeAsync<PointSummary>("lcdsRerollService", "getPointsBalance");
         }
 
+        public static Task<RollResult> Roll()
+        {
+            return InvokeAsync<RollResult>("lcdsRerollService", "roll");
+        }
+
         /// <summary>
         /// Gets the players overall stats
         /// </summary>

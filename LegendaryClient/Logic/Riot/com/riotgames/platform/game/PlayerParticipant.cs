@@ -69,5 +69,8 @@ namespace LegendaryClient.Logic.Riot.Platform
 
         [SerializedName("teamParticipantId")]
         public object TeamParticipantId { get; set; }
+
+        [SerializedName("pointSummary")]
+        public PointSummary PointSummary { get; set; } 
     }
 }

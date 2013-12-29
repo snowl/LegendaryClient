@@ -408,6 +408,14 @@ namespace LegendaryClient.Windows
                                         if (PurpleSide)
                                             AreWePurpleSide = true;
                                         RenderLockInGrid(selection);
+                                        if (player.PointSummary != null)
+                                        {
+                                            LockInButton.Content = string.Format("Reroll ({0}/{1})", player.PointSummary.CurrentPoints, player.PointSummary.PointsCostToRoll);
+                                            if (player.PointSummary.NumberOfRolls > 0)
+                                                LockInButton.IsEnabled = true;
+                                            else
+                                                LockInButton.IsEnabled = false;
+                                        }
                                     }
                                 }
                             }
@@ -835,10 +843,17 @@ namespace LegendaryClient.Windows
 
         private async void LockInButton_Click(object sender, RoutedEventArgs e)
         {
-            //TODO: Aram Reroll
-            if (ChampionSelectListView.SelectedItems.Count > 0)
+            if (configType.PickMode != "AllRandomPickStrategy")
             {
-                await RiotCalls.ChampionSelectCompleted();
+                if (ChampionSelectListView.SelectedItems.Count > 0)
+                {
+                    await RiotCalls.ChampionSelectCompleted();
+                    HasLockedIn = true;
+                }
+            }
+            else
+            {
+                await RiotCalls.Roll();
                 HasLockedIn = true;
             }
         }
