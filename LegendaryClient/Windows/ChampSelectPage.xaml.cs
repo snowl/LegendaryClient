@@ -97,9 +97,15 @@ namespace LegendaryClient.Windows
             //Force client to popup once in champion select
             Client.FocusClient();
             Client.IsInGame = true;
-            //Get champions and sort alphabetically
+            //Get champions and sort first by favourite, then alphabetically
             ChampList = new List<ChampionDTO>(Client.PlayerChampions);
-            ChampList.Sort((x, y) => champions.GetChampion(x.ChampionId).displayName.CompareTo(champions.GetChampion(y.ChampionId).displayName));
+            ChampList.Sort(delegate(ChampionDTO x, ChampionDTO y)
+            {
+                int IsFav = champions.GetChampion(y.ChampionId).IsFavourite.CompareTo(champions.GetChampion(x.ChampionId).IsFavourite);
+                if (IsFav != 0) return IsFav;
+                else return champions.GetChampion(x.ChampionId).displayName.CompareTo(champions.GetChampion(y.ChampionId).displayName);
+            });
+
             //Retrieve masteries and runes
             MyMasteries = Client.LoginPacket.AllSummonerData.MasteryBook;
             MyRunes = Client.LoginPacket.AllSummonerData.SpellBook;
@@ -550,12 +556,15 @@ namespace LegendaryClient.Windows
         /// <param name="selection">Details of champion you want to render</param>
         internal void RenderLockInGrid(PlayerChampionSelectionDTO selection)
         {
+            champions Champion = champions.GetChampion(selection.ChampionId);
+
+            if (Champion == null)
+                return;
+
             ChampionSelectListView.Visibility = Visibility.Hidden;
             AfterChampionSelectGrid.Visibility = Visibility.Visible;
 
             LockInButton.Content = "Locked In";
-
-            champions Champion = champions.GetChampion(selection.ChampionId);
 
             SkinSelectListView.Items.Clear();
             AbilityListView.Items.Clear();
@@ -625,6 +634,9 @@ namespace LegendaryClient.Windows
                         ListViewItem item = new ListViewItem();
                         ChampionImage championImage = new ChampionImage();
                         championImage.ChampImage.Source = champions.GetChampion(champ.ChampionId).icon;
+                        if (getChamp.IsFavourite)
+                            championImage.FavoriteImage.Visibility = Visibility.Visible;
+
                         if (champ.FreeToPlay)
                             championImage.FreeToPlayLabel.Visibility = Visibility.Visible;
                         championImage.Width = 64;

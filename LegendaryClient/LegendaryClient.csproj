@@ -186,6 +186,7 @@
     <Compile Include="Logic\Maps\Map8.cs" />
     <Compile Include="Logic\Maps\Map12.cs" />
     <Compile Include="Logic\Maps\BaseMap.cs" />
+    <Compile Include="Logic\Region\TR.cs" />
     <Compile Include="Logic\Riot\RiotCalls.cs" />
     <Compile Include="Logic\Riot\RiotPatcher.cs" />
     <Compile Include="Logic\Riot\com\riotgames\kudos\dto\PendingKudosDTO.cs" />
@@ -732,6 +733,7 @@
     </Content>
     <Resource Include="Unlocked.png" />
     <Resource Include="trade.png" />
+    <Resource Include="star.png" />
     <Content Include="wLib.dll">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>

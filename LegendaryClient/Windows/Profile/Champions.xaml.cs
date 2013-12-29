@@ -30,7 +30,12 @@ namespace LegendaryClient.Windows.Profile
 
             ChampionList = new List<ChampionDTO>(champList);
 
-            ChampionList.Sort((x, y) => champions.GetChampion(x.ChampionId).displayName.CompareTo(champions.GetChampion(y.ChampionId).displayName));
+            ChampionList.Sort(delegate(ChampionDTO x, ChampionDTO y)
+            {
+                int IsFav = champions.GetChampion(y.ChampionId).IsFavourite.CompareTo(champions.GetChampion(x.ChampionId).IsFavourite);
+                if (IsFav != 0) return IsFav;
+                else return champions.GetChampion(x.ChampionId).displayName.CompareTo(champions.GetChampion(y.ChampionId).displayName);
+            });
 
             FilterChampions();
         }
@@ -95,6 +100,9 @@ namespace LegendaryClient.Windows.Profile
                     ProfileChampionImage championImage = new ProfileChampionImage();
                     champions champion = champions.GetChampion(champ.ChampionId);
                     championImage.DataContext = champion;
+
+                    if (champion.IsFavourite)
+                        championImage.FavoriteImage.Visibility = System.Windows.Visibility.Visible;
 
                     if (champ.FreeToPlay)
                         championImage.FreeToPlayLabel.Visibility = System.Windows.Visibility.Visible;

@@ -37,11 +37,20 @@ namespace LegendaryClient.Windows
             Client.Champions = (from s in Client.SQLiteDatabase.Table<champions>()
                                 orderby s.name
                                 select s).ToList();
+            if (Properties.Settings.Default.FavouriteChamps == null)
+            {
+                Properties.Settings.Default.FavouriteChamps = new Int32[0];
+            }
+
             foreach (champions c in Client.Champions)
             {
                 string Source = Path.Combine(Client.ExecutingDirectory, "Assets", "champions", c.iconPath);
                 c.icon = Client.GetImage(Source);
                 Champions.InsertExtraChampData(c);
+                if (Properties.Settings.Default.FavouriteChamps.Contains(c.id))
+                {
+                    c.IsFavourite = true;
+                }
             }
             Client.ChampionSkins = (from s in Client.SQLiteDatabase.Table<championSkins>()
                                     orderby s.name
