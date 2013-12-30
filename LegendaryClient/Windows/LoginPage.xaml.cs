@@ -173,6 +173,18 @@ namespace LegendaryClient.Windows
             await Client.RtmpConnection.SubscribeAsync("my-rtmps", "messagingDestination", "cn-" + login.AccountSummary.AccountId.ToString(), "cn-" + login.AccountSummary.AccountId.ToString());
             bool LoggedIn = await Client.RtmpConnection.LoginAsync(LoginUsernameBox.Text.ToLower(), login.Token);
             LoginDataPacket packet = await RiotCalls.GetLoginDataPacketForUser();
+            string State = await RiotCalls.GetAccountState();
+
+            if (State != "ENABLED")
+            {
+                HideGrid.Visibility = Visibility.Visible;
+                ErrorTextBox.Visibility = Visibility.Visible;
+                LoggingInProgressRing.Visibility = Visibility.Hidden;
+                LoggingInLabel.Visibility = Visibility.Hidden;
+                ErrorTextBox.Text = "Your account state was invalid: " + State;
+                return;
+            }
+
             GotLoginPacket(packet);
         }
 

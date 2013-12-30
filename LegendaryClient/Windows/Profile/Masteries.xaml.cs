@@ -370,7 +370,7 @@ namespace LegendaryClient.Windows.Profile
             }
 
             //Make sure it has found the mastery page! Just to be safe :)
-            if (i == Client.LoginPacket.AllSummonerData.MasteryBook.BookPages.Count - 1 || i == 0)
+            if (i == 0)
                 return;
 
             //Swap the mastery page id and location

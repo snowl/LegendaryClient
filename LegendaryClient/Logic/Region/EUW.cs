@@ -32,7 +32,7 @@ namespace LegendaryClient.Logic.Region
 
         public override string LoginQueue
         {
-            get { return "https://lq.eu1.lol.riotgames.com/"; }
+            get { return "https://lq.eu.lol.riotgames.com/"; }
         }
 
         public override string Locale

@@ -56,6 +56,15 @@ namespace LegendaryClient.Logic.Riot
         }
 
         /// <summary>
+        /// Gets the state for the current account
+        /// </summary>
+        /// <returns>Return the accounts state</returns>
+        public static Task<String> GetAccountState()
+        {
+            return InvokeAsync<String>("accountService", "getAccountStateForCurrentSession");
+        }
+
+        /// <summary>
         /// Gets the login packet for the user with all the information for the user.
         /// </summary>
         /// <returns>Returns the login data packet</returns>
@@ -347,6 +356,10 @@ namespace LegendaryClient.Logic.Riot
             return InvokeAsync<PointSummary>("lcdsRerollService", "getPointsBalance");
         }
 
+        /// <summary>
+        /// Attempts to reroll the champion. Only works in AllRandomPickStrategy
+        /// </summary>
+        /// <returns>Returns the amount of rolls left for the player</returns>
         public static Task<RollResult> Roll()
         {
             return InvokeAsync<RollResult>("lcdsRerollService", "roll");
@@ -444,6 +457,16 @@ namespace LegendaryClient.Logic.Riot
         public static Task<object> AcceptInviteForMatchmakingGame(String InviteId)
         {
             return InvokeAsync<object>("matchmakerService", "acceptInviteForMatchmakingGame", InviteId);
+        }
+
+        /// <summary>
+        /// Attaches a premade team to a queue
+        /// </summary>
+        /// <param name="MatchMakerParams">The parameters for the queue</param>
+        /// <returns>Returns a notification to tell you if it was successful</returns>
+        public static Task<SearchingForMatchNotification> AttachTeamToQueue(MatchMakerParams matchMakerParams)
+        {
+            return InvokeAsync<SearchingForMatchNotification>("matchmakerService", "attachTeamToQueue", matchMakerParams);
         }
 
         /// <summary>
@@ -584,6 +607,15 @@ namespace LegendaryClient.Logic.Riot
         public static Task<SpellBookPageDTO> SelectDefaultSpellBookPage(SpellBookPageDTO SpellbookPage)
         {
             return InvokeAsync<SpellBookPageDTO>("spellBookService", "selectDefaultSpellBookPage", SpellbookPage);
+        }
+
+        /// <summary>
+        /// Saves the players spellbook
+        /// </summary>
+        /// <param name="Spellbook">The players SpellBookDTO</param>
+        public static Task<object> SaveSpellBook(SpellBookDTO Spellbook)
+        {
+            return InvokeAsync<object>("spellBookService", "saveSpellBook", Spellbook);
         }
 
         /// <summary>
@@ -741,15 +773,6 @@ namespace LegendaryClient.Logic.Riot
 
 
 
-        public static Task<T> InvokeAsync<T>(string destination, string method)
-        {
-            return InvokeAsync<T>(destination, method, new object[] { });
-        }
-
-        public static Task<T> InvokeAsync<T>(string destination, string method, object argument)
-        {
-            return InvokeAsync<T>(destination, method, new[] { argument });
-        }
 
         public static Task<T> InvokeAsync<T>(string destination, string method, params object[] argument)
         {

@@ -388,7 +388,7 @@ namespace LegendaryClient.Windows.Profile
                     RunePage.Name = RuneTextBox.Text;
                 }
             }
-            //await RiotCalls.SaveSpellBook(Client.LoginPacket.AllSummonerData.SpellBook);
+            await RiotCalls.SaveSpellBook(Client.LoginPacket.AllSummonerData.SpellBook);
         }
 
         private void ClearRunes_Click(object sender, RoutedEventArgs e)
