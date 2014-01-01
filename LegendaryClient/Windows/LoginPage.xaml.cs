@@ -37,6 +37,7 @@ namespace LegendaryClient.Windows
             Client.Champions = (from s in Client.SQLiteDatabase.Table<champions>()
                                 orderby s.name
                                 select s).ToList();
+
             if (Properties.Settings.Default.FavouriteChamps == null)
             {
                 Properties.Settings.Default.FavouriteChamps = new Int32[0];
@@ -52,6 +53,7 @@ namespace LegendaryClient.Windows
                     c.IsFavourite = true;
                 }
             }
+
             Client.ChampionSkins = (from s in Client.SQLiteDatabase.Table<championSkins>()
                                     orderby s.name
                                     select s).ToList();

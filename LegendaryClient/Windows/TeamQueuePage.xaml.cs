@@ -150,8 +150,6 @@ namespace LegendaryClient.Windows
                     {
                         if (invitePlayer != null)
                             invitePlayer.StatusLabel.Content = "Accepted";
-                        if (IsOwner)
-                            Client.Message("sum222908", "<body><inviteId>8649134</inviteId><userName>Snowl</userName><profileIconId>576</profileIconId><gameType>NORMAL_GAME</gameType><groupId></groupId><seasonRewards>-1</seasonRewards><mapId>1</mapId><queueId>2</queueId><gameMode>classic_pvp</gameMode><gameDifficulty></gameDifficulty></body>", ChatSubjects.GAME_INVITE_ACCEPT_ACK);
                     }
                     else if (subject == ChatSubjects.GAME_INVITE_REJECT)
                     {
@@ -219,19 +217,9 @@ namespace LegendaryClient.Windows
             }
         }
 
-        private async void StartGameButton_Click(object sender, RoutedEventArgs e)
+        private void StartGameButton_Click(object sender, RoutedEventArgs e)
         {
-            MatchMakerParams pareams = new MatchMakerParams();
-            pareams.InvitationId = 8649134;
-            pareams.QueueIds = new int[1] { 2 };
-            pareams.Team = new List<int>();
-            pareams.Team.Add(222908);
-            pareams.Team.Add(499467);
-            SearchingForMatchNotification par = await RiotCalls.AttachTeamToQueue(pareams);
-
-            Client.Message("sum222908", "<body><inviteId>8649134</inviteId><userName>Snooowl</userName><profileIconId>576</profileIconId><gameType>NORMAL_GAME</gameType><groupId></groupId><seasonRewards>-1</seasonRewards><mapId>1</mapId><queueId>2</queueId><gameMode>classic_pvp</gameMode><gameDifficulty></gameDifficulty></body>", ChatSubjects.VERIFY_INVITEE);
         }
-
 
 
         private void ChatButton_Click(object sender, RoutedEventArgs e)
