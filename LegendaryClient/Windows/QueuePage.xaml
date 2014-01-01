@@ -8,7 +8,8 @@
 	Title="QueuePage">
 
     <Grid>
-        <Button x:Name="testbutton" Content="Button" HorizontalAlignment="Left" Margin="193,157,0,0" VerticalAlignment="Top" Width="75" Click="testbutton_Click"/>
+        <Label Content="Queueing is still under construction." FontSize="50" FontWeight="ExtraLight" Foreground="White" HorizontalAlignment="Center" Margin="0,0,0,0" VerticalAlignment="Center"/>
+        <!--<Button x:Name="testbutton" Content="Button" HorizontalAlignment="Left" Margin="193,157,0,0" VerticalAlignment="Top" Width="75" Click="testbutton_Click"/>-->
 
     </Grid>
 </Page>

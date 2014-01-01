@@ -164,7 +164,7 @@ namespace LegendaryClient.Windows
                 else
                     ErrorTextBox.Text = "Unable to get Auth Key";
 
-                ErrorTextBox.Text += Environment.NewLine + e.StackTrace;
+                ErrorTextBox.Text += string.Format("{0}{1}{0}{2}", Environment.NewLine, e.Message, e.StackTrace);
                 return;
             }
 
