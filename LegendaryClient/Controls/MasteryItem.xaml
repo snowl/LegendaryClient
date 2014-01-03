@@ -8,11 +8,7 @@
     <Grid>
 
         <Image x:Name="MasteryImage" HorizontalAlignment="Left" Height="64" Margin="0,0,0,0" VerticalAlignment="Top" Width="64"/>
-        <Label x:Name="RankLabel" Content="0/3" Background="#4C0C0C0C" HorizontalAlignment="Right" Margin="0,0,0,0" VerticalAlignment="Bottom" Foreground="White">
-            <Label.Effect>
-                <DropShadowEffect BlurRadius="2" ShadowDepth="2"/>
-            </Label.Effect>
-        </Label>
+        <Label x:Name="RankLabel" Content="0/3" Background="#4C0C0C0C" HorizontalAlignment="Right" Margin="0,0,0,0" VerticalAlignment="Bottom" Foreground="White"/>
 
     </Grid>
 </UserControl>

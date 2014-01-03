@@ -1,7 +1,7 @@
 ﻿using ICSharpCode.SharpZipLib.GZip;
 using ICSharpCode.SharpZipLib.Tar;
 using LegendaryClient.Logic;
-using LegendaryClient.Logic.Patcher;
+using LegendaryClient.Logic.Riot;
 using System;
 using System.IO;
 using System.Net;
@@ -18,6 +18,8 @@ namespace LegendaryClient.Windows
     /// </summary>
     public partial class PatcherPage : Page
     {
+        Thread bgThread;
+
         public PatcherPage()
         {
             InitializeComponent();
@@ -26,12 +28,12 @@ namespace LegendaryClient.Windows
 
         private void SkipPatchButton_Click(object sender, RoutedEventArgs e)
         {
-            FinishPatching();
+            FinishPatching(true);
         }
 
         private void StartPatcher()
         {
-            Thread bgThread = new Thread(() =>
+            bgThread = new Thread(() =>
             {
                 LogTextBox("Starting Patcher");
 
@@ -120,6 +122,8 @@ namespace LegendaryClient.Windows
 
                 RiotPatcher patcher = new RiotPatcher();
                 string DDragonDownloadURL = patcher.GetDragon();
+                if (!DDragonDownloadURL.StartsWith("http:"))
+                    DDragonDownloadURL = "http:" + DDragonDownloadURL;
                 LogTextBox("DataDragon Version: " + patcher.DDragonVersion);
                 string DDragonVersion = File.ReadAllText(Path.Combine(Client.ExecutingDirectory, "Assets", "VERSION_DDragon"));
                 LogTextBox("Current DataDragon Version: " + DDragonVersion);
@@ -301,8 +305,10 @@ namespace LegendaryClient.Windows
             bgThread.Start();
         }
 
-        private void FinishPatching()
+        private void FinishPatching(bool Force = false)
         {
+            if (Force)
+                bgThread.Abort();
             Dispatcher.BeginInvoke(DispatcherPriority.Input, new ThreadStart(() =>
             {
                 Client.SwitchPage(new LoginPage());

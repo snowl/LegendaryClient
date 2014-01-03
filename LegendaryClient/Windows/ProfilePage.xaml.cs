@@ -1,12 +1,14 @@
 ﻿using LegendaryClient.Logic;
+using LegendaryClient.Logic.Riot;
+using LegendaryClient.Logic.Riot.Platform;
 using LegendaryClient.Windows.Profile;
-using PVPNetConnect.RiotObjects.Platform.Game;
-using PVPNetConnect.RiotObjects.Platform.Summoner;
 using System;
 using System.IO;
+using System.Threading;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media.Imaging;
+using System.Windows.Threading;
 
 namespace LegendaryClient.Windows
 {
@@ -44,8 +46,8 @@ namespace LegendaryClient.Windows
 
         public async void GetSummonerProfile(string s)
         {
-            PublicSummoner Summoner = await Client.PVPNet.GetSummonerByName(String.IsNullOrWhiteSpace(s) ? Client.LoginPacket.AllSummonerData.Summoner.Name : s);
-            if (String.IsNullOrWhiteSpace(Summoner.Name))
+            PublicSummoner Summoner = await RiotCalls.GetSummonerByName(String.IsNullOrWhiteSpace(s) ? Client.LoginPacket.AllSummonerData.Summoner.Name : s);
+            if (Summoner == null)
             {
                 MessageOverlay overlay = new MessageOverlay();
                 overlay.MessageTitle.Content = "No Summoner Found";
@@ -57,25 +59,35 @@ namespace LegendaryClient.Windows
             SummonerNameLabel.Content = Summoner.Name;
             SummonerLevelLabel.Content = "Level " + Summoner.SummonerLevel;
 
+            if (Summoner.SummonerLevel < 30)
+            {
+                LeagueHeader.Visibility = System.Windows.Visibility.Collapsed;
+            }
+            else
+            {
+                SummonerLeaguesDTO dto = await RiotCalls.GetAllLeaguesForPlayer(Summoner.SummonerId);
+                GotLeaguesForPlayer(dto);
+            }
+
             int ProfileIconID = Summoner.ProfileIconId;
             var uriSource = Path.Combine(Client.ExecutingDirectory, "Assets", "profileicon", ProfileIconID + ".png");
             ProfileImage.Source = Client.GetImage(uriSource);
 
-            PlatformGameLifecycleDTO n = await Client.PVPNet.RetrieveInProgressSpectatorGameInfo(s);
-            if (n.GameName != null)
+            try
             {
+                PlatformGameLifecycleDTO n = await RiotCalls.RetrieveInProgressSpectatorGameInfo(s);
                 InGameHeader.Visibility = Visibility.Visible;
                 InGameHeader.IsSelected = true;
                 Ingame ingame = InGameContainer.Content as Ingame;
                 ingame.Update(n);
             }
-            else
+            catch
             {
                 InGameHeader.Visibility = Visibility.Collapsed;
                 OverviewHeader.IsSelected = true;
             }
 
-            if (Summoner.InternalName == Client.LoginPacket.AllSummonerData.Summoner.InternalName)
+            if (Summoner.Name == Client.LoginPacket.AllSummonerData.Summoner.Name)
             {
                 ChampionsTab.Visibility = System.Windows.Visibility.Visible;
                 SkinsTab.Visibility = System.Windows.Visibility.Visible;
@@ -91,6 +103,23 @@ namespace LegendaryClient.Windows
 
             Overview overview = OverviewContainer.Content as Overview;
             overview.Update(Summoner.SummonerId, Summoner.AcctId);
+        }
+
+        private void GotLeaguesForPlayer(SummonerLeaguesDTO result)
+        {
+            Dispatcher.BeginInvoke(DispatcherPriority.Input, new ThreadStart(() =>
+            {
+                if (result.SummonerLeagues != null && result.SummonerLeagues.Count > 0)
+                {
+                    LeagueHeader.Visibility = System.Windows.Visibility.Visible;
+                    Leagues overview = LeaguesContainer.Content as Leagues;
+                    overview.Update(result);
+                }
+                else
+                {
+                    LeagueHeader.Visibility = System.Windows.Visibility.Collapsed;
+                }
+            }));
         }
 
         public class KeyValueItem

@@ -3,7 +3,6 @@ using LegendaryClient.Logic;
 using LegendaryClient.Windows;
 using MahApps.Metro;
 using MahApps.Metro.Controls;
-using PVPNetConnect;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -33,9 +32,7 @@ namespace LegendaryClient
             }
 
             Client.InfoLabel = InfoLabel;
-            Client.PVPNet = new PVPNetConnection();
-            Client.PVPNet.KeepDelegatesOnLogout = false;
-            Client.PVPNet.OnError += Client.PVPNet_OnError;
+            Client.StartHeartbeat();
 
             Steel = new Accent("Steel", new Uri("pack://application:,,,/LegendaryClient;component/Controls/Steel.xaml"));
             if (Properties.Settings.Default.DarkTheme)
@@ -155,7 +152,7 @@ namespace LegendaryClient
                 LoginPage page = new LoginPage();
                 Client.Pages.Clear();
                 Client.QuitCurrentGame();
-                Client.PVPNet.Disconnect();
+                //Client.PVPNet.Disconnect();
                 Client.ChatClient.Close();
                 Client.IsLoggedIn = false;
                 Client.StatusContainer.Visibility = Visibility.Hidden;

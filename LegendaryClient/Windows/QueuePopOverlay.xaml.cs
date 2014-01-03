@@ -1,8 +1,9 @@
 ﻿using LegendaryClient.Controls;
 using LegendaryClient.Logic;
-using PVPNetConnect.RiotObjects.Leagues.Pojo;
-using PVPNetConnect.RiotObjects.Platform.Game;
-using PVPNetConnect.RiotObjects.Platform.Leagues.Client.Dto;
+using LegendaryClient.Logic.Riot;
+using LegendaryClient.Logic.Riot.Leagues;
+using LegendaryClient.Logic.Riot.Platform;
+using RtmpSharp.Messaging;
 using System;
 using System.Collections.Generic;
 using System.Threading;
@@ -27,10 +28,11 @@ namespace LegendaryClient.Windows
         public QueuePopOverlay(GameDTO InitialDTO)
         {
             InitializeComponent();
+            Client.IsInGame = true;
             Client.FocusClient();
             InitializePop(InitialDTO);
             TimeLeft = InitialDTO.JoinTimerDuration;
-            Client.PVPNet.OnMessageReceived += PVPNet_OnMessageReceived;
+            Client.RtmpConnection.MessageReceived += OnMessageReceived;
             QueueTimer = new System.Timers.Timer(1000);
             QueueTimer.Elapsed += new ElapsedEventHandler(QueueElapsed);
             QueueTimer.Enabled = true;
@@ -47,23 +49,24 @@ namespace LegendaryClient.Windows
             }));
         }
 
-        private void PVPNet_OnMessageReceived(object sender, object message)
+        private void OnMessageReceived(object sender, MessageReceivedEventArgs message)
         {
-            if (message.GetType() == typeof(GameDTO))
+            if (message.Body.GetType() == typeof(GameDTO))
             {
                 Dispatcher.BeginInvoke(DispatcherPriority.Input, new ThreadStart(() =>
                 {
-                    GameDTO QueueDTO = message as GameDTO;
-                    if (QueueDTO.GameState == "TERMINATED")
+                    GameDTO QueueDTO = message.Body as GameDTO;
+                    if (QueueDTO.GameState == "TERMINATED" || QueueDTO.GameState == "TERMINATED_IN_ERROR")
                     {
                         Client.OverlayContainer.Visibility = Visibility.Hidden;
-                        Client.PVPNet.OnMessageReceived -= PVPNet_OnMessageReceived;
+                        Client.RtmpConnection.MessageReceived -= OnMessageReceived;
+                        Client.IsInGame = false;
                         return;
                     }
                     else if (QueueDTO.GameState == "CHAMP_SELECT")
                     {
                         HasStartedChampSelect = true;
-                        Client.PVPNet.OnMessageReceived -= PVPNet_OnMessageReceived;
+                        Client.RtmpConnection.MessageReceived -= OnMessageReceived;
                         string s = QueueDTO.GameState;
                         Client.ChampSelectDTO = QueueDTO;
                         Client.GameID = QueueDTO.Id;
@@ -153,7 +156,7 @@ namespace LegendaryClient.Windows
                 {
                     QueuePopPlayer player = (QueuePopPlayer)Team1ListBox.Items[i];
                     PlayerParticipant playerPart = (PlayerParticipant)p;
-                    SummonerLeaguesDTO playerLeagues = await Client.PVPNet.GetAllLeaguesForPlayer(playerPart.SummonerId);
+                    SummonerLeaguesDTO playerLeagues = await RiotCalls.GetAllLeaguesForPlayer(playerPart.SummonerId);
                     foreach (LeagueListDTO x in playerLeagues.SummonerLeagues)
                     {
                         if (x.Queue == "RANKED_SOLO_5x5")
@@ -172,13 +175,13 @@ namespace LegendaryClient.Windows
 
             if (Client.AutoAcceptQueue)
             {
-                await Client.PVPNet.AcceptPoppedGame(true);
+                await RiotCalls.AcceptPoppedGame(true);
             }
         }
 
         private async void AcceptButton_Click(object sender, RoutedEventArgs e)
         {
-            await Client.PVPNet.AcceptPoppedGame(true);
+            await RiotCalls.AcceptPoppedGame(true);
         }
     }
 }

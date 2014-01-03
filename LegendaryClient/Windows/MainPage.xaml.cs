@@ -3,14 +3,10 @@ using LegendaryClient.Logic;
 using LegendaryClient.Logic.Maps;
 using LegendaryClient.Logic.PlayerSpell;
 using LegendaryClient.Logic.Region;
+using LegendaryClient.Logic.Riot;
+using LegendaryClient.Logic.Riot.Leagues;
+using LegendaryClient.Logic.Riot.Platform;
 using LegendaryClient.Logic.SQLite;
-using PVPNetConnect;
-using PVPNetConnect.RiotObjects.Leagues.Pojo;
-using PVPNetConnect.RiotObjects.Platform.Broadcast;
-using PVPNetConnect.RiotObjects.Platform.Clientfacade.Domain;
-using PVPNetConnect.RiotObjects.Platform.Leagues.Client.Dto;
-using PVPNetConnect.RiotObjects.Platform.Statistics;
-using PVPNetConnect.RiotObjects.Platform.Summoner;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -50,9 +46,9 @@ namespace LegendaryClient.Windows
             GetNews(region);
         }
 
-        private void GotPlayerData(LoginDataPacket packet)
+        private async void GotPlayerData(LoginDataPacket packet)
         {
-            Client.PVPNet.OnMessageReceived += PVPNet_OnMessageReceived;
+            Client.RtmpConnection.MessageReceived += OnMessageReceived;
             AllSummonerData PlayerData = packet.AllSummonerData;
             SummonerNameLabel.Content = PlayerData.Summoner.Name;
             if (Client.LoginPacket.AllSummonerData.SummonerLevel.Level < 30)
@@ -64,12 +60,13 @@ namespace LegendaryClient.Windows
             }
             else
             {
-                Client.PVPNet.GetAllLeaguesForPlayer(PlayerData.Summoner.SumId, new SummonerLeaguesDTO.Callback(GotLeaguesForPlayer));
+                SummonerLeaguesDTO MyLeagues = await RiotCalls.GetAllLeaguesForPlayer(PlayerData.Summoner.SumId);
+                GotLeaguesForPlayer(MyLeagues);
             }
 
-            if (packet.BroadcastNotification.BroadcastMessages != null)
+            if (packet.BroadcastNotification.broadcastMessages != null)
             {
-                Dictionary<string, object> Message = packet.BroadcastNotification.BroadcastMessages[0] as Dictionary<string, object>;
+                Dictionary<string, object> Message = packet.BroadcastNotification.broadcastMessages[0] as Dictionary<string, object>;
                 BroadcastMessage.Text = Convert.ToString(Message["content"]);
             }
 
@@ -136,11 +133,10 @@ namespace LegendaryClient.Windows
                             {
                                 if (player.PlayerOrTeamName == Client.LoginPacket.AllSummonerData.Summoner.Name)
                                 {
-                                    TypedObject miniSeries = player.MiniSeries as TypedObject;
                                     string Series = "";
-                                    if (miniSeries != null)
+                                    if (player.MiniSeries != null)
                                     {
-                                        Series = (string)miniSeries["progress"];
+                                        Series = player.MiniSeries.Progress.Replace('N', '-');
                                         InPromo = true;
                                     }
                                     CurrentLP = (player.LeaguePoints == 100 ? Series : Convert.ToString(player.LeaguePoints));
@@ -161,7 +157,7 @@ namespace LegendaryClient.Windows
                 PlayerProgressLabel.Content = CurrentTier;
                 if (InPromo)
                 {
-                    PlayerCurrentProgressLabel.Content = CurrentLP;
+                    PlayerCurrentProgressLabel.Content = CurrentLP.Replace('N', '-');
                     PlayerProgressBar.Value = 100;
                 }
                 else
@@ -495,16 +491,16 @@ namespace LegendaryClient.Windows
             HoverLabel.Opacity = 0;
         }
 
-        private void PVPNet_OnMessageReceived(object sender, object message)
+        private void OnMessageReceived(object sender, object message)
         {
             Dispatcher.BeginInvoke(DispatcherPriority.Input, new ThreadStart(() =>
             {
                 if (message is BroadcastNotification)
                 {
                     BroadcastNotification notif = message as BroadcastNotification;
-                    if (notif.BroadcastMessages != null)
+                    if (notif.broadcastMessages != null)
                     {
-                        Dictionary<string, object> Message = notif.BroadcastMessages[0] as Dictionary<string, object>;
+                        Dictionary<string, object> Message = notif.broadcastMessages[0] as Dictionary<string, object>;
                         if ((bool)Message["active"] == true)
                         {
                             BroadcastMessage.Text = Convert.ToString(Message["content"]);
@@ -520,7 +516,7 @@ namespace LegendaryClient.Windows
 
         private void fakeend_Click(object sender, RoutedEventArgs e)
         {
-            Client.PVPNet.SimulateEndOfGame();
+            //Client.PVPNet.SimulateEndOfGame();
         }
     }
 }

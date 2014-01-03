@@ -52,9 +52,7 @@ namespace LegendaryClient.Windows
                         ChatPlayer player = new ChatPlayer();
                         player.Width = 250;
                         player.Tag = ChatPlayerPair.Value;
-                        player.PlayerName.Content = ChatPlayerPair.Value.Username;
-                        player.LevelLabel.Content = ChatPlayerPair.Value.Level;
-                        player.PlayerStatus.Content = ChatPlayerPair.Value.Status;
+                        player.DataContext = ChatPlayerPair.Value;
                         var uriSource = Path.Combine(Client.ExecutingDirectory, "Assets", "profileicon", ChatPlayerPair.Value.ProfileIcon + ".png");
                         player.ProfileImage.Source = Client.GetImage(uriSource);
 

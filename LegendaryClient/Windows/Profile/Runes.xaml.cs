@@ -1,7 +1,6 @@
 ﻿using LegendaryClient.Controls;
 using LegendaryClient.Logic;
 using LegendaryClient.Logic.SQLite;
-using PVPNetConnect.RiotObjects.Platform.Summoner.Spellbook;
 using System;
 using System.Collections.Generic;
 using System.Windows;
@@ -11,6 +10,8 @@ using System.Windows.Shapes;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.ComponentModel;
+using LegendaryClient.Logic.Riot.Platform;
+using LegendaryClient.Logic.Riot;
 
 namespace LegendaryClient.Windows.Profile
 {
@@ -21,8 +22,7 @@ namespace LegendaryClient.Windows.Profile
     {
         private SpellBookPageDTO SelectedBook;
         private LargeChatPlayer PlayerItem;
-        public List<PVPNetConnect.RiotObjects.Platform.Summoner.Runes.SummonerRune> runes =
-            new List<PVPNetConnect.RiotObjects.Platform.Summoner.Runes.SummonerRune>();
+        public List<SummonerRune> runes = new List<SummonerRune>();
         private double RedRunesAvail = 0;
         private double YellowRunesAvail = 0;
         private double BlueRunesAvail = 0;
@@ -117,7 +117,7 @@ namespace LegendaryClient.Windows.Profile
                 }
                 if (!filteredRune)
                 {
-                    foreach (PVPNetConnect.RiotObjects.Platform.Summoner.Runes.SummonerRune rune in runes)
+                    foreach (SummonerRune rune in runes)
                     {
                         if (Rune.id == rune.RuneId)
                         {
@@ -137,8 +137,8 @@ namespace LegendaryClient.Windows.Profile
         }
         private async void GetAvailableRunes()
         {
-            PVPNetConnect.RiotObjects.Platform.Summoner.Runes.SummonerRuneInventory runeInven = 
-                await Client.PVPNet.GetSummonerRuneInventory(Client.LoginPacket.AllSummonerData.Summoner.SumId);
+            SummonerRuneInventory runeInven = 
+                await RiotCalls.GetSummonerRuneInventory(Client.LoginPacket.AllSummonerData.Summoner.SumId);
             runes = runeInven.SummonerRunes;
             runes.Sort((x, y) => x.Rune.Name.CompareTo(y.Rune.Name));
             RuneFilterComboBox.SelectedIndex = 0;
@@ -388,7 +388,7 @@ namespace LegendaryClient.Windows.Profile
                     RunePage.Name = RuneTextBox.Text;
                 }
             }
-            await Client.PVPNet.SaveSpellBook(Client.LoginPacket.AllSummonerData.SpellBook);
+            await RiotCalls.SaveSpellBook(Client.LoginPacket.AllSummonerData.SpellBook);
         }
 
         private void ClearRunes_Click(object sender, RoutedEventArgs e)

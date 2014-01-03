@@ -1,8 +1,8 @@
 ﻿using LegendaryClient.Controls;
 using LegendaryClient.Logic;
 using LegendaryClient.Logic.PlayerSpell;
+using LegendaryClient.Logic.Riot.Platform;
 using LegendaryClient.Logic.SQLite;
-using PVPNetConnect.RiotObjects.Platform.Game;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -19,6 +19,8 @@ namespace LegendaryClient.Windows.Profile
     /// </summary>
     public partial class Ingame : Page
     {
+        PlatformGameLifecycleDTO Game;
+
         public Ingame()
         {
             InitializeComponent();
@@ -26,6 +28,7 @@ namespace LegendaryClient.Windows.Profile
 
         public void Update(PlatformGameLifecycleDTO CurrentGame)
         {
+            Game = CurrentGame;
             BlueBansLabel.Visibility = System.Windows.Visibility.Hidden;
             PurpleBansLabel.Visibility = System.Windows.Visibility.Hidden;
             PurpleBanListView.Items.Clear();
@@ -129,13 +132,9 @@ namespace LegendaryClient.Windows.Profile
                 champImage.Width = 58;
                 champImage.Source = champions.GetChampion(x.ChampionId).icon;
                 if (x.TeamId == 100)
-                {
                     BlueBanListView.Items.Add(champImage);
-                }
                 else
-                {
                     PurpleBanListView.Items.Add(champImage);
-                }
             }
 
             try
@@ -143,14 +142,20 @@ namespace LegendaryClient.Windows.Profile
                 string mmrJSON = "";
                 string url = Client.Region.SpectatorLink + "consumer/getGameMetaData/" + Client.Region.InternalName + "/" + CurrentGame.Game.Id + "/token";
                 using (WebClient client = new WebClient())
-                {
                     mmrJSON = client.DownloadString(url);
-                }
                 JavaScriptSerializer serializer = new JavaScriptSerializer();
                 Dictionary<string, object> deserializedJSON = serializer.Deserialize<Dictionary<string, object>>(mmrJSON);
                 MMRLabel.Content = "≈" + deserializedJSON["interestScore"];
             }
             catch { MMRLabel.Content = "N/A"; }
+        }
+
+        private void SpectateButton_Click(object sender, System.Windows.RoutedEventArgs e)
+        {
+            string IP = Game.PlayerCredentials.ObserverServerIp;
+            string Key = Game.PlayerCredentials.ObserverEncryptionKey;
+            double GameID = Game.PlayerCredentials.GameId;
+            Client.LaunchSpectatorGame(IP, Key, (int)GameID, Client.Region.InternalName);
         }
     }
 }

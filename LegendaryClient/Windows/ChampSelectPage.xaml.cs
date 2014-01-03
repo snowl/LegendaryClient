@@ -2,13 +2,10 @@
 using LegendaryClient.Controls;
 using LegendaryClient.Logic;
 using LegendaryClient.Logic.PlayerSpell;
+using LegendaryClient.Logic.Riot;
+using LegendaryClient.Logic.Riot.Platform;
 using LegendaryClient.Logic.SQLite;
-using PVPNetConnect.RiotObjects.Platform.Catalog.Champion;
-using PVPNetConnect.RiotObjects.Platform.Game;
-using PVPNetConnect.RiotObjects.Platform.Reroll.Pojo;
-using PVPNetConnect.RiotObjects.Platform.Summoner.Masterybook;
-using PVPNetConnect.RiotObjects.Platform.Summoner.Spellbook;
-using PVPNetConnect.RiotObjects.Platform.Trade;
+using RtmpSharp.Messaging;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -89,6 +86,7 @@ namespace LegendaryClient.Windows
         {
             InitializeComponent();
             StartChampSelect();
+            Client.LastPageContent = this.Content;
         }
 
         /// <summary>
@@ -98,9 +96,16 @@ namespace LegendaryClient.Windows
         {
             //Force client to popup once in champion select
             Client.FocusClient();
-            //Get champions and sort alphabetically
+            Client.IsInGame = true;
+            //Get champions and sort first by favourite, then alphabetically
             ChampList = new List<ChampionDTO>(Client.PlayerChampions);
-            ChampList.Sort((x, y) => champions.GetChampion(x.ChampionId).displayName.CompareTo(champions.GetChampion(y.ChampionId).displayName));
+            ChampList.Sort(delegate(ChampionDTO x, ChampionDTO y)
+            {
+                int IsFav = champions.GetChampion(y.ChampionId).IsFavourite.CompareTo(champions.GetChampion(x.ChampionId).IsFavourite);
+                if (IsFav != 0) return IsFav;
+                else return champions.GetChampion(x.ChampionId).displayName.CompareTo(champions.GetChampion(y.ChampionId).displayName);
+            });
+
             //Retrieve masteries and runes
             MyMasteries = Client.LoginPacket.AllSummonerData.MasteryBook;
             MyRunes = Client.LoginPacket.AllSummonerData.SpellBook;
@@ -136,9 +141,9 @@ namespace LegendaryClient.Windows
             QuickLoad = true;
 
             //Signal to the server we are in champion select
-            await Client.PVPNet.SetClientReceivedGameMessage(Client.GameID, "CHAMP_SELECT_CLIENT");
+            await RiotCalls.SetClientReceivedGameMessage(Client.GameID, "CHAMP_SELECT_CLIENT");
             //Retrieve the latest GameDTO
-            GameDTO latestDTO = await Client.PVPNet.GetLatestGameTimerState(Client.GameID, Client.ChampSelectDTO.GameState, Client.ChampSelectDTO.PickTurn);
+            GameDTO latestDTO = await RiotCalls.GetLatestGameTimerState(Client.GameID, Client.ChampSelectDTO.GameState, Client.ChampSelectDTO.PickTurn);
             //Find the game config for timers
             configType = Client.LoginPacket.GameTypeConfigs.Find(x => x.Id == latestDTO.GameTypeConfigId);
             if (configType == null) //Invalid config... abort!
@@ -160,7 +165,7 @@ namespace LegendaryClient.Windows
 
             LatestDto = latestDTO;
             //Get the champions for the other team to ban & sort alpabetically
-            ChampionBanInfoDTO[] ChampsForBan = await Client.PVPNet.GetChampionsForBan();
+            ChampionBanInfoDTO[] ChampsForBan = await RiotCalls.GetChampionsForBan();
             ChampionsForBan = new List<ChampionBanInfoDTO>(ChampsForBan);
             ChampionsForBan.Sort((x, y) => champions.GetChampion(x.ChampionId).displayName.CompareTo(champions.GetChampion(y.ChampionId).displayName));
 
@@ -178,7 +183,7 @@ namespace LegendaryClient.Windows
             //Start recieving champ select
             ChampSelect_OnMessageReceived(this, latestDTO);
             Client.OnFixChampSelect += ChampSelect_OnMessageReceived;
-            Client.PVPNet.OnMessageReceived += ChampSelect_OnMessageReceived;
+            Client.RtmpConnection.MessageReceived += ChampSelect_OnMessageReceived;
         }
 
         private void CountdownTimer_Tick(object sender, EventArgs e)
@@ -196,11 +201,17 @@ namespace LegendaryClient.Windows
         /// <param name="message"></param>
         private void ChampSelect_OnMessageReceived(object sender, object message)
         {
-            if (message.GetType() == typeof(GameDTO))
+            if (message.GetType() == typeof(GameDTO) || ((MessageReceivedEventArgs)message).Body.GetType() == typeof(GameDTO))
             {
                 #region In Champion Select
 
-                GameDTO ChampDTO = message as GameDTO;
+                GameDTO ChampDTO = null;
+
+                if (message.GetType() == typeof(GameDTO))
+                    ChampDTO = message as GameDTO;
+                else
+                    ChampDTO = ((MessageReceivedEventArgs)message).Body as GameDTO;
+
                 LatestDto = ChampDTO;
                 Dispatcher.BeginInvoke(DispatcherPriority.Input, new ThreadStart(async () =>
                 {
@@ -250,9 +261,9 @@ namespace LegendaryClient.Windows
                             CountdownTimer.Stop();
                         }
                         Client.FixChampSelect();
-                        FakePage fakePage = new FakePage();
-                        fakePage.Content = Client.LastPageContent;
-                        Client.SwitchPage(fakePage);
+                        CustomGameLobbyPage page = new CustomGameLobbyPage();
+                        Client.GameLobbyDTO = ChampDTO;
+                        Client.SwitchPage(page);
                         return;
                     }
                     else if (ChampDTO.GameState == "PRE_CHAMP_SELECT")
@@ -322,7 +333,7 @@ namespace LegendaryClient.Windows
                     else if (ChampDTO.GameState == "POST_CHAMP_SELECT")
                     {
                         //Post game has started. Allow trading
-                        CanTradeWith = await Client.PVPNet.GetPotentialTraders();
+                        CanTradeWith = await RiotCalls.GetPotentialTraders();
                         HasLockedIn = true;
                         GameStatusLabel.Content = "All players have picked!";
                         if (configType != null)
@@ -335,6 +346,10 @@ namespace LegendaryClient.Windows
                         GameStatusLabel.Content = "The game is about to start!";
                         DodgeButton.IsEnabled = false; //Cannot dodge past this point!
                         counter = 1;
+                    }
+                    else if (ChampDTO.GameState == "TERMINATED" || ChampDTO.GameState == "TERMINATED_IN_ERROR")
+                    {
+                        //TODO
                     }
 
                     #region Display players
@@ -353,12 +368,7 @@ namespace LegendaryClient.Windows
                         Participant tempParticipant = participant;
                         i++;
                         ChampSelectPlayer control = new ChampSelectPlayer();
-                        //Cast AramPlayers as PlayerParticipants. This removes reroll data
-                        if (tempParticipant is AramPlayerParticipant)
-                        {
-                            tempParticipant = new PlayerParticipant(tempParticipant.GetBaseTypedObject());
-                        }
-
+                       
                         if (tempParticipant is PlayerParticipant)
                         {
                             PlayerParticipant player = tempParticipant as PlayerParticipant;
@@ -398,6 +408,14 @@ namespace LegendaryClient.Windows
                                         if (PurpleSide)
                                             AreWePurpleSide = true;
                                         RenderLockInGrid(selection);
+                                        if (player.PointSummary != null)
+                                        {
+                                            LockInButton.Content = string.Format("Reroll ({0}/{1})", player.PointSummary.CurrentPoints, player.PointSummary.PointsCostToRoll);
+                                            if (player.PointSummary.NumberOfRolls > 0)
+                                                LockInButton.IsEnabled = true;
+                                            else
+                                                LockInButton.IsEnabled = false;
+                                        }
                                     }
                                 }
                             }
@@ -473,11 +491,11 @@ namespace LegendaryClient.Windows
 
                 #endregion In Champion Select
             }
-            else if (message.GetType() == typeof(PlayerCredentialsDto))
+            else if (((MessageReceivedEventArgs)message).Body.GetType() == typeof(PlayerCredentialsDto))
             {
                 #region Launching Game
 
-                PlayerCredentialsDto dto = message as PlayerCredentialsDto;
+                PlayerCredentialsDto dto = ((MessageReceivedEventArgs)message).Body as PlayerCredentialsDto;
                 Client.CurrentGame = dto;
 
                 if (!HasLaunchedGame)
@@ -496,11 +514,11 @@ namespace LegendaryClient.Windows
 
                 #endregion Launching Game
             }
-            else if (message.GetType() == typeof(TradeContractDTO))
+            else if (((MessageReceivedEventArgs)message).Body.GetType() == typeof(TradeContractDTO))
             {
                 Dispatcher.BeginInvoke(DispatcherPriority.Input, new ThreadStart(() =>
                 {
-                    TradeContractDTO TradeDTO = message as TradeContractDTO;
+                    TradeContractDTO TradeDTO = ((MessageReceivedEventArgs)message).Body as TradeContractDTO;
                     if (TradeDTO.State == "PENDING")
                     {
                         PlayerTradeControl.Visibility = System.Windows.Visibility.Visible;
@@ -541,12 +559,15 @@ namespace LegendaryClient.Windows
         /// <param name="selection">Details of champion you want to render</param>
         internal void RenderLockInGrid(PlayerChampionSelectionDTO selection)
         {
+            champions Champion = champions.GetChampion(selection.ChampionId);
+
+            if (Champion == null)
+                return;
+
             ChampionSelectListView.Visibility = Visibility.Hidden;
             AfterChampionSelectGrid.Visibility = Visibility.Visible;
 
             LockInButton.Content = "Locked In";
-
-            champions Champion = champions.GetChampion(selection.ChampionId);
 
             SkinSelectListView.Items.Clear();
             AbilityListView.Items.Clear();
@@ -566,10 +587,9 @@ namespace LegendaryClient.Windows
             foreach (Spell ability in Champion.Spells)
             {
                 ChampionAbility championAbility = new ChampionAbility();
+                championAbility.DataContext = ability;
                 uriSource = Path.Combine(Client.ExecutingDirectory, "Assets", "spell", ability.Image);
                 championAbility.AbilityImage.Source = Client.GetImage(uriSource);
-                championAbility.AbilityName.Content = ability.Name;
-                championAbility.AbilityDescription.Text = ability.Tooltip;
                 championAbility.Width = 375;
                 championAbility.Height = 75;
                 AbilityListView.Items.Add(championAbility);
@@ -617,6 +637,9 @@ namespace LegendaryClient.Windows
                         ListViewItem item = new ListViewItem();
                         ChampionImage championImage = new ChampionImage();
                         championImage.ChampImage.Source = champions.GetChampion(champ.ChampionId).icon;
+                        if (getChamp.IsFavourite)
+                            championImage.FavoriteImage.Visibility = Visibility.Visible;
+
                         if (champ.FreeToPlay)
                             championImage.FreeToPlayLabel.Visibility = Visibility.Visible;
                         championImage.Width = 64;
@@ -680,10 +703,20 @@ namespace LegendaryClient.Windows
                 MyChampId = selection.ChampionId;
             }
             //Has locked in
-            if (player.PickMode == 2)
+            if (player.PickMode == 2 || LatestDto.GameState == "POST_CHAMP_SELECT" || LatestDto.GameState == "START_REQUESTED")
             {
                 string uriSource = "/LegendaryClient;component/Locked.png";
                 control.LockedInIcon.Source = Client.GetImage(uriSource);
+            }
+            //Make obvious whos pick turn it is
+            if (player.PickTurn != LatestDto.PickTurn && (LatestDto.GameState == "CHAMP_SELECT" || LatestDto.GameState == "PRE_CHAMP_SELECT"))
+            {
+                control.Opacity = 0.5;
+            }
+            else
+            {
+                //Full opacity when not picking or banning
+                control.Opacity = 1;
             }
             //If trading with this player is possible
             if (CanTradeWith != null && (CanTradeWith.PotentialTraders.Contains(player.SummonerInternalName) || DevMode))
@@ -691,7 +724,7 @@ namespace LegendaryClient.Windows
                 control.TradeButton.Visibility = System.Windows.Visibility.Visible;
             }
             //If this player is duo/trio/quadra queued with players
-            if (player.TeamParticipantId != null)
+            if (player.TeamParticipantId != null && (double)player.TeamParticipantId != 0)
             {
                 //Byte hack to get individual hex colors
                 byte[] values = BitConverter.GetBytes((double)player.TeamParticipantId);
@@ -718,7 +751,7 @@ namespace LegendaryClient.Windows
         private async void TradeButton_Click(object sender, RoutedEventArgs e)
         {
             KeyValuePair<PlayerChampionSelectionDTO, PlayerParticipant> p = (KeyValuePair<PlayerChampionSelectionDTO, PlayerParticipant>)((Button)sender).Tag;
-            await Client.PVPNet.AttemptTrade(p.Value.SummonerInternalName, p.Key.ChampionId);
+            await RiotCalls.AttemptTrade(p.Value.SummonerInternalName, p.Key.ChampionId);
 
             PlayerTradeControl.Visibility = System.Windows.Visibility.Visible;
             champions MyChampion = champions.GetChampion((int)MyChampId);
@@ -741,7 +774,7 @@ namespace LegendaryClient.Windows
                 {
                     if (item.Tag != null)
                     {
-                        await Client.PVPNet.SelectChampion((int)item.Tag);
+                        await RiotCalls.SelectChampion((int)item.Tag);
 
                         //TODO: Fix stupid animation glitch on left hand side
                         DoubleAnimation fadingAnimation = new DoubleAnimation();
@@ -767,7 +800,7 @@ namespace LegendaryClient.Windows
                 {
                     if (item.Tag != null)
                     {
-                        await Client.PVPNet.BanChampion((int)item.Tag);
+                        await RiotCalls.BanChampion((int)item.Tag);
                     }
                 }
             }
@@ -785,7 +818,7 @@ namespace LegendaryClient.Windows
                         string[] splitItem = ((string)item.Tag).Split(':');
                         int championId = Convert.ToInt32(splitItem[1]);
                         champions Champion = champions.GetChampion(championId);
-                        await Client.PVPNet.SelectChampionSkin(championId, 0);
+                        await RiotCalls.SelectChampionSkin(championId, 0);
                         TextRange tr = new TextRange(ChatText.Document.ContentEnd, ChatText.Document.ContentEnd);
                         tr.Text = "Selected Default " + Champion.name + " as skin" + Environment.NewLine;
                         tr.ApplyPropertyValue(TextElement.ForegroundProperty, Brushes.White);
@@ -793,7 +826,7 @@ namespace LegendaryClient.Windows
                     else
                     {
                         championSkins skin = championSkins.GetSkin((int)item.Tag);
-                        await Client.PVPNet.SelectChampionSkin(skin.championId, skin.id);
+                        await RiotCalls.SelectChampionSkin(skin.championId, skin.id);
                         TextRange tr = new TextRange(ChatText.Document.ContentEnd, ChatText.Document.ContentEnd);
                         tr.Text = "Selected " + skin.displayName + " as skin" + Environment.NewLine;
                         tr.ApplyPropertyValue(TextElement.ForegroundProperty, Brushes.White);
@@ -810,10 +843,17 @@ namespace LegendaryClient.Windows
 
         private async void LockInButton_Click(object sender, RoutedEventArgs e)
         {
-            //TODO: Aram Reroll
-            if (ChampionSelectListView.SelectedItems.Count > 0)
+            if (configType.PickMode != "AllRandomPickStrategy")
             {
-                await Client.PVPNet.ChampionSelectCompleted();
+                if (ChampionSelectListView.SelectedItems.Count > 0)
+                {
+                    await RiotCalls.ChampionSelectCompleted();
+                    HasLockedIn = true;
+                }
+            }
+            else
+            {
+                await RiotCalls.Roll();
                 HasLockedIn = true;
             }
         }
@@ -872,7 +912,7 @@ namespace LegendaryClient.Windows
             }
             if (HasChanged)
             {
-                await Client.PVPNet.SaveMasteryBook(bookDTO);
+                await RiotCalls.SaveMasteryBook(bookDTO);
             }
         }
 
@@ -904,7 +944,7 @@ namespace LegendaryClient.Windows
             }
             if (HasChanged)
             {
-                await Client.PVPNet.SelectDefaultSpellBookPage(SelectedRunePage);
+                await RiotCalls.SelectDefaultSpellBookPage(SelectedRunePage);
             }
         }
 
@@ -971,6 +1011,7 @@ namespace LegendaryClient.Windows
                 TextRange tr = new TextRange(ChatText.Document.ContentEnd, ChatText.Document.ContentEnd);
                 tr.Text = participant.Nick + " joined the room." + Environment.NewLine;
                 tr.ApplyPropertyValue(TextElement.ForegroundProperty, Brushes.Yellow);
+                ChatButton.IsEnabled = true;
             }));
         }
     }

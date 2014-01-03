@@ -1,7 +1,8 @@
 ﻿using LegendaryClient.Controls;
 using LegendaryClient.Logic;
+using LegendaryClient.Logic.Riot;
+using LegendaryClient.Logic.Riot.Platform;
 using LegendaryClient.Logic.SQLite;
-using PVPNetConnect.RiotObjects.Platform.Summoner.Masterybook;
 using System;
 using System.Collections.Generic;
 using System.Windows;
@@ -97,6 +98,7 @@ namespace LegendaryClient.Windows.Profile
                         break;
                 }
 
+                //TODO: Remove hardcoded masteries (mastery.json has null values for this)
                 //Add spaces
                 if (Mastery.id == 4152 ||
                     Mastery.id == 4222 ||
@@ -319,7 +321,7 @@ namespace LegendaryClient.Windows.Profile
                     MasteryPage.Name = MasteryTextBox.Text;
                 }
             }
-            await Client.PVPNet.SaveMasteryBook(Client.LoginPacket.AllSummonerData.MasteryBook);
+            await RiotCalls.SaveMasteryBook(Client.LoginPacket.AllSummonerData.MasteryBook);
         }
 
         private void MasteryPageListView_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -355,6 +357,62 @@ namespace LegendaryClient.Windows.Profile
                         mastery.selectedRank = savedMastery.Rank;
                 }
             }
+        }
+
+        private async void LeftButton_Click(object sender, RoutedEventArgs e)
+        {
+            int i = 0;
+            foreach (MasteryBookPageDTO MasteryPage in Client.LoginPacket.AllSummonerData.MasteryBook.BookPages)
+            {
+                if (MasteryPage.Current)
+                    break;
+                i++;
+            }
+
+            //Make sure it has found the mastery page! Just to be safe :)
+            if (i == 0)
+                return;
+
+            //Swap the mastery page id and location
+            MasteryBookPageDTO tempDTO = Client.LoginPacket.AllSummonerData.MasteryBook.BookPages[i];
+            MasteryBookPageDTO tempDTOTwo = Client.LoginPacket.AllSummonerData.MasteryBook.BookPages[i - 1];
+            double TempDTOTwoId = tempDTOTwo.PageId;
+            tempDTOTwo.PageId = tempDTO.PageId;
+            tempDTO.PageId = TempDTOTwoId;
+            Client.LoginPacket.AllSummonerData.MasteryBook.BookPages.Remove(tempDTO);
+            Client.LoginPacket.AllSummonerData.MasteryBook.BookPages.Insert(i - 1, tempDTO);
+
+            MasteryPageListView.SelectedIndex -= 1;
+
+            await RiotCalls.SaveMasteryBook(Client.LoginPacket.AllSummonerData.MasteryBook);
+        }
+
+        private async void RightButton_Click(object sender, RoutedEventArgs e)
+        {
+            int i = 0;
+            foreach (MasteryBookPageDTO MasteryPage in Client.LoginPacket.AllSummonerData.MasteryBook.BookPages)
+            {
+                if (MasteryPage.Current)
+                    break;
+                i++;
+            }
+
+            //Make sure it has found the mastery page! Just to be safe :)
+            if (i == Client.LoginPacket.AllSummonerData.MasteryBook.BookPages.Count - 1)
+                return;
+
+            //Swap the mastery page id and location
+            MasteryBookPageDTO tempDTO = Client.LoginPacket.AllSummonerData.MasteryBook.BookPages[i];
+            MasteryBookPageDTO tempDTOTwo = Client.LoginPacket.AllSummonerData.MasteryBook.BookPages[i + 1];
+            double TempDTOTwoId = tempDTOTwo.PageId;
+            tempDTOTwo.PageId = tempDTO.PageId;
+            tempDTO.PageId = TempDTOTwoId;
+            Client.LoginPacket.AllSummonerData.MasteryBook.BookPages.Remove(tempDTO);
+            Client.LoginPacket.AllSummonerData.MasteryBook.BookPages.Insert(i + 1, tempDTO);
+
+            MasteryPageListView.SelectedIndex += 1;
+
+            await RiotCalls.SaveMasteryBook(Client.LoginPacket.AllSummonerData.MasteryBook);
         }
     }
 }

@@ -2,7 +2,10 @@
 using LegendaryClient.Controls;
 using LegendaryClient.Logic;
 using LegendaryClient.Logic.Maps;
-using PVPNetConnect.RiotObjects.Platform.Game;
+using LegendaryClient.Logic.Riot;
+using LegendaryClient.Logic.Riot.Platform;
+using LegendaryClient.Logic.SQLite;
+using RtmpSharp.Messaging;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -29,14 +32,16 @@ namespace LegendaryClient.Windows
         private double GameId;
         private int MapId;
         private Room newRoom;
+        private LargeChatPlayer PlayerItem;
+        private Dictionary<string, string> Metadata;
 
         public CustomGameLobbyPage()
         {
             InitializeComponent();
-
+            Client.IsInGame = true;
             GameName.Content = Client.GameName;
             Client.OnFixLobby += GameLobby_OnMessageReceived;
-            Client.PVPNet.OnMessageReceived += GameLobby_OnMessageReceived;
+            Client.RtmpConnection.MessageReceived += GameLobby_OnMessageReceived;
             //If client has created game use initial DTO
             if (Client.GameLobbyDTO != null)
             {
@@ -48,6 +53,9 @@ namespace LegendaryClient.Windows
                 WhitelistListBox.Items.Add(s);
             }
 
+            Metadata = new Dictionary<string, string>();
+
+            Client.LastPageContent = this.Content;
             Client.InviteListView = InviteListView;
             Client.InviteListView.Items.Clear();
             Client.OnMessage += Client_OnMessage;
@@ -101,7 +109,7 @@ namespace LegendaryClient.Windows
             {
                 ChatSubjects subject = (ChatSubjects)Enum.Parse(typeof(ChatSubjects), msg.Subject, true);
                 double[] Double = new double[1] { Convert.ToDouble(msg.From.User.Replace("sum", "")) };
-                string[] Name = await Client.PVPNet.GetSummonerNames(Double);
+                string[] Name = await RiotCalls.GetSummonerNames(Double);
                 Dispatcher.BeginInvoke(DispatcherPriority.Input, new ThreadStart(() =>
                 {
                     InvitePlayer invitePlayer = null;
@@ -118,7 +126,8 @@ namespace LegendaryClient.Windows
                     if (subject == ChatSubjects.PRACTICE_GAME_INVITE_ACCEPT)
                     {
                         invitePlayer.StatusLabel.Content = "Accepted";
-                        Client.Message(msg.From.User, msg.Body, ChatSubjects.PRACTICE_GAME_INVITE_ACCEPT_ACK);
+                        if (IsOwner)
+                            Client.Message(msg.From.User, msg.Body, ChatSubjects.PRACTICE_GAME_INVITE_ACCEPT_ACK);
                     }
 
                     if (subject == ChatSubjects.GAME_INVITE_REJECT)
@@ -136,9 +145,15 @@ namespace LegendaryClient.Windows
 
         private void GameLobby_OnMessageReceived(object sender, object message)
         {
-            if (message.GetType() == typeof(GameDTO))
+            if (message.GetType() == typeof(GameDTO) || ((MessageReceivedEventArgs)message).Body.GetType() == typeof(GameDTO))
             {
-                GameDTO dto = message as GameDTO;
+                GameDTO dto = null;
+
+                if (message.GetType() == typeof(GameDTO))
+                    dto = message as GameDTO;
+                else
+                    dto = ((MessageReceivedEventArgs)message).Body as GameDTO;
+
                 Dispatcher.BeginInvoke(DispatcherPriority.Input, new ThreadStart(async () =>
                 {
                     MapId = dto.MapId;
@@ -191,7 +206,7 @@ namespace LegendaryClient.Windows
                                 {
                                     if (!Client.Whitelist.Contains(player.SummonerName.ToLower()) && player.SummonerId != Client.LoginPacket.AllSummonerData.Summoner.SumId && IsOwner)
                                     {
-                                        await Client.PVPNet.BanUserFromGame(Client.GameID, player.AccountId);
+                                        await RiotCalls.BanUserFromGame(Client.GameID, player.AccountId);
                                     }
                                 }
                             }
@@ -201,6 +216,9 @@ namespace LegendaryClient.Windows
                                 i = 0;
                                 PurpleSide = true;
                             }
+
+                            lobbyPlayer.ProfileImage.MouseMove += ProfileImage_MouseMove;
+                            lobbyPlayer.ProfileImage.MouseLeave += ProfileImage_MouseLeave;
 
                             if (!PurpleSide)
                             {
@@ -226,6 +244,101 @@ namespace LegendaryClient.Windows
             }
         }
 
+        void ProfileImage_MouseLeave(object sender, System.Windows.Input.MouseEventArgs e)
+        {
+            if (PlayerItem != null)
+            {
+                Client.MainGrid.Children.Remove(PlayerItem);
+                PlayerItem = null;
+            }
+        }
+
+        void ProfileImage_MouseMove(object sender, System.Windows.Input.MouseEventArgs e)
+        {
+            Image item = (Image)sender;
+            string playerName = (string)item.Tag;
+            if (PlayerItem == null && Metadata.ContainsKey(playerName))
+            {
+                PlayerItem = new LargeChatPlayer();
+                Client.MainGrid.Children.Add(PlayerItem);
+                Panel.SetZIndex(PlayerItem, 5);
+                var playerItem = Client.ParsePresence(Metadata[playerName]);
+                PlayerItem.Tag = playerItem;
+
+                PlayerItem.PlayerName.Content = playerItem.Username;
+                PlayerItem.PlayerLeague.Content = playerItem.LeagueTier + " " + playerItem.LeagueDivision;
+                if (playerItem.RankedWins == 0)
+                    PlayerItem.PlayerWins.Content = playerItem.Wins + " Normal Wins";
+                else
+                    PlayerItem.PlayerWins.Content = playerItem.RankedWins + " Ranked Wins";
+                PlayerItem.LevelLabel.Content = playerItem.Level;
+                PlayerItem.UsingLegendary.Visibility = playerItem.UsingLegendary ? System.Windows.Visibility.Visible : System.Windows.Visibility.Hidden;
+                var uriSource = Path.Combine(Client.ExecutingDirectory, "Assets", "profileicon", playerItem.ProfileIcon + ".png");
+                PlayerItem.ProfileImage.Source = Client.GetImage(uriSource);
+                if (playerItem.Status != null)
+                {
+                    PlayerItem.PlayerStatus.Text = playerItem.Status.Replace("∟", "");
+                }
+                else
+                {
+                    PlayerItem.PlayerStatus.Text = "";
+                }
+
+                if (playerItem.GameStatus != "outOfGame")
+                {
+                    TimeSpan elapsed = new TimeSpan();
+                    if (playerItem.Timestamp != 0)
+                    {
+                        elapsed = DateTime.Now.Subtract(Client.JavaTimeStampToDateTime(playerItem.Timestamp));
+                    }
+                    switch (playerItem.GameStatus)
+                    {
+                        case "inGame":
+                            champions InGameChamp = champions.GetChampion(playerItem.Champion);
+                            if (InGameChamp != null)
+                                PlayerItem.InGameStatus.Text = "In Game" + Environment.NewLine +
+                                                               "Playing as " + InGameChamp.displayName + Environment.NewLine +
+                                                               "For " + string.Format("{0} Minutes and {1} Seconds", elapsed.Minutes, elapsed.Seconds);
+                            else
+                                PlayerItem.InGameStatus.Text = "In Game";
+                            break;
+                        case "hostingPracticeGame":
+                            PlayerItem.InGameStatus.Text = "Creating Custom Game";
+                            break;
+                        case "inQueue":
+                            PlayerItem.InGameStatus.Text = "In Queue" + Environment.NewLine +
+                                                           "For " + string.Format("{0} Minutes and {1} Seconds", elapsed.Minutes, elapsed.Seconds);
+                            break;
+                        case "spectating":
+                            PlayerItem.InGameStatus.Text = "Spectating";
+                            break;
+                        case "championSelect":
+                            PlayerItem.InGameStatus.Text = "In Champion Select" + Environment.NewLine +
+                                                           "For " + string.Format("{0} Minutes and {1} Seconds", elapsed.Minutes, elapsed.Seconds);
+                            break;
+                    }
+                    PlayerItem.InGameStatus.Visibility = System.Windows.Visibility.Visible;
+                }
+
+                PlayerItem.Width = 250;
+                PlayerItem.HorizontalAlignment = System.Windows.HorizontalAlignment.Left;
+                PlayerItem.VerticalAlignment = System.Windows.VerticalAlignment.Top;
+            }
+
+            if (PlayerItem == null)
+                return;
+
+            Point MouseLocation = e.GetPosition(Client.MainGrid);
+
+            double YMargin = MouseLocation.Y;
+
+            double XMargin = MouseLocation.X;
+            if (XMargin + PlayerItem.Width + 10 > Client.MainGrid.ActualWidth)
+                XMargin = Client.MainGrid.ActualWidth - PlayerItem.Width - 10;
+
+            PlayerItem.Margin = new Thickness(XMargin + 5, YMargin + 5, 0, 0);
+        }
+
         private void newRoom_OnParticipantJoin(Room room, RoomParticipant participant)
         {
             Dispatcher.BeginInvoke(DispatcherPriority.Input, new ThreadStart(() =>
@@ -233,6 +346,7 @@ namespace LegendaryClient.Windows
                 TextRange tr = new TextRange(ChatText.Document.ContentEnd, ChatText.Document.ContentEnd);
                 tr.Text = participant.Nick + " joined the room." + Environment.NewLine;
                 tr.ApplyPropertyValue(TextElement.ForegroundProperty, Brushes.Yellow);
+                Metadata[participant.Nick] = participant.Presence.Status;
             }));
         }
 
@@ -277,6 +391,7 @@ namespace LegendaryClient.Windows
 
             string uriSource = Path.Combine(Client.ExecutingDirectory, "Assets", "profileicon", player.ProfileIconId + ".png");
             lobbyPlayer.ProfileImage.Source = Client.GetImage(uriSource);
+            lobbyPlayer.ProfileImage.Tag = player.SummonerName;
 
             if (IsOwner)
                 lobbyPlayer.OwnerLabel.Visibility = Visibility.Visible;
@@ -299,19 +414,19 @@ namespace LegendaryClient.Windows
 
         private async void SwitchTeamsButton_Click(object sender, RoutedEventArgs e)
         {
-            await Client.PVPNet.SwitchTeams(Client.GameID);
+            await RiotCalls.SwitchTeams(Client.GameID);
         }
 
         private async void KickAndBan_Click(object sender, RoutedEventArgs e)
         {
             var button = sender as Button;
             PlayerParticipant BanPlayer = (PlayerParticipant)button.Tag;
-            await Client.PVPNet.BanUserFromGame(Client.GameID, BanPlayer.AccountId);
+            await RiotCalls.BanUserFromGame(Client.GameID, BanPlayer.AccountId);
         }
 
         private async void StartGameButton_Click(object sender, RoutedEventArgs e)
         {
-            await Client.PVPNet.StartChampionSelection(Client.GameID, OptomisticLock);
+            await RiotCalls.StartChampionSelection(Client.GameID, OptomisticLock);
         }
 
         private void InviteButton_Click(object sender, RoutedEventArgs e)

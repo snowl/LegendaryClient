@@ -19,39 +19,35 @@ You need these DLLS:
 * MahApps.Metro
 * SharpZipLib
 * Sqlite
+* rtmps-sharp
 
 You must compile these DLLS yourself:
 
 * https://github.com/bladecoding/Jabber-net
-* https://github.com/Snowl/PVPNetConnect
 
-In-Client Screenshots (90-100)% complete
+In-Client Screenshots
 =====================
 
 ![Login](http://puu.sh/5Q7jT.jpg)
-![News Screen](http://puu.sh/5Q7vd.jpg)
-![Featured Games](http://puu.sh/5Q7tZ.jpg)
+![News Screen](http://i.imgur.com/83YTpKC.png)
+![Featured Games](http://i.imgur.com/CZi2708.png)
 ![Store](http://i.imgur.com/raXcBfv.png)
-
-Still-in Progress Screenshots 
-=============================
-
-![Chat](http://puu.sh/5FVHS.png)
+![Chat](http://i.imgur.com/ekaYYms.png)
 ![Queue](http://i.imgur.com/ZpZiyJ5.png)
 ![QueuePop](http://i.imgur.com/KAt5KXR.png)
-![ChampSelect](http://puu.sh/5Q7wZ.jpg)
-![ChampSelect2](http://puu.sh/5Q7xO.jpg)
+![ChampSelect](http://i.imgur.com/PBWFcfp.jpg)
+![ChampSelect2](http://i.imgur.com/V57akNp.png)
 ![CustomGameCreate](http://puu.sh/5Q7yH.jpg)
 ![SearchCustomGames](http://puu.sh/5Q7zE.png)
 ![CustomGameLobby](http://puu.sh/5Q7Av.jpg)
 ![Trading](http://puu.sh/5NcEw.jpg)
 ![Inviting](http://i.imgur.com/99q4kcd.png)
-![Profile](http://puu.sh/5Q7D8.jpg)
+![Profile](http://i.imgur.com/qDC9puY.png)
 ![AggregatedStats](http://puu.sh/5Q7E2.jpg)
-![Skins](http://i.imgur.com/Lsz3x4d.jpg)
-![Settings](http://i.imgur.com/ZTktZTY.png)
-![Notifications](http://i.imgur.com/96bctwF.png)
-![Champions](http://puu.sh/5Q78z.jpg)
+![Skins](http://i.imgur.com/Nz99jq7.jpg)
+![Settings](http://i.imgur.com/3wCyfN1.png)
+![Notifications](http://i.imgur.com/JX9AH37.png)
+![Champions](http://i.imgur.com/fJdYZd5.jpg)
 
 Other Features
 ======

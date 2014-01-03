@@ -1,8 +1,8 @@
 ﻿using LegendaryClient.Controls;
 using LegendaryClient.Logic;
 using LegendaryClient.Logic.PlayerSpell;
+using LegendaryClient.Logic.Riot.Platform;
 using LegendaryClient.Logic.SQLite;
-using PVPNetConnect.RiotObjects.Platform.Statistics;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -100,9 +100,9 @@ namespace LegendaryClient.Windows
 
             PlayersListView.Items.Insert(AllParticipants.Count / 2, new Separator());
 
-            championSkins Skin = championSkins.GetSkin(Statistics.SkinIndex);
+            /*championSkins Skin = championSkins.GetSkin(Statistics.SkinIndex);
             var skinSource = Path.Combine(Client.ExecutingDirectory, "Assets", "champions", Skin.splashPath);
-            SkinImage.Source = Client.GetImage(skinSource);
+            SkinImage.Source = Client.GetImage(skinSource);*/
         }
 
         private void CloseButton_Click(object sender, RoutedEventArgs e)

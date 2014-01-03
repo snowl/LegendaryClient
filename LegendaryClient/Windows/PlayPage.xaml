@@ -19,5 +19,6 @@
         <Button x:Name="CreateCustomGameButton" Content="Create Custom Game" HorizontalAlignment="Left" Margin="10,0,0,10" VerticalAlignment="Bottom" Width="140" Height="42" Click="CreateCustomGameButton_Click" />
         <Button x:Name="JoinCustomGameButton" Content="Join Custom Games" HorizontalAlignment="Left" Margin="155,0,0,10" VerticalAlignment="Bottom" Width="140" Height="42" Click="JoinCustomGameButton_Click" />
         <CheckBox x:Name="AutoAcceptCheckBox" Content="Auto Accept Queue" HorizontalAlignment="Right" Margin="0,0,10,65" VerticalAlignment="Bottom" Checked="AutoAcceptCheckBox_Checked" />
+        <ContentControl x:Name="QueueContent" HorizontalAlignment="Stretch" Margin="0,0,0,90" VerticalAlignment="Stretch"/>
     </Grid>
 </Page>

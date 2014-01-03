@@ -3,15 +3,12 @@ using jabber.connection;
 using jabber.protocol.client;
 using LegendaryClient.Controls;
 using LegendaryClient.Logic.Region;
+using LegendaryClient.Logic.Riot;
+using LegendaryClient.Logic.Riot.Platform;
 using LegendaryClient.Logic.SQLite;
 using LegendaryClient.Windows;
-using PVPNetConnect;
-using PVPNetConnect.RiotObjects.Platform.Catalog.Champion;
-using PVPNetConnect.RiotObjects.Platform.Clientfacade.Domain;
-using PVPNetConnect.RiotObjects.Platform.Game;
-using PVPNetConnect.RiotObjects.Platform.Game.Message;
-using PVPNetConnect.RiotObjects.Platform.Messaging;
-using PVPNetConnect.RiotObjects.Platform.Statistics;
+using RtmpSharp.Messaging;
+using RtmpSharp.Net;
 using SQLite;
 using System;
 using System.Collections.Generic;
@@ -22,6 +19,7 @@ using System.Security.Cryptography;
 using System.Security.Cryptography.X509Certificates;
 using System.Text.RegularExpressions;
 using System.Threading;
+using System.Timers;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media.Imaging;
@@ -116,7 +114,7 @@ namespace LegendaryClient.Logic
                     {
                         if (ChatClient.IsAuthenticated)
                         {
-                            ChatClientConnect(null);
+                            SetChatHover();
                         }
                     }
                 }
@@ -137,7 +135,7 @@ namespace LegendaryClient.Logic
                     {
                         if (ChatClient.IsAuthenticated)
                         {
-                            ChatClientConnect(null);
+                            SetChatHover();
                         }
                     }
                 }
@@ -150,6 +148,7 @@ namespace LegendaryClient.Logic
         internal static bool UpdatePlayers = true;
 
         internal static Dictionary<string, ChatPlayerItem> AllPlayers = new Dictionary<string, ChatPlayerItem>();
+        internal static List<Group> Groups = new List<Group>();
 
         internal static bool ChatClient_OnInvalidCertificate(object sender, X509Certificate certificate, X509Chain chain, SslPolicyErrors sslPolicyErrors)
         {
@@ -172,11 +171,20 @@ namespace LegendaryClient.Logic
                     if (subject == ChatSubjects.PRACTICE_GAME_INVITE ||
                         subject == ChatSubjects.GAME_INVITE)
                     {
+                        MainWin.FlashWindow();
                         NotificationPopup pop = new NotificationPopup(subject, msg);
                         pop.Height = 230;
                         pop.HorizontalAlignment = HorizontalAlignment.Right;
                         pop.VerticalAlignment = VerticalAlignment.Bottom;
                         NotificationGrid.Children.Add(pop);
+                    }
+                    else if (subject == ChatSubjects.GAME_MSG_OUT_OF_SYNC)
+                    {
+                        MessageOverlay messageOver = new MessageOverlay();
+                        messageOver.MessageTitle.Content = "Game no longer exists";
+                        messageOver.MessageTextBox.Text = "The game you are looking for no longer exists.";
+                        Client.OverlayContainer.Content = messageOver.Content;
+                        Client.OverlayContainer.Visibility = Visibility.Visible;
                     }
                 }
             }));
@@ -195,6 +203,38 @@ namespace LegendaryClient.Logic
 
         internal static void ChatClientConnect(object sender)
         {
+            Groups.Add(new Group("Online"));
+
+            //Get all groups
+            RosterManager manager = sender as RosterManager;
+            string ParseString = manager.ToString();
+            List<string> StringHackOne = new List<string>(ParseString.Split(new string[] { "@pvp.net=" }, StringSplitOptions.None));
+            StringHackOne.RemoveAt(0);
+            foreach (string StringHack in StringHackOne)
+            {
+                string[] StringHackTwo = StringHack.Split(',');
+                string Parse = StringHackTwo[0];
+                using (XmlReader reader = XmlReader.Create(new StringReader(Parse)))
+                {
+                    while (reader.Read())
+                    {
+                        if (reader.IsStartElement())
+                        {
+                            switch (reader.Name)
+                            {
+                                case "group":
+                                    reader.Read();
+                                    string Group = reader.Value;
+                                    if (Group != "**Default" && Groups.Find(e => e.GroupName == Group) == null)
+                                        Groups.Add(new Group(Group));
+                                    break;
+                            }
+                        }
+                    }
+                }
+            }
+
+            Groups.Add(new Group("Offline", false));
             SetChatHover();
         }
 
@@ -232,10 +272,30 @@ namespace LegendaryClient.Logic
         internal static void RostManager_OnRosterItem(object sender, jabber.protocol.iq.Item ri)
         {
             UpdatePlayers = true;
+
             if (!AllPlayers.ContainsKey(ri.JID.User))
             {
                 ChatPlayerItem player = new ChatPlayerItem();
                 player.Id = ri.JID.User;
+                player.Group = "Online";
+                using (XmlReader reader = XmlReader.Create(new StringReader(ri.OuterXml)))
+                {
+                    while (reader.Read())
+                    {
+                        if (reader.IsStartElement())
+                        {
+                            switch (reader.Name)
+                            {
+                                case "group":
+                                    reader.Read();
+                                    string TempGroup = reader.Value;
+                                    if (TempGroup != "**Default")
+                                        player.Group = TempGroup;
+                                    break;
+                            }
+                        }
+                    }
+                }
                 player.Username = ri.Nickname;
                 bool PlayerPresence = PresManager.IsAvailable(ri.JID);
                 AllPlayers.Add(ri.JID.User, player);
@@ -244,101 +304,111 @@ namespace LegendaryClient.Logic
 
         internal static void PresManager_OnPrimarySessionChange(object sender, jabber.JID bare)
         {
-            jabber.protocol.client.Presence[] s = PresManager.GetAll(bare);
-            if (s.Length == 0)
-                return;
-            string Presence = s[0].Status;
-            if (Presence == null)
-                return;
-            Debug.WriteLine(Presence);
             if (AllPlayers.ContainsKey(bare.User))
             {
-                UpdatePlayers = true;
                 ChatPlayerItem Player = AllPlayers[bare.User];
-                using (XmlReader reader = XmlReader.Create(new StringReader(Presence)))
-                {
-                    while (reader.Read())
-                    {
-                        if (reader.IsStartElement())
-                        {
-                            #region Parse Presence
+                Player.IsOnline = false;
+                UpdatePlayers = true;
+                jabber.protocol.client.Presence[] s = PresManager.GetAll(bare);
+                if (s.Length == 0)
+                    return;
+                string Presence = s[0].Status;
+                if (Presence == null)
+                    return;
+                Player = ParsePresence(Presence);
+                Player.IsOnline = true;
 
-                            switch (reader.Name)
-                            {
-                                case "profileIcon":
-                                    reader.Read();
-                                    Player.ProfileIcon = Convert.ToInt32(reader.Value);
-                                    break;
-
-                                case "level":
-                                    reader.Read();
-                                    Player.Level = Convert.ToInt32(reader.Value);
-                                    break;
-
-                                case "wins":
-                                    reader.Read();
-                                    Player.Wins = Convert.ToInt32(reader.Value);
-                                    break;
-
-                                case "leaves":
-                                    reader.Read();
-                                    Player.Leaves = Convert.ToInt32(reader.Value);
-                                    break;
-
-                                case "rankedWins":
-                                    reader.Read();
-                                    Player.RankedWins = Convert.ToInt32(reader.Value);
-                                    break;
-
-                                case "timeStamp":
-                                    reader.Read();
-                                    Player.Timestamp = Convert.ToInt64(reader.Value);
-                                    break;
-
-                                case "statusMsg":
-                                    reader.Read();
-                                    Player.Status = reader.Value;
-                                    if (Player.Status.EndsWith("∟"))
-                                    {
-                                        Player.UsingLegendary = true;
-                                    }
-                                    break;
-
-                                case "gameStatus":
-                                    reader.Read();
-                                    Player.GameStatus = reader.Value;
-                                    break;
-
-                                case "skinname":
-                                    reader.Read();
-                                    Player.Champion = reader.Value;
-                                    break;
-
-                                case "rankedLeagueName":
-                                    reader.Read();
-                                    Player.LeagueName = reader.Value;
-                                    break;
-
-                                case "rankedLeagueTier":
-                                    reader.Read();
-                                    Player.LeagueTier = reader.Value;
-                                    break;
-
-                                case "rankedLeagueDivision":
-                                    reader.Read();
-                                    Player.LeagueDivision = reader.Value;
-                                    break;
-                            }
-
-                            #endregion Parse Presence
-                        }
-                    }
-                }
                 if (String.IsNullOrWhiteSpace(Player.Status))
                 {
                     Player.Status = "Online";
                 }
             }
+        }
+
+        internal static ChatPlayerItem ParsePresence(string Presence)
+        {
+            ChatPlayerItem Player = new ChatPlayerItem();
+            Player.RawPresence = Presence; //For debugging
+            using (XmlReader reader = XmlReader.Create(new StringReader(Presence)))
+            {
+                while (reader.Read())
+                {
+                    if (reader.IsStartElement())
+                    {   
+                        #region Parse Presence
+
+                        switch (reader.Name)
+                        {
+                            case "profileIcon":
+                                reader.Read();
+                                Player.ProfileIcon = Convert.ToInt32(reader.Value);
+                                break;
+
+                            case "level":
+                                reader.Read();
+                                Player.Level = Convert.ToInt32(reader.Value);
+                                break;
+
+                            case "wins":
+                                reader.Read();
+                                Player.Wins = Convert.ToInt32(reader.Value);
+                                break;
+
+                            case "leaves":
+                                reader.Read();
+                                Player.Leaves = Convert.ToInt32(reader.Value);
+                                break;
+
+                            case "rankedWins":
+                                reader.Read();
+                                Player.RankedWins = Convert.ToInt32(reader.Value);
+                                break;
+
+                            case "timeStamp":
+                                reader.Read();
+                                Player.Timestamp = Convert.ToInt64(reader.Value);
+                                break;
+
+                            case "statusMsg":
+                                reader.Read();
+                                Player.Status = reader.Value;
+                                if (Player.Status.EndsWith("∟"))
+                                {
+                                    Player.UsingLegendary = true;
+                                }
+                                break;
+
+                            case "gameStatus":
+                                reader.Read();
+                                Player.GameStatus = reader.Value;
+                                break;
+
+                            case "skinname":
+                                reader.Read();
+                                Player.Champion = reader.Value;
+                                break;
+
+                            case "rankedLeagueName":
+                                reader.Read();
+                                Player.LeagueName = reader.Value;
+                                break;
+
+                            case "rankedLeagueTier":
+                                reader.Read();
+                                Player.LeagueTier = reader.Value;
+                                break;
+
+                            case "rankedLeagueDivision":
+                                reader.Read();
+                                Player.LeagueDivision = reader.Value;
+                                break;
+                        }
+
+                        #endregion Parse Presence
+                    }
+                }
+            }
+            return Player;
         }
 
         internal static void Message(string To, string Message, ChatSubjects Subject)
@@ -455,10 +525,7 @@ namespace LegendaryClient.Logic
 
         #region League Of Legends Logic
 
-        /// <summary>
-        /// Main connection to the League of Legends server
-        /// </summary>
-        internal static PVPNetConnection PVPNet;
+        internal static RtmpClient RtmpConnection;
 
         /// <summary>
         /// Packet recieved when initially logged on. Cached so the packet doesn't
@@ -511,40 +578,65 @@ namespace LegendaryClient.Logic
         /// </summary>
         internal static PlayerCredentialsDto CurrentGame;
 
+        internal static Session PlayerSession;
+
         internal static bool AutoAcceptQueue = false;
         internal static object LastPageContent;
+        internal static bool IsInGame = false;
 
         /// <summary>
         /// Fix for champ select. Do not use this!
         /// </summary>
-        internal static event PVPNetConnection.OnMessageReceivedHandler OnFixChampSelect;
+        internal static event EventHandler<MessageReceivedEventArgs> OnFixChampSelect;
         /// <summary>
         /// Allow lobby to still have a connection. Do not use this!
         /// </summary>
-        internal static event PVPNetConnection.OnMessageReceivedHandler OnFixLobby;
+        internal static event EventHandler<MessageReceivedEventArgs> OnFixLobby;
 
         /// <summary>
         /// When an error occurs while connected. Currently un-used
         /// </summary>
-        internal static void PVPNet_OnError(object sender, PVPNetConnect.Error error)
+        public static void CallbackException(object sender, Exception e)
         {
-            Log(error.Type + " " + error.Message, "RTMPSERROR");
+            ;
         }
 
-        internal static void OnMessageReceived(object sender, object message)
+        internal static System.Timers.Timer HeartbeatTimer;
+        internal static int HeartbeatCount;
+
+        internal static void StartHeartbeat()
+        {
+            HeartbeatTimer = new System.Timers.Timer();
+            HeartbeatTimer.Elapsed += new ElapsedEventHandler(DoHeartbeat);
+            HeartbeatTimer.Interval = 120000; // in milliseconds
+            HeartbeatTimer.Start();
+        }
+
+        internal async static void DoHeartbeat(object sender, ElapsedEventArgs e)
+        {
+            if (IsLoggedIn)
+            {
+                string result = await RiotCalls.PerformLCDSHeartBeat(Convert.ToInt32(LoginPacket.AllSummonerData.Summoner.AcctId), PlayerSession.Token, HeartbeatCount,
+                            DateTime.Now.ToString("ddd MMM d yyyy HH:mm:ss 'GMT-0700'"));
+
+                HeartbeatCount++;
+            }
+        }
+
+        internal static void OnMessageReceived(object sender, MessageReceivedEventArgs message)
         {
             MainWin.Dispatcher.BeginInvoke(DispatcherPriority.Input, new ThreadStart(async () =>
             {
-                if (message is StoreAccountBalanceNotification)
+                if (message.Body is StoreAccountBalanceNotification)
                 {
-                    StoreAccountBalanceNotification newBalance = (StoreAccountBalanceNotification)message;
+                    StoreAccountBalanceNotification newBalance = (StoreAccountBalanceNotification)message.Body;
                     InfoLabel.Content = "IP: " + newBalance.Ip + " ∙ RP: " + newBalance.Rp;
                     LoginPacket.IpBalance = newBalance.Ip;
                     LoginPacket.RpBalance = newBalance.Rp;
                 }
-                else if (message is GameNotification)
+                else if (message.Body is GameNotification)
                 {
-                    GameNotification notification = (GameNotification)message;
+                    GameNotification notification = (GameNotification)message.Body;
                     MessageOverlay messageOver = new MessageOverlay();
                     messageOver.MessageTitle.Content = notification.Type;
                     switch (notification.Type)
@@ -553,26 +645,59 @@ namespace LegendaryClient.Logic
                             messageOver.MessageTitle.Content = "Banned from custom game";
                             messageOver.MessageTextBox.Text = "You have been banned from this custom game!";
                             break;
-
+                        case "PLAYER_QUIT":
+                            string[] Name = await RiotCalls.GetSummonerNames(new double[1] { Convert.ToDouble((string)notification.MessageArgument) });
+                            messageOver.MessageTitle.Content = "Player has left the queue";
+                            messageOver.MessageTextBox.Text = Name[0] + " has left the queue";
+                            break;
                         default:
                             messageOver.MessageTextBox.Text = notification.MessageCode + Environment.NewLine;
-                            messageOver.MessageTextBox.Text = Convert.ToString(notification.MessageArgument);
+                            messageOver.MessageTextBox.Text += Convert.ToString(notification.MessageArgument);
                             break;
                     }
                     OverlayContainer.Content = messageOver.Content;
                     OverlayContainer.Visibility = Visibility.Visible;
                     QuitCurrentGame();
                 }
-                else if (message is EndOfGameStats)
+                else if (message.Body is EndOfGameStats)
                 {
-                    EndOfGameStats stats = message as EndOfGameStats;
+                    EndOfGameStats stats = message.Body as EndOfGameStats;
                     EndOfGamePage EndOfGame = new EndOfGamePage(stats);
                     OverlayContainer.Visibility = Visibility.Visible;
                     OverlayContainer.Content = EndOfGame.Content;
                 }
-                else if (message is StoreFulfillmentNotification)
+                else if (message.Body is StoreFulfillmentNotification)
                 {
-                    PlayerChampions = await PVPNet.GetAvailableChampions();
+                    PlayerChampions = await RiotCalls.GetAvailableChampions();
+                }
+                else if (message.Body is GameDTO)
+                {
+                    GameDTO Queue = message.Body as GameDTO;
+                    if (!IsInGame && Queue.GameState != "TERMINATED" && Queue.GameState != "TERMINATED_IN_ERROR")
+                    {
+                        MainWin.Dispatcher.BeginInvoke(DispatcherPriority.Input, new ThreadStart(() =>
+                        {
+                            Client.OverlayContainer.Content = new QueuePopOverlay(Queue).Content;
+                            Client.OverlayContainer.Visibility = Visibility.Visible;
+                        }));
+                    }
+                }
+                else if (message.Body is SearchingForMatchNotification)
+                {
+                    SearchingForMatchNotification Notification = message.Body as SearchingForMatchNotification;
+                    if (Notification.PlayerJoinFailures != null && Notification.PlayerJoinFailures.Count > 0)
+                    {
+                        MessageOverlay messageOver = new MessageOverlay();
+                        messageOver.MessageTitle.Content = "Could not join the queue";
+                        foreach (QueueDodger x in Notification.PlayerJoinFailures)
+                        {
+                            messageOver.MessageTextBox.Text += x.Summoner.Name + " is unable to join the queue as they recently dodged a game." + Environment.NewLine;
+                            TimeSpan time = TimeSpan.FromMilliseconds(x.PenaltyRemainingTime);
+                            messageOver.MessageTextBox.Text += "You have " + string.Format("{0:D2}m:{1:D2}s", time.Minutes, time.Seconds) + " remaining until you may queue again";
+                        }
+                        OverlayContainer.Content = messageOver.Content;
+                        OverlayContainer.Visibility = Visibility.Visible;
+                    }
                 }
             }));
         }
@@ -689,10 +814,12 @@ namespace LegendaryClient.Logic
 
             FixChampSelect();
             FixLobby();
+            IsInGame = false;
 
-            await PVPNet.QuitGame();
+            await RiotCalls.QuitGame();
             StatusGrid.Visibility = System.Windows.Visibility.Hidden;
             PlayButton.Visibility = System.Windows.Visibility.Visible;
+            LastPageContent = null;
             GameStatus = "outOfGame";
             SetChatHover();
             SwitchPage(new MainPage());
@@ -704,8 +831,8 @@ namespace LegendaryClient.Logic
             {
                 foreach (Delegate d in OnFixLobby.GetInvocationList())
                 {
-                    PVPNet.OnMessageReceived -= (PVPNetConnection.OnMessageReceivedHandler)d;
-                    OnFixLobby -= (PVPNetConnection.OnMessageReceivedHandler)d;
+                    RtmpConnection.MessageReceived -= (EventHandler<MessageReceivedEventArgs>)d;
+                    OnFixLobby -= (EventHandler<MessageReceivedEventArgs>)d;
                 }
             }
         }
@@ -716,8 +843,8 @@ namespace LegendaryClient.Logic
             {
                 foreach (Delegate d in OnFixChampSelect.GetInvocationList())
                 {
-                    PVPNet.OnMessageReceived -= (PVPNetConnection.OnMessageReceivedHandler)d;
-                    OnFixChampSelect -= (PVPNetConnection.OnMessageReceivedHandler)d;
+                    RtmpConnection.MessageReceived -= (EventHandler<MessageReceivedEventArgs>)d;
+                    OnFixChampSelect -= (EventHandler<MessageReceivedEventArgs>)d;
                 }
             }
         }
@@ -786,9 +913,9 @@ namespace LegendaryClient.Logic
 
         public static void Log(String lines, String type = "LOG")
         {
-            System.IO.StreamWriter file = new System.IO.StreamWriter(Path.Combine(ExecutingDirectory, "lcdebug.log"), true);
+            /*System.IO.StreamWriter file = new System.IO.StreamWriter(Path.Combine(ExecutingDirectory, "lcdebug.log"), true);
             file.WriteLine(string.Format("({0} {1}) [{2}]: {3}", DateTime.Now.ToShortDateString(), DateTime.Now.ToShortTimeString(), type, lines));
-            file.Close();
+            file.Close();*/
         }
 
         public static BitmapImage GetImage(string Address)
@@ -836,8 +963,27 @@ namespace LegendaryClient.Logic
 
         public string Status { get; set; }
 
+        public string RawPresence { get; set; }
+
+        public string Group { get; set; }
+
         public bool UsingLegendary { get; set; }
 
+        public bool IsOnline { get; set; }
+
         public List<string> Messages = new List<string>();
+    }
+
+    public class Group
+    {
+        public Group(string s, bool Open = true)
+        {
+            GroupName = s;
+            IsOpen = Open;
+        }
+
+        public string GroupName { get; set; }
+
+        public bool IsOpen { get; set; }
     }
 }

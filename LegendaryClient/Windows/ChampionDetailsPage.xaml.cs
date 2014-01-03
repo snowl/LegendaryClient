@@ -17,15 +17,31 @@ namespace LegendaryClient.Windows
     /// </summary>
     public partial class ChampionDetailsPage : Page
     {
+        internal champions TheChamp;
         public ChampionDetailsPage(int ChampionId)
         {
             InitializeComponent();
             RenderChampions(ChampionId);
         }
 
+        public ChampionDetailsPage(int ChampionId, int SkinID)
+        {
+            InitializeComponent();
+            RenderChampions(ChampionId);
+            championSkins skin = championSkins.GetSkin(SkinID);
+            SkinName.Content = skin.displayName;
+            string uriSource = Path.Combine(Client.ExecutingDirectory, "Assets", "champions", skin.splashPath);
+            ChampionImage.Source = Client.GetImage(uriSource);
+        }
+
         public void RenderChampions(int ChampionId)
         {
             champions Champ = champions.GetChampion(ChampionId);
+            TheChamp = Champ;
+            if (TheChamp.IsFavourite)
+                FavouriteLabel.Content = "Unfavourite";
+            else
+                FavouriteLabel.Content = "Favourite";
             ChampionName.Content = Champ.displayName;
             ChampionTitle.Content = Champ.title;
             ChampionProfileImage.Source = Champ.icon;
@@ -62,8 +78,7 @@ namespace LegendaryClient.Windows
             foreach (Spell Sp in Champ.Spells)
             {
                 ChampionDetailAbility detailAbility = new ChampionDetailAbility();
-                detailAbility.AbilityDescription.Text = Sp.Tooltip;
-                detailAbility.AbilityName.Content = Sp.Name;
+                detailAbility.DataContext = Sp;
                 var uriSource = Path.Combine(Client.ExecutingDirectory, "Assets", "spell", Sp.Image);
                 detailAbility.AbilityImage.Source = Client.GetImage(uriSource);
                 AbilityListView.Items.Add(detailAbility);
@@ -75,7 +90,6 @@ namespace LegendaryClient.Windows
             TipsText.Text = string.Format("Tips while playing {0}:{1}{2}{2}{2}Tips while playing aginst {0}:{3}", Champ.displayName, Champ.tips.Replace("*", Environment.NewLine + "*"), Environment.NewLine, Champ.opponentTips.Replace("*", Environment.NewLine + "*"));
         }
 
-
         private void SkinSelectListView_PreviewMouseDown(object sender, MouseButtonEventArgs e)
         {
             var item = sender as ListViewItem;
@@ -86,7 +100,7 @@ namespace LegendaryClient.Windows
                     championSkins skin = championSkins.GetSkin((int)item.Tag);
                     SkinName.Content = skin.displayName;
                     DoubleAnimation fadingAnimation = new DoubleAnimation();
-                    fadingAnimation.From = 0.4;
+                    fadingAnimation.From = 1;
                     fadingAnimation.To = 0;
                     fadingAnimation.Duration = new Duration(TimeSpan.FromSeconds(0.2));
                     fadingAnimation.Completed += (eSender, eArgs) =>
@@ -95,7 +109,7 @@ namespace LegendaryClient.Windows
                         ChampionImage.Source = Client.GetImage(uriSource);
                         fadingAnimation = new DoubleAnimation();
                         fadingAnimation.From = 0;
-                        fadingAnimation.To = 0.4;
+                        fadingAnimation.To = 1;
                         fadingAnimation.Duration = new Duration(TimeSpan.FromSeconds(0.5));
 
                         ChampionImage.BeginAnimation(Image.OpacityProperty, fadingAnimation);
@@ -109,6 +123,24 @@ namespace LegendaryClient.Windows
         private void CloseButton_Click(object sender, System.Windows.RoutedEventArgs e)
         {
             Client.OverlayContainer.Visibility = Visibility.Hidden;
+        }
+
+        private void FavouriteButton_Click(object sender, RoutedEventArgs e)
+        {
+            TheChamp.IsFavourite = !TheChamp.IsFavourite;
+            List<Int32> TempList = new List<int>(Properties.Settings.Default.FavouriteChamps);
+            if (TempList.Contains(TheChamp.id))
+                TempList.Remove(TheChamp.id);
+            else
+                TempList.Add(TheChamp.id);
+
+            Properties.Settings.Default.FavouriteChamps = TempList.ToArray();
+            Properties.Settings.Default.Save();
+
+            if (TheChamp.IsFavourite)
+                FavouriteLabel.Content = "Unfavourite";
+            else
+                FavouriteLabel.Content = "Favourite";
         }
     }
 }

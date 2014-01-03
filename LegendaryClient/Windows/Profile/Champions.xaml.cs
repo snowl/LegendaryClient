@@ -1,12 +1,13 @@
 ﻿using LegendaryClient.Controls;
 using LegendaryClient.Logic;
 using LegendaryClient.Logic.SQLite;
-using PVPNetConnect.RiotObjects.Platform.Catalog.Champion;
 using System;
 using System.Windows;
 using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Controls;
+using LegendaryClient.Logic.Riot.Platform;
+using LegendaryClient.Logic.Riot;
 
 namespace LegendaryClient.Windows.Profile
 {
@@ -25,11 +26,16 @@ namespace LegendaryClient.Windows.Profile
 
         public async void Update()
         {
-            ChampionDTO[] champList = await Client.PVPNet.GetAvailableChampions();
+            ChampionDTO[] champList = await RiotCalls.GetAvailableChampions();
 
             ChampionList = new List<ChampionDTO>(champList);
 
-            ChampionList.Sort((x, y) => champions.GetChampion(x.ChampionId).displayName.CompareTo(champions.GetChampion(y.ChampionId).displayName));
+            ChampionList.Sort(delegate(ChampionDTO x, ChampionDTO y)
+            {
+                int IsFav = champions.GetChampion(y.ChampionId).IsFavourite.CompareTo(champions.GetChampion(x.ChampionId).IsFavourite);
+                if (IsFav != 0) return IsFav;
+                else return champions.GetChampion(x.ChampionId).displayName.CompareTo(champions.GetChampion(y.ChampionId).displayName);
+            });
 
             FilterChampions();
         }
@@ -93,14 +99,17 @@ namespace LegendaryClient.Windows.Profile
                 {
                     ProfileChampionImage championImage = new ProfileChampionImage();
                     champions champion = champions.GetChampion(champ.ChampionId);
-                    championImage.ChampImage.Source = champion.icon;
+                    championImage.DataContext = champion;
+
+                    if (champion.IsFavourite)
+                        championImage.FavoriteImage.Visibility = System.Windows.Visibility.Visible;
+
                     if (champ.FreeToPlay)
                         championImage.FreeToPlayLabel.Visibility = System.Windows.Visibility.Visible;
-                    championImage.ChampName.Content = champion.displayName;
+
                     if (!champ.Owned && !champ.FreeToPlay)
-                    {
                         championImage.ChampImage.Opacity = 0.5;
-                    }
+
                     championImage.Tag = champ.ChampionId;
                     ChampionSelectListView.Items.Add(championImage);
                 }

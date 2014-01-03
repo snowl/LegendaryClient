@@ -13,7 +13,11 @@ namespace LegendaryClient.Logic.Region
 
         public abstract Uri NewsAddress { get; }
 
-        public abstract PVPNetConnect.Region PVPRegion { get; }
+        public abstract string Server { get; }
+
+        public abstract string LoginQueue { get; }
+
+        public abstract string Locale { get; }
 
         public abstract IPAddress[] PingAddresses { get; }
 

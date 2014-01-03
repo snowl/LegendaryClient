@@ -12,5 +12,6 @@
                 <DropShadowEffect ShadowDepth="2" BlurRadius="1" />
             </Label.Effect>
         </Label>
+        <Image x:Name="FavoriteImage" HorizontalAlignment="Left" Height="16" Margin="2,2,0,0" VerticalAlignment="Top" Width="16" Source="/LegendaryClient;component/star.png" Visibility="Hidden" />
     </Grid>
 </UserControl>

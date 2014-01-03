@@ -24,6 +24,7 @@ namespace LegendaryClient.Windows
         {
             InitializeComponent();
             Client.IsOnPlayPage = true;
+            QueueContent.Content = new QueuePage().Content;
             PingTimer = new Timer(1000);
             PingTimer.Elapsed += new ElapsedEventHandler(PingElapsed);
             PingTimer.Enabled = true;
@@ -37,7 +38,6 @@ namespace LegendaryClient.Windows
             i = 0;
             if (!Client.IsOnPlayPage)
                 return;
-
             double PingAverage = HighestPingTime(Client.Region.PingAddresses);
             Dispatcher.BeginInvoke(DispatcherPriority.Input, new ThreadStart(() =>
             {
