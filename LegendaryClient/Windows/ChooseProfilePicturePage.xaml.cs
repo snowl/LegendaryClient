@@ -64,6 +64,13 @@ namespace LegendaryClient.Windows
                 Client.LoginPacket.AllSummonerData.Summoner.ProfileIconId = SummonerIcon;
                 Client.SetChatHover();
                 var uriSource = Path.Combine(Client.ExecutingDirectory, "Assets", "profileicon", SummonerIcon + ".png");
+                foreach (Page p in Client.Pages)
+                {
+                    if (p is MainPage)
+                    {
+                        Client.MainPageProfileImage = ((MainPage)p).ProfileImage;
+                    }
+                }
                 Client.MainPageProfileImage.Source = Client.GetImage(uriSource);
             }
             Client.OverlayContainer.Visibility = Visibility.Hidden;
