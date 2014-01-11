@@ -3,7 +3,7 @@ LegendaryClient
 
 Beautiful, fully-featured League of Legends client.
 
-Still under heavy development! Lots of things don't work or don't look good...
+Will not be accepting any changes until UI changes are merged into master.
 
 Prerequisites
 =============
