@@ -1,13 +1,14 @@
-﻿using System;
+﻿using LegendaryClient.Logic.Riot.Kudos;
 using RtmpSharp.IO;
+using System;
 using System.Collections.Generic;
-using LegendaryClient.Logic.Riot.Kudos;
+using System.ComponentModel;
 
 namespace LegendaryClient.Logic.Riot.Platform
 {
     [Serializable]
     [SerializedName("com.riotgames.platform.clientfacade.domain.LoginDataPacket")]
-    public class LoginDataPacket
+    public class LoginDataPacket : INotifyPropertyChanged
     {
         [SerializedName("playerStatSummaries")]
         public PlayerStatSummaries PlayerStatSummaries { get; set; }
@@ -27,8 +28,17 @@ namespace LegendaryClient.Logic.Riot.Platform
         [SerializedName("summonerCatalog")]
         public SummonerCatalog SummonerCatalog { get; set; }
 
+        public Double _IpBalance;
         [SerializedName("ipBalance")]
-        public Double IpBalance { get; set; }
+        public Double IpBalance
+        {
+            get { return _IpBalance; }
+            set
+            {
+                _IpBalance = value;
+                Notify("IpBalance");
+            }
+        }
 
         [SerializedName("reconnectInfo")]
         public object ReconnectInfo { get; set; }
@@ -99,8 +109,17 @@ namespace LegendaryClient.Logic.Riot.Platform
         [SerializedName("minutesUntilShutdownEnabled")]
         public Boolean MinutesUntilShutdownEnabled { get; set; }
 
+        public Double _RpBalance;
         [SerializedName("rpBalance")]
-        public Double RpBalance { get; set; }
+        public Double RpBalance
+        {
+            get { return _RpBalance; }
+            set
+            {
+                _RpBalance = value;
+                Notify("RpBalance");
+            }
+        }
 
         [SerializedName("gameTypeConfigs")]
         public List<GameTypeConfigDTO> GameTypeConfigs { get; set; }
@@ -116,5 +135,15 @@ namespace LegendaryClient.Logic.Riot.Platform
 
         [SerializedName("customMsecsUntilReset")]
         public Double CustomMsecsUntilReset { get; set; }
+
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        protected void Notify(string propertyName)
+        {
+            if (this.PropertyChanged != null)
+            {
+                PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+            }
+        }
     }
 }

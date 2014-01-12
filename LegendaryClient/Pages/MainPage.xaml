@@ -1,0 +1,110 @@
+﻿<Page x:Class="LegendaryClient.Pages.MainPage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+      xmlns:local="clr-namespace:LegendaryClient.Elements"
+      mc:Ignorable="d"
+      d:DesignHeight="768" d:DesignWidth="1360"
+	Title="MainPage">
+
+    <Grid x:Name="HolderGrid">
+        <Grid x:Name="HeaderGrid" HorizontalAlignment="Stretch" Height="100" Margin="0,30,0,0" VerticalAlignment="Top" Background="#34495e" MouseLeave="HeaderGrid_MouseLeave">
+            <Grid>
+                <Grid.Background>
+                    <ImageBrush ImageSource="/LegendaryClient;component/noise.png" Viewport="0,0,100,100" ViewportUnits="Absolute" TileMode="Tile" Stretch="None" AlignmentX="Left" AlignmentY="Top"  />
+                </Grid.Background>
+            </Grid>
+
+            <Rectangle Fill="#ecf0f1" HorizontalAlignment="Left" Height="66" Margin="17,17,0,0" VerticalAlignment="Top" Width="66"  />
+            <Image x:Name="ProfileImage" HorizontalAlignment="Left" Height="64" Margin="18,18,0,0" VerticalAlignment="Top" Width="64" Source="/LegendaryClient;component/temp/535.png"/>
+            <Label x:Name="NameLabel" Content="Snowl" HorizontalAlignment="Left" Margin="100,10,0,0" FontSize="14" Foreground="#FFE4E4E4" VerticalAlignment="Top" FontWeight="Medium"/>
+            <Label x:Name="LPLabel" Content="{Binding Path=CurrentLP}" HorizontalAlignment="Left" Margin="100,0,0,0" FontSize="24" Foreground="#FFE4E4E4" VerticalAlignment="Center" FontWeight="Thin"/>
+            <Label x:Name="LeagueLabel" Content="{Binding Path=Tier}" HorizontalAlignment="Left" Margin="100,0,0,10" FontSize="14" Foreground="#FFE4E4E4" VerticalAlignment="Bottom" FontWeight="Thin"/>
+
+            <Grid Width="50" HorizontalAlignment="Left" Margin="250,0,0,0">
+                <Label Content="level" HorizontalAlignment="Center" Margin="2,10,0,0" VerticalAlignment="Top" FontSize="20" Foreground="White" FontWeight="Thin" />
+                <Label x:Name="LevelLabel" Content="{Binding Level}" HorizontalAlignment="Center" Margin="0,0,0,15" VerticalAlignment="Bottom" FontSize="34" Foreground="White" FontWeight="Bold" />
+            </Grid>
+            <Grid HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="310,10,200,10">
+                <ProgressBar x:Name="ExpProgressBar" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Value="20" Background="#33000000" BorderBrush="{x:Null}" Foreground="#33192A3C"/>
+                <Label x:Name="ExpLabel" Content="104/936" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="White" FontWeight="Thin" FontSize="18"/>
+            </Grid>
+
+            <Image HorizontalAlignment="Right" Height="24" Margin="0,18,10,0" VerticalAlignment="Top" Width="24" Source="/LegendaryClient;component/Ip.png" ToolTip="Influence Points"/>
+            <Label x:Name="IPLabel" Content="{Binding IpBalance}" HorizontalAlignment="Right" Margin="0,10,40,0" FontSize="20" Foreground="#FFE4E4E4" VerticalAlignment="Top" FontWeight="Thin"/>
+            <Image HorizontalAlignment="Right" Height="24" Margin="0,0,10,18" VerticalAlignment="Bottom" Width="24" Source="/LegendaryClient;component/Rp.png" ToolTip="Riot Points"/>
+            <Label x:Name="RPLabel" Content="{Binding RpBalance}" HorizontalAlignment="Right" Margin="0,0,40,13" FontSize="20" Foreground="#FFE4E4E4" VerticalAlignment="Bottom" FontWeight="Thin"/>
+
+            <Grid x:Name="HeaderTriggerGrid" HorizontalAlignment="Center" Width="100" MouseEnter="HeaderTriggerGrid_MouseEnter">
+                <Rectangle Fill="#00F5DEB3"></Rectangle>
+                <Polygon x:Name="TrianglePoly" Opacity="0" Points="0,0 5,7,10,0" Margin="0,0,0,2" Fill="#FFC5C5C5" HorizontalAlignment="Center" VerticalAlignment="Bottom" IsHitTestVisible="False"/>
+            </Grid>
+        </Grid>
+
+        <Grid HorizontalAlignment="Stretch" Height="30" VerticalAlignment="Top" Background="#2c3e50">
+            <Grid>
+                <Grid.Background>
+                    <ImageBrush ImageSource="/LegendaryClient;component/noise.png" Viewport="0,0,100,100" ViewportUnits="Absolute" TileMode="Tile" Stretch="None" AlignmentX="Left" AlignmentY="Top"  />
+                </Grid.Background>
+            </Grid>
+
+            <StackPanel Orientation="Horizontal">
+                <local:FadeLabel x:Name="HomeButton" Content="home" Margin="5,0,0,0" MouseDown="HomeButton_MouseDown"/>
+                <local:FadeLabel x:Name="PlayButton" Content="play" Margin="5,0,0,0" MouseDown="PlayButton_MouseDown"/>
+                <local:FadeLabel x:Name="ProfileButton" Content="profile" Margin="5,0,0,0" MouseDown="ProfileButton_MouseDown"/>
+                <local:FadeLabel Content="shop" Margin="5,0,0,0"/>
+                <local:FadeLabel Content="settings" Margin="5,0,0,0"/>
+            </StackPanel>
+        </Grid>
+
+        <Grid x:Name="ChatGrid" HorizontalAlignment="Right" Width="200" Margin="0,130,-190,30" VerticalAlignment="Stretch" Background="#2c3e50" MouseLeave="ChatGrid_MouseLeave" >
+            <Grid>
+                <Grid.Background>
+                    <ImageBrush ImageSource="/LegendaryClient;component/noise.png" Viewport="0,0,100,100" ViewportUnits="Absolute" TileMode="Tile" Stretch="None" AlignmentX="Left" AlignmentY="Top"  />
+                </Grid.Background>
+            </Grid>
+
+            <ScrollViewer VerticalScrollBarVisibility="Visible" HorizontalScrollBarVisibility="Disabled" Margin="0,0,0,60">
+                <StackPanel x:Name="ChatStackPanel">
+
+                </StackPanel>
+            </ScrollViewer>
+
+            <TextBox x:Name="StatusTextbox" HorizontalAlignment="Stretch" Height="23" Margin="20,0,0,28" VerticalAlignment="Bottom" TextChanged="StatusTextbox_TextChanged" LostFocus="StatusTextbox_LostFocus" KeyUp="StatusTextbox_KeyUp" />
+            <Label x:Name="StatusLabel" Content="enter status here" HorizontalAlignment="Left" Margin="22,0,0,26" VerticalAlignment="Bottom" Foreground="#FFC5C2C2" IsHitTestVisible="False"/>
+            <Ellipse x:Name="OnlineStatusEllipse" Fill="#2ecc71" HorizontalAlignment="Left" Height="10" Margin="30,0,0,10" VerticalAlignment="Bottom" Width="10" MouseDown="ChangeStatus" ToolTip="Online"/>
+            <Ellipse x:Name="BusyStatusEllipse" Fill="#e74c3c" HorizontalAlignment="Center" Height="10" Margin="0,0,0,10" VerticalAlignment="Bottom" Width="10" MouseDown="ChangeStatus" ToolTip="Away/Busy"/>
+            <Ellipse x:Name="InvisibleStatusEllipse" HorizontalAlignment="Right" Height="10" Margin="0,0,30,10" VerticalAlignment="Bottom" Width="10" Stroke="#FFA0A0A0" MouseDown="ChangeStatus" Fill="#02000000" ToolTip="Invisible"/>
+            <Rectangle x:Name="StatusRectangle" Fill="#3498db" HorizontalAlignment="Left" Height="2" Margin="22,0,0,2" VerticalAlignment="Bottom" Width="25"/>
+
+            <Grid x:Name="ChatTriggerGrid" VerticalAlignment="Center" Height="100" MouseEnter="ChatTriggerGrid_MouseEnter" >
+                <Rectangle Fill="#00F5DEB3"></Rectangle>
+                <Polygon x:Name="ChatTrianglePoly" Points="0,0 5,7,10,0" Margin="0,0,0,2" Fill="#FFC5C5C5" HorizontalAlignment="Left" VerticalAlignment="Center" IsHitTestVisible="False" RenderTransformOrigin="0.5,0.5">
+                    <Polygon.RenderTransform>
+                        <TransformGroup>
+                            <ScaleTransform/>
+                            <SkewTransform/>
+                            <RotateTransform Angle="90"/>
+                            <TranslateTransform/>
+                        </TransformGroup>
+                    </Polygon.RenderTransform>
+                </Polygon>
+            </Grid>
+        </Grid>
+
+        <Grid x:Name="PlayerChatGrid" HorizontalAlignment="Stretch" Height="30" VerticalAlignment="Bottom" Background="#FF0082A8">
+            <Grid>
+                <Grid.Background>
+                    <ImageBrush ImageSource="/LegendaryClient;component/noise.png" Viewport="0,0,100,100" ViewportUnits="Absolute" TileMode="Tile" Stretch="None" AlignmentX="Left" AlignmentY="Top"  />
+                </Grid.Background>
+            </Grid>
+
+            <StackPanel x:Name="PlayerChatStackPanel" Orientation="Horizontal">
+                
+            </StackPanel>
+        </Grid>
+
+        <ContentControl x:Name="ContentContainer" HorizontalAlignment="Stretch" Panel.ZIndex="-1" Margin="0,40,10,30" VerticalAlignment="Stretch"/>
+    </Grid>
+</Page>

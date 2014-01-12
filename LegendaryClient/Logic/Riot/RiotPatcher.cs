@@ -1,4 +1,5 @@
-﻿using System;
+﻿using LegendaryClient.Logic.Region;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Net;
@@ -9,9 +10,13 @@ namespace LegendaryClient.Logic.Riot
     public class RiotPatcher
     {
         public string DDragonVersion;
+        public string CurrentInstallLocation;
+        public BaseRegion Region;
 
-        public RiotPatcher()
+        public RiotPatcher(BaseRegion region, string InstallLocation)
         {
+            Region = region;
+            CurrentInstallLocation = InstallLocation;
         }
 
         public string GetDragon()
@@ -19,7 +24,7 @@ namespace LegendaryClient.Logic.Riot
             string dragonJSON = "";
             using (WebClient client = new WebClient())
             {
-                dragonJSON = client.DownloadString("http://ddragon.leagueoflegends.com/realms/na.js");
+                dragonJSON = client.DownloadString("http://ddragon.leagueoflegends.com/realms/" + Region.RegionName.ToLower() + ".js");
             }
             dragonJSON = dragonJSON.Replace("Riot.DDragon.m=", "").Replace(";", "");
             JavaScriptSerializer serializer = new JavaScriptSerializer();

@@ -89,7 +89,7 @@ namespace LegendaryClient.Logic.SQLite
         public ArrayList Skins { get; set; }
         public List<Spell> Spells { get; set; }
 
-        #endregion
+        #endregion DDragon Data
 
         public bool IsFavourite { get; set; }
 

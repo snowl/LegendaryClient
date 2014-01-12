@@ -1,7 +1,7 @@
-﻿using System;
+﻿using LegendaryClient.Logic.Riot.Leagues;
 using RtmpSharp.IO;
+using System;
 using System.Collections.Generic;
-using LegendaryClient.Logic.Riot.Leagues;
 
 namespace LegendaryClient.Logic.Riot.Platform
 {

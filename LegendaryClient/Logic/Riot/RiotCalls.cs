@@ -1,21 +1,18 @@
-﻿using System;
-using RtmpSharp.IO;
-using System.Reflection;
-using System.Linq;
-using LegendaryClient.Logic.Riot.Kudos;
-using System.Collections;
-using System.Threading.Tasks;
+﻿using LegendaryClient.Logic.Riot.Kudos;
+using LegendaryClient.Logic.Riot.Leagues;
 using LegendaryClient.Logic.Riot.Platform;
 using LegendaryClient.Logic.Riot.Team;
-using LegendaryClient.Logic.Riot.Leagues;
-using System.Text;
-using System.Net;
-using System.Xml;
-using System.IO;
-using System.Collections.Generic;
-using System.Threading;
-using System.Web.Script.Serialization;
+using RtmpSharp.IO;
 using RtmpSharp.Messaging;
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Net;
+using System.Reflection;
+using System.Text;
+using System.Threading.Tasks;
+using System.Web.Script.Serialization;
 
 namespace LegendaryClient.Logic.Riot
 {
@@ -189,7 +186,7 @@ namespace LegendaryClient.Logic.Riot
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         public static Task<PlayerDTO> CreatePlayer()
         {
@@ -226,7 +223,7 @@ namespace LegendaryClient.Logic.Riot
         }
 
         /// <summary>
-        /// Checks if a name is available 
+        /// Checks if a name is available
         /// </summary>
         /// <param name="TeamName">The name that you want to validate</param>
         /// <returns>Returns a boolean as the result</returns>
@@ -236,7 +233,7 @@ namespace LegendaryClient.Logic.Riot
         }
 
         /// <summary>
-        /// Checks if a tag is available 
+        /// Checks if a tag is available
         /// </summary>
         /// <param name="TeamName">The tag that you want to validate</param>
         /// <returns>Returns a boolean as the result</returns>
@@ -244,7 +241,7 @@ namespace LegendaryClient.Logic.Riot
         {
             return InvokeAsync<Boolean>("summonerTeamService", "isTagValidAndAvailable", TagName);
         }
-        
+
         /// <summary>
         /// Creates a ranked team if the name and tag is valid
         /// </summary>
@@ -525,7 +522,7 @@ namespace LegendaryClient.Logic.Riot
         /// <returns>Returns true if successful</returns>
         public static Task<Boolean> SwitchPlayerToObserver(Double GameId)
         {
-            return InvokeAsync<Boolean>("gameService", "switchPlayerToObserver", GameId );
+            return InvokeAsync<Boolean>("gameService", "switchPlayerToObserver", GameId);
         }
 
         /// <summary>
@@ -644,7 +641,7 @@ namespace LegendaryClient.Logic.Riot
         {
             return InvokeAsync<object>("gameService", "championSelectCompleted");
         }
-        
+
         /// <summary>
         /// Gets the spectator game info for a summoner
         /// </summary>
@@ -769,11 +766,6 @@ namespace LegendaryClient.Logic.Riot
             return InvokeAsync<object>("lcdsChampionTradeService", "attemptTrade", SummonerInternalName, ChampionId, true);
         }
 
-
-
-
-
-
         public static Task<T> InvokeAsync<T>(string destination, string method, params object[] argument)
         {
             try
@@ -787,8 +779,6 @@ namespace LegendaryClient.Logic.Riot
                 return null;
             }
         }
-
-
 
         public static string GetAuthKey(String Username, String Password, String LoginQueue)
         {

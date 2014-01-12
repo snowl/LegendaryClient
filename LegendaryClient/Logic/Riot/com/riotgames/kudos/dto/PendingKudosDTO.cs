@@ -1,5 +1,5 @@
-﻿using System;
-using RtmpSharp.IO;
+﻿using RtmpSharp.IO;
+using System;
 
 namespace LegendaryClient.Logic.Riot.Kudos
 {

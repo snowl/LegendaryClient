@@ -1,0 +1,34 @@
+﻿<UserControl x:Class="LegendaryClient.Elements.FeaturedGameControl"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             mc:Ignorable="d"
+             MinHeight="70" Width="800">
+    <Grid x:Name="FeaturedGrid" MouseEnter="FeaturedGrid_MouseEnter"  Background="#2c3e50" MouseLeave="FeaturedGrid_MouseLeave">
+        <Grid>
+            <Grid.Background>
+                <ImageBrush ImageSource="/LegendaryClient;component/noise.png" Viewport="0,0,100,100" ViewportUnits="Absolute" TileMode="Tile" Stretch="None" AlignmentX="Left" AlignmentY="Top"  />
+            </Grid.Background>
+        </Grid>
+        <Grid x:Name="SmallGrid">
+            <ListView x:Name="TeamOneListView" HorizontalAlignment="Left" ScrollViewer.VerticalScrollBarVisibility="Hidden" ScrollViewer.HorizontalScrollBarVisibility="Disabled" Height="50" Margin="10,0,0,0" VerticalAlignment="Center" Width="350" Background="{x:Null}" BorderBrush="{x:Null}">
+                <ListView.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <WrapPanel />
+                    </ItemsPanelTemplate>
+                </ListView.ItemsPanel>
+            </ListView>
+
+            <Label Content="VS" HorizontalAlignment="Center" Margin="0,0,0,0" VerticalAlignment="Center" FontFamily="/LegendaryClient;component/#Lobster 1.3" FontSize="36" Foreground="#FFE4E4E4"/>
+
+            <ListView x:Name="TeamTwoListView" HorizontalAlignment="Right" ScrollViewer.VerticalScrollBarVisibility="Hidden" ScrollViewer.HorizontalScrollBarVisibility="Disabled" Height="50" Margin="0,0,10,0" VerticalAlignment="Center" Width="350" Background="{x:Null}" BorderBrush="{x:Null}">
+                <ListView.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <WrapPanel />
+                    </ItemsPanelTemplate>
+                </ListView.ItemsPanel>
+            </ListView>
+        </Grid>
+    </Grid>
+</UserControl>

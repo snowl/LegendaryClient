@@ -8,7 +8,6 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-using System;
 namespace LegendaryClient.Properties {
     
     
@@ -26,31 +25,7 @@ namespace LegendaryClient.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("")]
-        public string SavedUsername {
-            get {
-                return ((string)(this["SavedUsername"]));
-            }
-            set {
-                this["SavedUsername"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("")]
-        public string SavedPassword {
-            get {
-                return ((string)(this["SavedPassword"]));
-            }
-            set {
-                this["SavedPassword"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        [global::System.Configuration.DefaultSettingValueAttribute("NA")]
         public string Region {
             get {
                 return ((string)(this["Region"]));
@@ -62,85 +37,36 @@ namespace LegendaryClient.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("True")]
-        public bool DarkTheme {
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string Username {
             get {
-                return ((bool)(this["DarkTheme"]));
+                return ((string)(this["Username"]));
             }
             set {
-                this["DarkTheme"] = value;
+                this["Username"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        public byte[] Password {
+            get {
+                return ((byte[])(this["Password"]));
+            }
+            set {
+                this["Password"] = value;
             }
         }
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("")]
-        public string StatusMsg {
+        public string Status {
             get {
-                return ((string)(this["StatusMsg"]));
+                return ((string)(this["Status"]));
             }
             set {
-                this["StatusMsg"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("")]
-        public string ChatStatus {
-            get {
-                return ((string)(this["ChatStatus"]));
-            }
-            set {
-                this["ChatStatus"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("False")]
-        public bool GatherStatistics {
-            get {
-                return ((bool)(this["GatherStatistics"]));
-            }
-            set {
-                this["GatherStatistics"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("False")]
-        public bool SendErrors {
-            get {
-                return ((bool)(this["SendErrors"]));
-            }
-            set {
-                this["SendErrors"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("False")]
-        public bool AutoLogin {
-            get {
-                return ((bool)(this["AutoLogin"]));
-            }
-            set {
-                this["AutoLogin"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("")]
-        public Int32[] FavouriteChamps {
-            get {
-                return ((Int32[])(this["FavouriteChamps"]));
-            }
-            set {
-                this["FavouriteChamps"] = value;
+                this["Status"] = value;
             }
         }
     }

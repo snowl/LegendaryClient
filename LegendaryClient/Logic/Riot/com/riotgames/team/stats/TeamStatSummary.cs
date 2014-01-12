@@ -1,5 +1,5 @@
-﻿using System;
-using RtmpSharp.IO;
+﻿using RtmpSharp.IO;
+using System;
 using System.Collections.Generic;
 
 namespace LegendaryClient.Logic.Riot.Team

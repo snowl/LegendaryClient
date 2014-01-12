@@ -1,10 +1,10 @@
-﻿using System;
-using RtmpSharp.IO;
+﻿using RtmpSharp.IO;
 using RtmpSharp.IO.AMF3;
+using System;
+using System.Collections;
+using System.Collections.Generic;
 using System.Text;
 using System.Web.Script.Serialization;
-using System.Collections.Generic;
-using System.Collections;
 
 namespace LegendaryClient.Logic.Riot.Platform
 {

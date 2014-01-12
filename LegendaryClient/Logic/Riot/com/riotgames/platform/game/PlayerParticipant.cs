@@ -1,5 +1,5 @@
-﻿using System;
-using RtmpSharp.IO;
+﻿using RtmpSharp.IO;
+using System;
 
 namespace LegendaryClient.Logic.Riot.Platform
 {
@@ -71,6 +71,6 @@ namespace LegendaryClient.Logic.Riot.Platform
         public object TeamParticipantId { get; set; }
 
         [SerializedName("pointSummary")]
-        public PointSummary PointSummary { get; set; } 
+        public PointSummary PointSummary { get; set; }
     }
 }
