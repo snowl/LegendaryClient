@@ -35,7 +35,7 @@
             <Label x:Name="IPLabel" Content="{Binding IpBalance}" HorizontalAlignment="Right" Margin="0,10,40,0" FontSize="20" Foreground="#FFE4E4E4" VerticalAlignment="Top" FontWeight="Thin"/>
             <Image HorizontalAlignment="Right" Height="24" Margin="0,0,10,18" VerticalAlignment="Bottom" Width="24" Source="/LegendaryClient;component/Rp.png" ToolTip="Riot Points"/>
             <Label x:Name="RPLabel" Content="{Binding RpBalance}" HorizontalAlignment="Right" Margin="0,0,40,13" FontSize="20" Foreground="#FFE4E4E4" VerticalAlignment="Bottom" FontWeight="Thin"/>
-
+            
             <Grid x:Name="HeaderTriggerGrid" HorizontalAlignment="Center" Width="100" MouseEnter="HeaderTriggerGrid_MouseEnter">
                 <Rectangle Fill="#00F5DEB3"></Rectangle>
                 <Polygon x:Name="TrianglePoly" Opacity="0" Points="0,0 5,7,10,0" Margin="0,0,0,2" Fill="#FFC5C5C5" HorizontalAlignment="Center" VerticalAlignment="Bottom" IsHitTestVisible="False"/>
@@ -56,6 +56,8 @@
                 <local:FadeLabel Content="shop" Margin="5,0,0,0"/>
                 <local:FadeLabel Content="settings" Margin="5,0,0,0"/>
             </StackPanel>
+            
+            <Label x:Name="PingLabel" HorizontalAlignment="Right" Foreground="#FF9F9F9F" Margin="0,0,5,0"/>
         </Grid>
 
         <Grid x:Name="ChatGrid" HorizontalAlignment="Right" Width="200" Margin="0,130,-190,30" VerticalAlignment="Stretch" Background="#2c3e50" MouseLeave="ChatGrid_MouseLeave" >
@@ -93,7 +95,7 @@
             </Grid>
         </Grid>
 
-        <Grid x:Name="PlayerChatGrid" HorizontalAlignment="Stretch" Height="30" VerticalAlignment="Bottom" Background="#FF0082A8">
+        <Grid x:Name="PlayerChatGrid" HorizontalAlignment="Stretch" Height="30" VerticalAlignment="Bottom" Background="#34495e">
             <Grid>
                 <Grid.Background>
                     <ImageBrush ImageSource="/LegendaryClient;component/noise.png" Viewport="0,0,100,100" ViewportUnits="Absolute" TileMode="Tile" Stretch="None" AlignmentX="Left" AlignmentY="Top"  />

@@ -1,0 +1,16 @@
+﻿<UserControl x:Class="LegendaryClient.Elements.OverviewLeagueControl"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             mc:Ignorable="d" 
+             d:DesignHeight="340" d:DesignWidth="200">
+    <Grid>
+        <Label Content="Solo 5v5" HorizontalAlignment="Center" Margin="0,10,0,0" VerticalAlignment="Top" FontSize="18" FontWeight="Bold"/>
+        <Image HorizontalAlignment="Center" Width="192" Margin="0,40,0,0" VerticalAlignment="Top" Source="/LegendaryClient;component/temp/challenger_1.png"/>
+        <Label Content="Challenger I" HorizontalAlignment="Center" Margin="0,240,0,0" VerticalAlignment="Top" FontSize="18" FontWeight="Bold"/>
+        <Label Content="50 League Points" HorizontalAlignment="Center" Margin="0,265,0,0" VerticalAlignment="Top" FontSize="12" FontWeight="Thin" FontStyle="Italic"/>
+        <Label Content="300 Wins" HorizontalAlignment="Center" Margin="0,285,0,0" VerticalAlignment="Top" FontSize="12" FontWeight="Medium" FontStyle="Italic"/>
+        <Label Content="200 Losses" HorizontalAlignment="Center" Margin="0,305,0,0" VerticalAlignment="Top" FontSize="12" FontWeight="Medium" FontStyle="Italic"/>
+    </Grid>
+</UserControl>

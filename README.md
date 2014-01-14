@@ -29,4 +29,5 @@ These screenshots are in progress and may not represent the final look of the cl
 ![Login](http://puu.sh/6iKrX.png)
 ![MainScreen](http://puu.sh/6iKyx.jpg)
 ![Chat](http://puu.sh/6iKBW.jpg)
-![Profile](http://puu.sh/6iKD3.jpg)
+![Profile](http://puu.sh/6kduH.jpg)
+![Queueing](http://puu.sh/6kdvL.png)

@@ -1,0 +1,29 @@
+﻿<UserControl x:Class="LegendaryClient.Elements.TopChampionControl"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             mc:Ignorable="d" 
+             d:DesignHeight="60" d:DesignWidth="300">
+    <Grid>
+        <Image x:Name="BackgroundImage" Source="/LegendaryClient;component/temp/Teemo_0.jpg" Stretch="None" />
+        <Rectangle Fill="#233140" Opacity="0.85"/>
+        <Image x:Name="ChampionImage" HorizontalAlignment="Left" Height="50" VerticalAlignment="Top" Width="50" Margin="5,5,0,0" Source="/LegendaryClient;component/temp/Teemo_Square_0.png"/>
+
+        <Label x:Name="ChampionNameLabel" Content="Teemo" HorizontalAlignment="Left" Margin="60,0,0,20" Foreground="#FFE4E4E4" FontSize="14" FontWeight="Medium" VerticalAlignment="Center"/>
+        <StackPanel Orientation="Horizontal">
+            <Label x:Name="CSLabel" Content="54.6" HorizontalAlignment="Left" Margin="60,20,0,0" Foreground="#FF7DCF56" FontSize="12" FontWeight="Medium" VerticalAlignment="Center"/>
+            <Label Content="CS" HorizontalAlignment="Left" Margin="-6,20,0,0" Foreground="#FFE4E4E4" FontSize="12" FontWeight="Medium" VerticalAlignment="Center"/>
+        </StackPanel>
+        <Label x:Name="KDALabel" Content="5.21:1 KDA" HorizontalAlignment="Right" Margin="0,0,70,20" Foreground="#FFF1FF9A" FontSize="12" FontWeight="Medium" VerticalAlignment="Center"/>
+        <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,20,60,0" VerticalAlignment="Center">
+            <Label x:Name="KillsLabel" Content="5.0" Foreground="#FF7DCF56" FontSize="12" FontWeight="Medium"/>
+            <Label Content="/" Margin="-6,0,0,0" Foreground="#FFE4E4E4" FontSize="12" FontWeight="Medium"/>
+            <Label x:Name="DeathsLabel" Content="2.9"  Margin="-6,0,0,0" Foreground="#FFFF5F5F" FontSize="12" FontWeight="Medium"/>
+            <Label Content="/" Margin="-6,0,0,0" Foreground="#FFE4E4E4" FontSize="12" FontWeight="Medium"/>
+            <Label x:Name="AssistsLabel" Content="10.1"  Margin="-6,0,0,0" Foreground="#FFF1FF9A" FontSize="12" FontWeight="Medium"/>
+        </StackPanel>
+        <Label x:Name="GamesPlayedLabel" Content="25" HorizontalAlignment="Right" Margin="0,0,-4,-5" Foreground="#FFE4E4E4" FontWeight="Bold" FontSize="24" VerticalAlignment="Bottom"/>
+
+    </Grid>
+</UserControl>

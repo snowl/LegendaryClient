@@ -17,6 +17,8 @@ using System.ComponentModel;
 using System.Globalization;
 using System.IO;
 using System.Linq;
+using System.Net;
+using System.Net.NetworkInformation;
 using System.Net.Security;
 using System.Reflection;
 using System.Security.Cryptography;
@@ -123,7 +125,7 @@ namespace LegendaryClient.Logic
             }
         }
 
-        internal static void PresManager_OnPrimarySessionChange(object sender, JID bare)
+        internal async static void PresManager_OnPrimarySessionChange(object sender, JID bare)
         {
             ChatPlayerItem Player = Players.Find(x => x.Id == bare.User);
             if (Player != null)
@@ -152,6 +154,12 @@ namespace LegendaryClient.Logic
 
                 if (String.IsNullOrWhiteSpace(Player.Status))
                     Player.Status = "Online";
+
+                if (!Player.HasGottenNickname)
+                {
+                    Player.HasGottenNickname = true;
+                    Player.Username = (await RiotCalls.GetSummonerNames(new double[1] { Convert.ToDouble(Player.Id.Replace("sum", "")) }))[0];
+                }
 
                 if (OnUpdatePlayer != null)
                     OnUpdatePlayer(null, Player);
@@ -329,18 +337,87 @@ namespace LegendaryClient.Logic
         {
 
         }
+
+        internal static string InternalQueueToPretty(string InternalQueue)
+        {
+            switch (InternalQueue)
+            {
+                case "matching-queue-NORMAL-5x5-game-queue":
+                    return "normal 5v5";
+
+                case "matching-queue-NORMAL-3x3-game-queue":
+                    return "normal 3v3";
+
+                case "matching-queue-NORMAL-5x5-draft-game-queue":
+                    return "draft 5v5";
+
+                case "matching-queue-RANKED_SOLO-5x5-game-queue":
+                    return "ranked 5v5";
+
+                case "matching-queue-RANKED_TEAM-3x3-game-queue":
+                    return "ranked team 3v3";
+
+                case "matching-queue-RANKED_TEAM-5x5-game-queue":
+                    return "ranked team 5v5";
+
+                case "matching-queue-ODIN-5x5-game-queue":
+                    return "dominion 5v5";
+
+                case "matching-queue-ARAM-5x5-game-queue":
+                    return "aram 5v5";
+
+                case "matching-queue-BOT-5x5-game-queue":
+                    return "bot 5v5";
+
+                case "matching-queue-ODIN-5x5-draft-game-queue":
+                    return "draft 5v5";
+
+                case "matching-queue-BOT_TT-3x3-game-queue":
+                    return "bot 3v3";
+
+                case "matching-queue-ODINBOT-5x5-game-queue":
+                    return "bot 5v5";
+
+                case "matching-queue-ONEFORALL-5x5-game-queue":
+                    return "one for all 5v5";
+
+                default:
+                    return InternalQueue;
+            }
+        }
         #endregion League
 
         #region Client
         internal static Window Win;
+        internal static Timer PingTimer;
+        internal static Label PingLabel;
         internal static ContentControl MainHolder;
         internal static ContentControl MainContainer;
-        internal static Type CurrentPage;
+        internal static Type CurrentPage; //To show header on home page
         internal static List<Page> CachedPages = new List<Page>();
 
-        internal static void SwitchPage<T>(bool Fade = false)
+        internal static void PingElapsed(object sender, ElapsedEventArgs e)
         {
-            Page instance = (Page)Activator.CreateInstance(typeof(T));
+            if (Region != null && !RtmpConnection.IsDisconnected && PingLabel != null)
+            {
+                double PingAverage = HighestPingTime(Client.Region.PingAddresses);
+                RunOnUIThread(new Action(() =>
+                {
+                    PingLabel.Content = Math.Round(PingAverage).ToString() + "ms";
+                    if (PingAverage == -2)
+                        PingLabel.Content = "";
+                    else if (PingAverage == -1)
+                        PingLabel.Content = "timeout";
+                }));
+            }
+        }
+
+        internal static void SwitchPage<T>(bool Fade = false, params object[] Arguments)
+        {
+            if (CurrentPage == typeof(T))
+                return;
+
+            Page instance = (Page)Activator.CreateInstance(typeof(T), Arguments);
             CurrentPage = typeof(T);
 
             //Only cache some pages
@@ -412,7 +489,7 @@ namespace LegendaryClient.Logic
             Win.Focus();
         }
 
-        public static String TitleCaseString(String s)
+        internal static String TitleCaseString(String s)
         {
             if (s == null) return s;
 
@@ -432,7 +509,7 @@ namespace LegendaryClient.Logic
             return String.Join(" ", words);
         }
 
-        public static BitmapSource ToWpfBitmap(System.Drawing.Bitmap bitmap)
+        internal static BitmapSource ToWpfBitmap(System.Drawing.Bitmap bitmap)
         {
             using (MemoryStream stream = new MemoryStream())
             {
@@ -449,14 +526,14 @@ namespace LegendaryClient.Logic
             }
         }
 
-        public static DateTime JavaTimeStampToDateTime(double javaTimeStamp)
+        internal static DateTime JavaTimeStampToDateTime(double javaTimeStamp)
         {
             System.DateTime dtDateTime = new DateTime(1970, 1, 1, 0, 0, 0, 0);
             dtDateTime = dtDateTime.AddSeconds(Math.Round(javaTimeStamp / 1000)).ToLocalTime();
             return dtDateTime;
         }
 
-        public static BitmapImage GetImage(string Address)
+        internal static BitmapImage GetImage(string Address)
         {
             Uri UriSource = new Uri(Address, UriKind.RelativeOrAbsolute);
 
@@ -464,6 +541,31 @@ namespace LegendaryClient.Logic
                 UriSource = new Uri("/LegendaryClient;component/NONE.png", UriKind.RelativeOrAbsolute);
 
             return new BitmapImage(UriSource);
+        }
+
+        internal static double HighestPingTime(IPAddress[] Addresses)
+        {
+            double HighestPing = -2;
+
+            if (Addresses.Length > 0)
+            {
+                HighestPing = -1;
+            }
+
+            foreach (IPAddress Address in Addresses)
+            {
+                int timeout = 120;
+                Ping pingSender = new Ping();
+                PingReply reply = pingSender.Send(Address.ToString(), timeout);
+                if (reply.Status == IPStatus.Success)
+                {
+                    if (reply.RoundtripTime > HighestPing)
+                    {
+                        HighestPing = reply.RoundtripTime;
+                    }
+                }
+            }
+            return HighestPing;
         }
         #endregion Client
     }
@@ -490,6 +592,7 @@ namespace LegendaryClient.Logic
         public bool UsingLegendary { get; set; }
         public bool IsOnline { get; set; }
         public bool IsAway { get; set; }
+        internal bool HasGottenNickname { get; set; }
         public List<string> Messages = new List<string>();
     }
 

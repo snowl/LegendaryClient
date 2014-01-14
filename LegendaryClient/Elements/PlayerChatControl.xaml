@@ -5,9 +5,9 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              mc:Ignorable="d" 
              d:DesignHeight="30" d:DesignWidth="300">
-    <Grid Background="#2c3e50">
-        <Button x:Name="CloseButton" Content="X" HorizontalAlignment="Right" Margin="0,0,0,0" VerticalAlignment="Top" Width="30" Click="CloseButton_Click"/>
-        <Ellipse x:Name="StatusEllipse" Fill="#2ecc71" HorizontalAlignment="Left" Height="10" Margin="10,0,0,0" VerticalAlignment="Center" Width="10"/>
+    <Grid Background="#FF263442">
+        <Button x:Name="CloseButton" Content="X" HorizontalAlignment="Right" Background="#FF263442" Margin="0,0,0,0" VerticalAlignment="Top" Width="30" Click="CloseButton_Click"/>
+        <Ellipse x:Name="StatusEllipse" Fill="#2ecc71" HorizontalAlignment="Left" Height="7" Margin="10,0,0,0" VerticalAlignment="Center" Width="7"/>
         <Label x:Name="PlayerNameLabel" Content="Snowl" Foreground="#FFCFCFCF" HorizontalAlignment="Left" Margin="22,0,45,0" VerticalAlignment="Top" FontSize="14"/>
     </Grid>
 </UserControl>

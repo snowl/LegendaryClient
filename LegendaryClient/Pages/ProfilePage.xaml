@@ -3,17 +3,30 @@
       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+      xmlns:Elements="clr-namespace:LegendaryClient.Elements"
       mc:Ignorable="d"
       d:DesignHeight="738" d:DesignWidth="1360"
 	Title="ProfilePage">
 
-    <Grid x:Name="TestGrid">
-        <Grid VerticalAlignment="Top" HorizontalAlignment="Center" Width="1215" Height="150">
-            <Image x:Name="FavouriteChampionImage"  Source="/LegendaryClient;component/temp/Teemo_Splash_0.jpg" Stretch="None" Opacity="0.8"/>
-            <Rectangle Fill="#FF002A5D" Opacity="0.4"/>
+    <Grid>
+        <Grid VerticalAlignment="Top" HorizontalAlignment="Center" Width="1215" Height="150" Margin="0,30,0,0">
+            <Image x:Name="FavouriteChampionImage" Source="/LegendaryClient;component/temp/Teemo_Splash_0.jpg" Stretch="None" Opacity="0.8"/>
+            <Rectangle Fill="#FF002A5D" Opacity="0.2"/>
 
             <Image x:Name="ProfileImage" Width="64" Height="64" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="10,20,0,0" Source="/LegendaryClient;component/temp/535.png"/>
-            
+
+            <Label Content="H" HorizontalAlignment="Right" Margin="0,5,15,0" VerticalAlignment="Top" Foreground="#FFE4E4E4" FontWeight="Bold" ToolTip="Helpful"/>
+            <Label x:Name="HelpfulLabel" Content="0" HorizontalAlignment="Right" Margin="0,5,30,0" VerticalAlignment="Top" Foreground="#FFE4E4E4" FontWeight="Thin"/>
+
+            <Label Content="F" HorizontalAlignment="Right" Margin="0,25,19,0" VerticalAlignment="Top" Foreground="#FFE4E4E4" FontWeight="Bold" ToolTip="Friendly"/>
+            <Label x:Name="FriendlyLabel" Content="0" HorizontalAlignment="Right" Margin="0,25,30,0" VerticalAlignment="Top" Foreground="#FFE4E4E4" FontWeight="Thin"/>
+
+            <Label Content="T" HorizontalAlignment="Right" Margin="0,45,18,0" VerticalAlignment="Top" Foreground="#FFE4E4E4" FontWeight="Bold" ToolTip="Teamwork"/>
+            <Label x:Name="TeamworkLabel" Content="0" HorizontalAlignment="Right" Margin="0,45,30,0" VerticalAlignment="Top" Foreground="#FFE4E4E4" FontWeight="Thin"/>
+
+            <Label Content="HO" HorizontalAlignment="Right" Margin="0,65,6,0" VerticalAlignment="Top" Foreground="#FFE4E4E4" FontWeight="Bold" ToolTip="Honorable Opponent"/>
+            <Label x:Name="HonorableLabel" Content="0" HorizontalAlignment="Right" Margin="0,65,30,0" VerticalAlignment="Top" Foreground="#FFE4E4E4" FontWeight="Thin"/>
+
             <Label x:Name="PlayerNameLabel" Content="Snowl" HorizontalAlignment="Left" Margin="10,0,0,10" Foreground="#FFE4E4E4" FontSize="30" FontWeight="Thin" VerticalAlignment="Bottom"/>
             <Grid x:Name="SearchGrid" Height="30" MinWidth="300" HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="0,0,40,0" Opacity="0" Visibility="Hidden">
                 <TextBox x:Name="PlayerSearchBox" VerticalAlignment="Top" TextChanged="PlayerSearchBox_TextChanged" KeyDown="PlayerSearchBox_KeyDown"/>
@@ -31,7 +44,25 @@
             </Image>
         </Grid>
 
+        <Grid VerticalAlignment="Top" HorizontalAlignment="Center" Width="1215" Height="30" Margin="0,0,0,0" Background="#233140">
+            <Grid>
+                <Grid.Background>
+                    <ImageBrush ImageSource="/LegendaryClient;component/noise.png" Viewport="0,0,100,100" ViewportUnits="Absolute" TileMode="Tile" Stretch="None" AlignmentX="Left" AlignmentY="Top"  />
+                </Grid.Background>
+            </Grid>
+            
+            <StackPanel Orientation="Horizontal">
+                <Elements:FadeLabel Content="overview" Margin="5,0,0,0" />
+                <Elements:FadeLabel Content="matches" />
+                <Elements:FadeLabel Content="leagues" />
+                <Elements:FadeLabel Content="masteries" />
+                <Elements:FadeLabel Content="runes" />
+                <Elements:FadeLabel Content="champions" />
+                <Elements:FadeLabel Content="skins" />
+            </StackPanel>
+        </Grid>
 
+        <ContentControl x:Name="ProfileControl" Margin="0,185,0,0" />
 
     </Grid>
 </Page>

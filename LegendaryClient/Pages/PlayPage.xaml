@@ -3,11 +3,52 @@
       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+      xmlns:local="clr-namespace:LegendaryClient.Elements"
       mc:Ignorable="d"
       d:DesignHeight="738" d:DesignWidth="1360"
 	Title="PlayPage">
 
     <Grid>
+        <Grid HorizontalAlignment="Left" Height="30" VerticalAlignment="Top" Background="#2c3e50" Margin="30,30,0,0">
+            <Grid>
+                <Grid.Background>
+                    <ImageBrush ImageSource="/LegendaryClient;component/noise.png" Viewport="0,0,100,100" ViewportUnits="Absolute" TileMode="Tile" Stretch="None" AlignmentX="Left" AlignmentY="Top"  />
+                </Grid.Background>
+            </Grid>
+
+            <StackPanel Orientation="Horizontal">
+                <local:FadeLabel x:Name="MatchButton" Content="matchmaking" Margin="30,0,30,0"/>
+                <local:FadeLabel x:Name="CustomButton" Content="custom" Margin="5,0,30,0"/>
+            </StackPanel>
+        </Grid>
+
+        <Grid HorizontalAlignment="Left" Width="244" VerticalAlignment="Top" Background="#34495e" Margin="30,60,0,0">
+            <Grid>
+                <Grid.Background>
+                    <ImageBrush ImageSource="/LegendaryClient;component/noise.png" Viewport="0,0,100,100" ViewportUnits="Absolute" TileMode="Tile" Stretch="None" AlignmentX="Left" AlignmentY="Top"  />
+                </Grid.Background>
+            </Grid>
+
+            <StackPanel x:Name="QueuePanel" MinHeight="100">
+
+            </StackPanel>
+        </Grid>
+        
+        <Grid x:Name="QueueGrid" Margin="300,30,30,0">
+            <Label x:Name="QueueLabel" Content="normal 5v5" HorizontalAlignment="Left" FontSize="26" FontWeight="Thin" VerticalAlignment="Top"/>
+            <Label x:Name="MapLabel" Content="Summoner's Rift" HorizontalAlignment="Left" Margin="0,30,0,0" FontSize="12" VerticalAlignment="Top" FontStyle="Italic"/>
+            <Button x:Name="QueueButton" Content="Queue" HorizontalAlignment="Right" VerticalAlignment="Top" Width="150" Height="60" FontSize="24" Foreground="White" Background="#16a085"/>
+            <RichTextBox HorizontalAlignment="Stretch"  Margin="0,60,300,60" VerticalAlignment="Stretch" Background="#FF363636" IsReadOnly="True">
+                <FlowDocument>
+
+                </FlowDocument>
+            </RichTextBox>
+            <TextBox HorizontalAlignment="Stretch" Height="23" Margin="0,0,300,39" VerticalAlignment="Bottom"/>
+            
+            
+            <Button Content="invite players" HorizontalAlignment="Right" Margin="0,0,0,39" VerticalAlignment="Bottom" Width="270"/>
+
+        </Grid>
 
     </Grid>
 </Page>

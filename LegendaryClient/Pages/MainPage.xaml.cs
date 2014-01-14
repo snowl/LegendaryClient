@@ -26,6 +26,8 @@ namespace LegendaryClient.Pages
         {
             InitializeComponent();
 
+            Client.PingLabel = PingLabel;
+
             Client.MainContainer = ContentContainer;
             Client.SwitchPage<HomePage>();
 
@@ -241,7 +243,7 @@ namespace LegendaryClient.Pages
             PlayerControl.Tag = player;
             PlayerControl.PlayerNameLabel.Content = player.Username;
             PlayerControl.StatusEllipse.Fill = item.StatusEllipse.Fill;
-            PlayerControl.Margin = new Thickness(5, 0, 5, 0);
+            PlayerControl.Margin = new Thickness(5, 0, 0, 0);
             PlayerControl.MouseDown += PlayerControl_MouseDown;
             PlayerChatStackPanel.Children.Add(PlayerControl);
         }

@@ -64,6 +64,10 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Page Include="Elements\ChampionOverviewControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Elements\ChatBoxControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -72,7 +76,15 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Elements\InvitePlayerControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Elements\NewsItem.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Elements\OverviewLeagueControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -88,6 +100,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Elements\TopChampionControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -96,6 +112,9 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Elements\ChampionOverviewControl.xaml.cs">
+      <DependentUpon>ChampionOverviewControl.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Elements\ChatBoxControl.xaml.cs">
       <DependentUpon>ChatBoxControl.xaml</DependentUpon>
     </Compile>
@@ -103,8 +122,14 @@
     <Compile Include="Elements\FeaturedGameControl.xaml.cs">
       <DependentUpon>FeaturedGameControl.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Elements\InvitePlayerControl.xaml.cs">
+      <DependentUpon>InvitePlayerControl.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Elements\NewsItem.xaml.cs">
       <DependentUpon>NewsItem.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Elements\OverviewLeagueControl.xaml.cs">
+      <DependentUpon>OverviewLeagueControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="Elements\PlayerChatControl.xaml.cs">
       <DependentUpon>PlayerChatControl.xaml</DependentUpon>
@@ -115,6 +140,10 @@
     <Compile Include="Elements\SmallMatchOverview.xaml.cs">
       <DependentUpon>SmallMatchOverview.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Elements\TopChampionControl.xaml.cs">
+      <DependentUpon>TopChampionControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Elements\WindowExtensions.cs" />
     <Compile Include="Logic\ChatPrefixes.cs" />
     <Compile Include="Logic\ChatSubjects.cs" />
     <Compile Include="Logic\Client.cs" />
@@ -278,6 +307,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Pages\Profile\Overview.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Pages\HomePage.xaml.cs">
@@ -294,6 +327,9 @@
     </Compile>
     <Compile Include="Pages\ProfilePage.xaml.cs">
       <DependentUpon>ProfilePage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\Profile\Overview.xaml.cs">
+      <DependentUpon>Overview.xaml</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
@@ -344,6 +380,9 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="search.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="temp\challenger_1.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

@@ -3,6 +3,7 @@ using LegendaryClient.Pages;
 using System;
 using System.IO;
 using System.Reflection;
+using System.Timers;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media.Animation;
@@ -21,6 +22,10 @@ namespace LegendaryClient
             Client.ExecutingDirectory = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
             Client.MainHolder = Container;
             Client.Win = this;
+
+            Client.PingTimer = new Timer(10000);
+            Client.PingTimer.Elapsed += new ElapsedEventHandler(Client.PingElapsed);
+            Client.PingTimer.Enabled = true;
 
             //Wait half a second before starting, makes it look sleek. This is a hack tho. TODO: Use a proper class for this, not an animation
             var waitAnimation = new DoubleAnimation(1, TimeSpan.FromSeconds(0.5));

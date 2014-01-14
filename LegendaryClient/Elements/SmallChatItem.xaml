@@ -7,7 +7,7 @@
              Height="40" d:DesignWidth="200">
     <Grid>
         <Rectangle Fill="#02000000"></Rectangle>
-        <Ellipse x:Name="StatusEllipse" Fill="#2ecc71" HorizontalAlignment="Left" Height="10" Margin="10,0,0,0" VerticalAlignment="Center" Width="10"/>
+        <Ellipse x:Name="StatusEllipse" Fill="#2ecc71" HorizontalAlignment="Left" Height="7" Margin="10,0,0,0" VerticalAlignment="Center" Width="7"/>
         <Label x:Name="PlayerNameLabel" Content="Snowl" Foreground="#FFCFCFCF" HorizontalAlignment="Left" Margin="22,0,0,0" VerticalAlignment="Top" FontSize="14"/>
         <Label x:Name="StatusLabel" Content="Online" Foreground="#FFCFCFCF" HorizontalAlignment="Left" Margin="22,0,0,0" VerticalAlignment="Bottom" FontSize="10" FontStyle="Italic"/>
     </Grid>

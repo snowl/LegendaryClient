@@ -107,7 +107,7 @@ namespace LegendaryClient.Logic.SQLite
         {
             foreach (champions c in Client.Champions)
             {
-                if (c.name == name)
+                if (c.name.ToLower() == name.ToLower())
                     return c;
             }
             return null;
