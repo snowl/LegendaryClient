@@ -5,7 +5,7 @@
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
       xmlns:local="clr-namespace:LegendaryClient.Elements"
       mc:Ignorable="d"
-      d:DesignHeight="738" d:DesignWidth="1360"
+      d:DesignHeight="660" d:DesignWidth="1360"
 	Title="PlayPage">
 
     <Grid>
@@ -17,12 +17,12 @@
             </Grid>
 
             <StackPanel Orientation="Horizontal">
-                <local:FadeLabel x:Name="MatchButton" Content="matchmaking" Margin="30,0,30,0"/>
-                <local:FadeLabel x:Name="CustomButton" Content="custom" Margin="5,0,30,0"/>
+                <local:FadeLabel x:Name="MatchButton" Content="matchmaking" Margin="30,0,30,0" MouseDown="MatchButton_MouseDown"/>
+                <local:FadeLabel x:Name="CustomButton" Content="custom" Margin="5,0,30,0" MouseDown="CustomButton_MouseDown"/>
             </StackPanel>
         </Grid>
 
-        <Grid HorizontalAlignment="Left" Width="244" VerticalAlignment="Top" Background="#34495e" Margin="30,60,0,0">
+        <Grid x:Name="QueuePanelGrid" HorizontalAlignment="Left" Width="244" VerticalAlignment="Top" Background="#34495e" Margin="30,60,0,0">
             <Grid>
                 <Grid.Background>
                     <ImageBrush ImageSource="/LegendaryClient;component/noise.png" Viewport="0,0,100,100" ViewportUnits="Absolute" TileMode="Tile" Stretch="None" AlignmentX="Left" AlignmentY="Top"  />
@@ -33,22 +33,98 @@
 
             </StackPanel>
         </Grid>
-        
-        <Grid x:Name="QueueGrid" Margin="300,30,30,0">
+
+        <Grid x:Name="CustomPanelGrid" HorizontalAlignment="Left" Width="244" VerticalAlignment="Top" Background="#34495e" Margin="30,60,0,0" Visibility="Hidden">
+            <Grid>
+                <Grid.Background>
+                    <ImageBrush ImageSource="/LegendaryClient;component/noise.png" Viewport="0,0,100,100" ViewportUnits="Absolute" TileMode="Tile" Stretch="None" AlignmentX="Left" AlignmentY="Top"  />
+                </Grid.Background>
+            </Grid>
+
+            <StackPanel x:Name="CustomPanel" MinHeight="100">
+                <Label Content="Custom Games" Foreground="#FFE4E4E4" Margin="5,5,0,0" FontWeight="Bold"></Label>
+                <local:FadeLabel Content="join a game" Margin="20,0,0,0"></local:FadeLabel>
+                <local:FadeLabel Content="create a game" Margin="20,0,0,0"></local:FadeLabel>
+            </StackPanel>
+        </Grid>
+
+        <Grid x:Name="QueueGrid" Margin="300,30,30,0" Opacity="0" Visibility="Hidden">
             <Label x:Name="QueueLabel" Content="normal 5v5" HorizontalAlignment="Left" FontSize="26" FontWeight="Thin" VerticalAlignment="Top"/>
             <Label x:Name="MapLabel" Content="Summoner's Rift" HorizontalAlignment="Left" Margin="0,30,0,0" FontSize="12" VerticalAlignment="Top" FontStyle="Italic"/>
+
+            <Label x:Name="WaitTimeLabel" Content="avg time 0:00" HorizontalAlignment="Right" Margin="0,0,160,0" FontSize="16" FontWeight="Thin" VerticalAlignment="Top"/>
+            <Label x:Name="AmountInQueueLabel" Content="people in queue 0" HorizontalAlignment="Right" Margin="0,25,160,0" FontSize="16" FontWeight="Thin" VerticalAlignment="Top"/>
             <Button x:Name="QueueButton" Content="Queue" HorizontalAlignment="Right" VerticalAlignment="Top" Width="150" Height="60" FontSize="24" Foreground="White" Background="#16a085"/>
-            <RichTextBox HorizontalAlignment="Stretch"  Margin="0,60,300,60" VerticalAlignment="Stretch" Background="#FF363636" IsReadOnly="True">
+            
+            <RichTextBox HorizontalAlignment="Stretch"  Margin="0,60,300,70" VerticalAlignment="Stretch" Background="#FFDADADA" IsReadOnly="True" BorderBrush="#FFDADADA">
                 <FlowDocument>
 
                 </FlowDocument>
             </RichTextBox>
-            <TextBox HorizontalAlignment="Stretch" Height="23" Margin="0,0,300,39" VerticalAlignment="Bottom"/>
-            
-            
-            <Button Content="invite players" HorizontalAlignment="Right" Margin="0,0,0,39" VerticalAlignment="Bottom" Width="270"/>
+            <TextBox HorizontalAlignment="Stretch" Height="30" Margin="0,0,300,39" VerticalAlignment="Bottom"/>
+
+            <StackPanel x:Name="JoinedPlayerPanel" HorizontalAlignment="Right" VerticalAlignment="Top" Width="270" Margin="10,100,0,0">
+                <local:InvitePlayerControl Margin="0,2.5,0,2.5"/>
+            </StackPanel>
+
+            <Grid x:Name="InviteGrid" HorizontalAlignment="Right" VerticalAlignment="Bottom" Width="270" Margin="10,0,0,40">
+                <Rectangle Fill="#FF474747" IsHitTestVisible="False" Height="30" VerticalAlignment="Bottom"></Rectangle>
+                <TextBox x:Name="InvitePlayerTextBox" TextWrapping="NoWrap" Margin="0,0,50,0" TextChanged="InvitePlayerTextBox_TextChanged" VerticalAlignment="Bottom" SelectionBrush="{x:Null}"/>
+                <Label x:Name="HintLabel" Content="invite a summoner" HorizontalAlignment="Left" Margin="2,0,0,0" VerticalAlignment="Bottom" Foreground="#FFC5C2C2" IsHitTestVisible="False"/>
+                <Button x:Name="InviteButton" Width="52" Content="Invite" Background="#2c3e50" HorizontalAlignment="Right" Opacity="0" VerticalAlignment="Bottom" Visibility="Hidden" IsDefault="True" Click="InviteButton_Click"/>
+                <ScrollViewer VerticalScrollBarVisibility="Visible" Margin="0,0,0,30" Height="170">
+                    <StackPanel x:Name="InvitePlayerPanel">
+
+                    </StackPanel>
+                </ScrollViewer>
+            </Grid>
+            <Label x:Name="NoSummonerLabel" Content="could not find summoner" HorizontalAlignment="Right" Margin="0,0,50,10" VerticalAlignment="Bottom" Foreground="#FFCD2727" FontStyle="Italic" Opacity="0"/>
 
         </Grid>
 
+        <Grid x:Name="CustomGrid" Margin="300,0,30,0" Opacity="0" Visibility="Hidden">
+            <ListView Style="{Binding CustomListView}" x:Name="CustomGameListView"  HorizontalAlignment="Stretch" Margin="0,30,0,90" VerticalAlignment="Stretch" Foreground="White" Background="#34495e" SelectionChanged="CustomGameListView_SelectionChanged">
+                <ListView.ItemContainerStyle>
+                    <Style TargetType="{x:Type ListViewItem}">
+                        <Setter Property="FontSize" Value="14" />
+                        <Setter Property="Margin" Value="0,2,0,2"/>
+                        <Setter Property="Foreground" Value="#FFF3F3F3"/>
+                        <Setter Property="Template">
+                            <Setter.Value>
+                                <ControlTemplate TargetType="ListBoxItem">
+                                    <Border Name="Border" Padding="2" SnapsToDevicePixels="true" Background="Transparent">
+                                        <GridViewRowPresenter VerticalAlignment="{TemplateBinding VerticalContentAlignment}"/>
+                                    </Border>
+                                    <ControlTemplate.Triggers>
+                                        <Trigger Property="IsMouseOver" Value="True">
+                                            <Setter TargetName="Border" Property="Background" Value="#2c3e50"/>
+                                        </Trigger>
+                                        <Trigger Property="IsSelected" Value="true">
+                                            <Setter TargetName="Border" Property="Background" Value="#FF0D1727"/>
+                                        </Trigger>
+                                    </ControlTemplate.Triggers>
+                                </ControlTemplate>
+                            </Setter.Value>
+                        </Setter>
+                    </Style>
+                </ListView.ItemContainerStyle>
+                <ListView.View>
+                    <GridView>
+                        <GridViewColumn Header="Name" DisplayMemberBinding="{Binding GameName}" />
+                        <GridViewColumn Header="Owner" DisplayMemberBinding="{Binding GameOwner}" />
+                        <GridViewColumn Header="Slots" DisplayMemberBinding="{Binding Slots}" />
+                        <GridViewColumn Header="Map" DisplayMemberBinding="{Binding Map}" />
+                        <GridViewColumn Header="Private" DisplayMemberBinding="{Binding Private}" />
+                    </GridView>
+                </ListView.View>
+            </ListView>
+
+            <Grid x:Name="PasswordGrid" Visibility="Hidden" Opacity="0">
+                <TextBox x:Name="PasswordTextBox" HorizontalAlignment="Left" Height="30" Margin="0,0,0,39" Width="300" VerticalAlignment="Bottom" TextChanged="PasswordTextBox_TextChanged"/>
+                <Label x:Name="PasswordHintLabel" Content="password for game" HorizontalAlignment="Left" Margin="2,0,0,39" VerticalAlignment="Bottom" Foreground="#FFC5C2C2" IsHitTestVisible="False"/>
+            </Grid>
+
+            <Button x:Name="JoinGameButton" Content="Join Game" Margin="0,0,0,39" HorizontalAlignment="Right" VerticalAlignment="Bottom" Width="150" Height="30" FontSize="16" Foreground="White" Background="#16a085"/>
+        </Grid>
     </Grid>
 </Page>

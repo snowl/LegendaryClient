@@ -335,7 +335,10 @@ namespace LegendaryClient.Logic
 
         internal static void OnMessageReceived(object sender, MessageReceivedEventArgs message)
         {
+            RunOnUIThread(new Action(() =>
+            {
 
+            }));
         }
 
         internal static string InternalQueueToPretty(string InternalQueue)
@@ -391,8 +394,12 @@ namespace LegendaryClient.Logic
         internal static Window Win;
         internal static Timer PingTimer;
         internal static Label PingLabel;
-        internal static ContentControl MainHolder;
-        internal static ContentControl MainContainer;
+        internal static ContentControl MainHolder; //The entire contentcontrol holding MainPage/LoginPage
+        internal static ContentControl MainContainer; //The content control that holds everything else while on MainPage
+
+        internal static Grid OverlayGrid;
+        internal static ContentControl OverlayContainer;
+
         internal static Type CurrentPage; //To show header on home page
         internal static List<Page> CachedPages = new List<Page>();
 

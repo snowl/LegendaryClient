@@ -11,7 +11,7 @@
     <Grid>
         <Grid VerticalAlignment="Top" HorizontalAlignment="Center" Width="1215" Height="150" Margin="0,30,0,0">
             <Image x:Name="FavouriteChampionImage" Source="/LegendaryClient;component/temp/Teemo_Splash_0.jpg" Stretch="None" Opacity="0.8"/>
-            <Rectangle Fill="#FF002A5D" Opacity="0.2"/>
+            <Rectangle Fill="#FF002A5D" Opacity="0.3"/>
 
             <Image x:Name="ProfileImage" Width="64" Height="64" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="10,20,0,0" Source="/LegendaryClient;component/temp/535.png"/>
 

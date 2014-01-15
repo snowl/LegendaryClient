@@ -23,6 +23,9 @@ namespace LegendaryClient
             Client.MainHolder = Container;
             Client.Win = this;
 
+            Client.OverlayContainer = OverlayContainer;
+            Client.OverlayGrid = OverlayGrid;
+
             Client.PingTimer = new Timer(10000);
             Client.PingTimer.Elapsed += new ElapsedEventHandler(Client.PingElapsed);
             Client.PingTimer.Enabled = true;

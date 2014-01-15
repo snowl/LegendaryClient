@@ -80,6 +80,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Elements\InvitePlayerItem.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Elements\NewsItem.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -124,6 +128,9 @@
     </Compile>
     <Compile Include="Elements\InvitePlayerControl.xaml.cs">
       <DependentUpon>InvitePlayerControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Elements\InvitePlayerItem.xaml.cs">
+      <DependentUpon>InvitePlayerItem.xaml</DependentUpon>
     </Compile>
     <Compile Include="Elements\NewsItem.xaml.cs">
       <DependentUpon>NewsItem.xaml</DependentUpon>

@@ -1,0 +1,12 @@
+﻿<UserControl x:Class="LegendaryClient.Elements.InvitePlayerItem"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             mc:Ignorable="d" 
+             Height="30" Width="250">
+    <Grid>
+        <Label x:Name="PlayerNameLabel" Content="Snowl" HorizontalAlignment="Left" VerticalAlignment="Top" Foreground="#FF424242"/>
+        <Label x:Name="PlayerStatusLabel" Content="pending" HorizontalAlignment="Right" VerticalAlignment="Top" Foreground="#FF424242" FontStyle="Italic"/>
+    </Grid>
+</UserControl>

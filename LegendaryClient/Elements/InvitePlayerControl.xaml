@@ -6,7 +6,11 @@
              mc:Ignorable="d" 
              d:DesignHeight="64" d:DesignWidth="264">
     <Grid>
+        <Rectangle Fill="#34495e"/>
         <Image HorizontalAlignment="Left" Height="64" Margin="0,0,0,0" VerticalAlignment="Top" Width="64" Source="/LegendaryClient;component/temp/535.png"/>
-
+        <Label x:Name="PlayerNameLabel" Content="Snowl" Foreground="#FFCFCFCF" HorizontalAlignment="Left" Margin="70,10,0,0" VerticalAlignment="Top" FontSize="14"/>
+        <Label x:Name="LeagueLabel" Content="Silver III" Foreground="#FFCFCFCF" HorizontalAlignment="Left" Margin="70,0,0,10" VerticalAlignment="Bottom" FontSize="10" FontStyle="Italic"/>
+        <Button Content="X" HorizontalAlignment="Right" Margin="0,0,0,0" VerticalAlignment="Top" Width="35" Background="#2c3e50"/>
+        <Button Content="I" HorizontalAlignment="Right" Margin="0,0,0,0" VerticalAlignment="Bottom" Width="35" Background="#2c3e50"/>
     </Grid>
 </UserControl>

@@ -5,6 +5,9 @@
         Title="LegendaryClient"
         Width="1360" Height="768" ResizeMode="CanMinimize">
     <Grid Background="#ecf0f1" local:FocusVisualTreeChanger.IsChanged="True">
+        <Grid x:Name="OverlayGrid" Background="#7F000000" Panel.ZIndex="999" Visibility="Hidden">
+            <ContentControl x:Name="OverlayContainer" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Margin="40,40,40,40" />
+        </Grid>
         <ContentControl x:Name="Container" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Margin="0,0,0,0" />
     </Grid>
 </Window>

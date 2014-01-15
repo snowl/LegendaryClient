@@ -49,7 +49,7 @@
         <Button x:Name="LoginButton" IsDefault="True" Click="LoginHandler" Width="0" Height="0"/>
 
         <Grid x:Name="SettingsGrid" Height="30" MinWidth="300" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0,30,3,0" Background="#FF95A5A6" Opacity="0" Visibility="Hidden">
-            <Button x:Name="FindLeagueButton" Content="Find LoL" HorizontalAlignment="Right" Margin="0,0,0,0" VerticalAlignment="Center" Width="75" ToolTip="Find your existing League of Legends installation for the patcher to use on first-run, saving time and download." Click="FindLeagueButton_Click"/>
+            <Button x:Name="FindLeagueButton" Content="find LoL" HorizontalAlignment="Right" Margin="0,0,0,0" VerticalAlignment="Center" Width="75" ToolTip="Find your existing League of Legends installation for the patcher to use on first-run, saving time and download." Click="FindLeagueButton_Click"/>
             <Label x:Name="LocationLabel"  HorizontalAlignment="Right" Margin="0,0,80,0" VerticalAlignment="Center" Foreground="#FFE4E4E4"/>
         </Grid>
     </Grid>
