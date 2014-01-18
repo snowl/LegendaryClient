@@ -6,16 +6,20 @@
              mc:Ignorable="d" 
              Height="300" Width="300">
     <Grid>
-        <Grid Background="#34495e">
-            <RichTextBox Margin="10,35,10,40" Background="#FF383838" Foreground="#FFD4D4D4"/>
-            <TextBox HorizontalAlignment="Left" Height="23" Margin="10,0,0,10" Text="TextBox" VerticalAlignment="Bottom" Width="220" BorderBrush="#FFB8B8B8"/>
+        <Grid Background="#FF547393">
+            <RichTextBox Margin="10,35,10,40"  VerticalAlignment="Stretch" Background="#FFDADADA" IsReadOnly="True" BorderBrush="#FFDADADA">
+                <FlowDocument>
+
+                </FlowDocument>
+            </RichTextBox>
+            <TextBox HorizontalAlignment="Stretch" Height="30" Margin="10,0,10,10" VerticalAlignment="Bottom"/>
 
         </Grid>
 
-        <Grid Background="#2c3e50" Height="25" VerticalAlignment="Top">
-            <Label x:Name="PlayerNameLabel" Content="Snowl" HorizontalAlignment="Left" Margin="2,-1,0,0" FontSize="11" FontWeight="Bold" VerticalAlignment="Top" Foreground="#FFD4D4D4"/>
-            <Button Content="X" HorizontalAlignment="Right" Margin="0,0,0,0" VerticalAlignment="Top" Width="30" Height="25"/>
-            <Button Content="_" HorizontalAlignment="Right" Margin="0,0,32.5,0" VerticalAlignment="Top" Width="30" Height="25"/>
+        <Grid Background="#2c3e50" Height="30" VerticalAlignment="Top">
+            <Label x:Name="PlayerNameLabel" Content="Snowl" HorizontalAlignment="Left" Margin="2,0,0,0" FontSize="14" FontWeight="Medium" VerticalAlignment="Top" Foreground="#FFD4D4D4"/>
+            <Button Content="X" HorizontalAlignment="Right" Margin="0,0,0,0" VerticalAlignment="Top" Width="30" Height="30" Background="#FF292929"/>
+            <Button Content="_" HorizontalAlignment="Right" Margin="0,0,32.5,0" VerticalAlignment="Top" Width="30" Height="30" Background="#FF292929"/>
 
         </Grid>
     </Grid>

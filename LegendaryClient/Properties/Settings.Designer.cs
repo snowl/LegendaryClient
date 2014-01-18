@@ -69,5 +69,17 @@ namespace LegendaryClient.Properties {
                 this["Status"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string[] ChampionGroups {
+            get {
+                return ((string[])(this["ChampionGroups"]));
+            }
+            set {
+                this["ChampionGroups"] = value;
+            }
+        }
     }
 }

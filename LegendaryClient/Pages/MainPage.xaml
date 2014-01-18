@@ -73,8 +73,7 @@
                 </StackPanel>
             </ScrollViewer>
 
-            <TextBox x:Name="StatusTextbox" HorizontalAlignment="Stretch" Height="23" Margin="20,0,0,28" VerticalAlignment="Bottom" TextChanged="StatusTextbox_TextChanged" LostFocus="StatusTextbox_LostFocus" KeyUp="StatusTextbox_KeyUp" />
-            <Label x:Name="StatusLabel" Content="enter status here" HorizontalAlignment="Left" Margin="22,0,0,26" VerticalAlignment="Bottom" Foreground="#FFC5C2C2" IsHitTestVisible="False"/>
+            <local:WatermarkTextbox x:Name="StatusTextbox" HorizontalAlignment="Stretch" Height="23" Margin="20,0,0,28" VerticalAlignment="Bottom" Watermark="enter status here" LostFocus="StatusTextbox_LostFocus" KeyUp="StatusTextbox_KeyUp" />
             <Ellipse x:Name="OnlineStatusEllipse" Fill="#2ecc71" HorizontalAlignment="Left" Height="10" Margin="30,0,0,10" VerticalAlignment="Bottom" Width="10" MouseDown="ChangeStatus" ToolTip="Online"/>
             <Ellipse x:Name="BusyStatusEllipse" Fill="#e74c3c" HorizontalAlignment="Center" Height="10" Margin="0,0,0,10" VerticalAlignment="Bottom" Width="10" MouseDown="ChangeStatus" ToolTip="Away/Busy"/>
             <Ellipse x:Name="InvisibleStatusEllipse" HorizontalAlignment="Right" Height="10" Margin="0,0,30,10" VerticalAlignment="Bottom" Width="10" Stroke="#FFA0A0A0" MouseDown="ChangeStatus" Fill="#02000000" ToolTip="Invisible"/>

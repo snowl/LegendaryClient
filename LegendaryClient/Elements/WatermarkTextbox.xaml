@@ -1,0 +1,12 @@
+﻿<UserControl x:Class="LegendaryClient.Elements.WatermarkTextbox"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             mc:Ignorable="d" 
+             Height="30" d:DesignWidth="300">
+    <Grid>
+        <TextBox x:Name="WaterTextbox" HorizontalAlignment="Stretch" Height="30" VerticalAlignment="Top" TextChanged="WaterTextbox_TextChanged" />
+        <Label x:Name="HintLabel" Content="{Binding Watermark}" HorizontalAlignment="Left" Margin="2,0,0,0" VerticalAlignment="Bottom" Foreground="#FFC5C2C2" IsHitTestVisible="False"/>
+    </Grid>
+</UserControl>

@@ -49,7 +49,7 @@ namespace LegendaryClient.Logic
         internal static bool IsAway = false;
         internal static bool HasInitalTransmit = false;
         internal static PresenceType CurrentPresence;
-        internal static string CurrentStatus;
+        internal static string CurrentStatus = "Online";
 
         internal static void SetPresence()
         {
@@ -86,6 +86,7 @@ namespace LegendaryClient.Logic
 
         internal static void RostManager_OnRosterEnd(object sender)
         {
+            CurrentPresence = PresenceType.available;
             SetPresence();
         }
 
@@ -309,7 +310,9 @@ namespace LegendaryClient.Logic
         internal static BaseRegion Region;
         internal static Session PlayerSession;
         internal static ClientDataContext Context;
-        internal static ChampionDTO[] PlayerChampions;
+        internal static List<ChampionDTO> PlayerChampions;
+
+        internal static bool IsInGame = false;
 
         internal static System.Timers.Timer HeartbeatTimer;
         internal static int HeartbeatCount;
@@ -400,7 +403,7 @@ namespace LegendaryClient.Logic
         internal static Grid OverlayGrid;
         internal static ContentControl OverlayContainer;
 
-        internal static Type CurrentPage; //To show header on home page
+        internal static Type CurrentPage; //Stop changing to same page
         internal static List<Page> CachedPages = new List<Page>();
 
         internal static void PingElapsed(object sender, ElapsedEventArgs e)

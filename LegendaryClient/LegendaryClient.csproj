@@ -47,6 +47,7 @@
     <Reference Include="System.Drawing" />
     <Reference Include="System.Security" />
     <Reference Include="System.Web.Extensions" />
+    <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Core" />
@@ -64,15 +65,19 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Page Include="Elements\ChampionGroupItem.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Elements\ChampionItem.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Elements\ChampionOverviewControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Elements\ChatBoxControl.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Elements\FeaturedGameControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -96,15 +101,23 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Elements\PlayerItem.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Elements\SmallChampionItem.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Elements\SmallChatItem.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Elements\SmallMatchOverview.xaml">
+    <Page Include="Elements\TopChampionControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Elements\TopChampionControl.xaml">
+    <Page Include="Elements\WatermarkTextbox.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -116,6 +129,12 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Elements\ChampionGroupItem.xaml.cs">
+      <DependentUpon>ChampionGroupItem.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Elements\ChampionItem.xaml.cs">
+      <DependentUpon>ChampionItem.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Elements\ChampionOverviewControl.xaml.cs">
       <DependentUpon>ChampionOverviewControl.xaml</DependentUpon>
     </Compile>
@@ -123,9 +142,6 @@
       <DependentUpon>ChatBoxControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="Elements\FadeLabel.cs" />
-    <Compile Include="Elements\FeaturedGameControl.xaml.cs">
-      <DependentUpon>FeaturedGameControl.xaml</DependentUpon>
-    </Compile>
     <Compile Include="Elements\InvitePlayerControl.xaml.cs">
       <DependentUpon>InvitePlayerControl.xaml</DependentUpon>
     </Compile>
@@ -141,14 +157,20 @@
     <Compile Include="Elements\PlayerChatControl.xaml.cs">
       <DependentUpon>PlayerChatControl.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Elements\PlayerItem.xaml.cs">
+      <DependentUpon>PlayerItem.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Elements\SmallChampionItem.xaml.cs">
+      <DependentUpon>SmallChampionItem.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Elements\SmallChatItem.xaml.cs">
       <DependentUpon>SmallChatItem.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Elements\SmallMatchOverview.xaml.cs">
-      <DependentUpon>SmallMatchOverview.xaml</DependentUpon>
-    </Compile>
     <Compile Include="Elements\TopChampionControl.xaml.cs">
       <DependentUpon>TopChampionControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Elements\WatermarkTextbox.xaml.cs">
+      <DependentUpon>WatermarkTextbox.xaml</DependentUpon>
     </Compile>
     <Compile Include="Elements\WindowExtensions.cs" />
     <Compile Include="Logic\ChatPrefixes.cs" />
@@ -294,6 +316,14 @@
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Page Include="Pages\ChampSelectPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Pages\CustomGameLobbyPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Pages\HomePage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -314,12 +344,22 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Pages\Profile\Champions.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Pages\Profile\Overview.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Pages\ChampSelectPage.xaml.cs">
+      <DependentUpon>ChampSelectPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\CustomGameLobbyPage.xaml.cs">
+      <DependentUpon>CustomGameLobbyPage.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Pages\HomePage.xaml.cs">
       <DependentUpon>HomePage.xaml</DependentUpon>
     </Compile>
@@ -334,6 +374,9 @@
     </Compile>
     <Compile Include="Pages\ProfilePage.xaml.cs">
       <DependentUpon>ProfilePage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\Profile\Champions.xaml.cs">
+      <DependentUpon>Champions.xaml</DependentUpon>
     </Compile>
     <Compile Include="Pages\Profile\Overview.xaml.cs">
       <DependentUpon>Overview.xaml</DependentUpon>
@@ -390,6 +433,9 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="temp\challenger_1.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="trade.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

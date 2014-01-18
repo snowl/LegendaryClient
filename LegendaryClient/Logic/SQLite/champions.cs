@@ -112,5 +112,15 @@ namespace LegendaryClient.Logic.SQLite
             }
             return null;
         }
+
+        public static champions GetDisplayChampion(string displayName)
+        {
+            foreach (champions c in Client.Champions)
+            {
+                if (c.displayName.ToLower() == displayName.ToLower())
+                    return c;
+            }
+            return null;
+        }
     }
 }

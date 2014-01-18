@@ -7,12 +7,12 @@
              Height="100" Width="100">
     <Grid>
         <Grid Width="128" Height="128" Margin="-20,-20,0,0" >
-            <Image x:Name="ChampionImage" Source="/LegendaryClient;component/temp/Teemo_Square_0.png">
+            <Image x:Name="ChampionImage" Source="{Binding Path=icon}">
                 <Image.Clip>
                     <RectangleGeometry Rect="20,20,100,100"/>
                 </Image.Clip>
             </Image>
-            <Rectangle Fill="#233140" Opacity="0.60" Margin="10,10,0,0" Width="100" Height="100"/>
+            <Rectangle Fill="#233140" Opacity="0.60" Margin="11,11,0,0" Width="100" Height="100"/>
         </Grid>
 
         <Label x:Name="KillsLabel" Content="3" HorizontalAlignment="Right" Margin="0,2,55,0" FontWeight="Bold" VerticalAlignment="Top" Foreground="#FFE4E4E4"/>

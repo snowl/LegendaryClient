@@ -5,7 +5,7 @@
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
       xmlns:Elements="clr-namespace:LegendaryClient.Elements"
       mc:Ignorable="d"
-      d:DesignHeight="738" d:DesignWidth="1360"
+      d:DesignHeight="660" d:DesignWidth="1360"
 	Title="ProfilePage">
 
     <Grid>
@@ -29,8 +29,7 @@
 
             <Label x:Name="PlayerNameLabel" Content="Snowl" HorizontalAlignment="Left" Margin="10,0,0,10" Foreground="#FFE4E4E4" FontSize="30" FontWeight="Thin" VerticalAlignment="Bottom"/>
             <Grid x:Name="SearchGrid" Height="30" MinWidth="300" HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="0,0,40,0" Opacity="0" Visibility="Hidden">
-                <TextBox x:Name="PlayerSearchBox" VerticalAlignment="Top" TextChanged="PlayerSearchBox_TextChanged" KeyDown="PlayerSearchBox_KeyDown"/>
-                <Label x:Name="HintLabel" Content="search for a player" HorizontalAlignment="Left" Margin="2,0,0,0" VerticalAlignment="Bottom" Foreground="#FFC5C2C2" IsHitTestVisible="False"/>
+                <Elements:WatermarkTextbox x:Name="PlayerSearchBox" VerticalAlignment="Top" KeyDown="PlayerSearchBox_KeyDown" Watermark="search for a summoner"/>
             </Grid>
             <Image x:Name="SearchImage" HorizontalAlignment="Right" Height="32" Margin="0,0,0,0" VerticalAlignment="Bottom" Width="32" Source="/LegendaryClient;component/search.png" Opacity="0.3" RenderTransformOrigin="0.5,0.5" MouseEnter="SearchImage_MouseEnter" MouseLeave="SearchImage_MouseLeave" MouseDown="SearchImage_MouseDown">
                 <Image.RenderTransform>
@@ -52,13 +51,15 @@
             </Grid>
             
             <StackPanel Orientation="Horizontal">
-                <Elements:FadeLabel Content="overview" Margin="5,0,0,0" />
+                <Elements:FadeLabel x:Name="OverviewButton" Content="overview" Margin="5,0,0,0" MouseDown="OverviewButton_MouseDown" />
                 <Elements:FadeLabel Content="matches" />
                 <Elements:FadeLabel Content="leagues" />
                 <Elements:FadeLabel Content="masteries" />
                 <Elements:FadeLabel Content="runes" />
-                <Elements:FadeLabel Content="champions" />
-                <Elements:FadeLabel Content="skins" />
+            </StackPanel>
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                <Elements:FadeLabel x:Name="ChampionsButton" Content="champions" MouseDown="ChampionsButton_MouseDown" />
+                <Elements:FadeLabel Content="skins" Margin="0,0,5,0"/>
             </StackPanel>
         </Grid>
 

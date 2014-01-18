@@ -52,6 +52,10 @@
             <Label x:Name="QueueLabel" Content="normal 5v5" HorizontalAlignment="Left" FontSize="26" FontWeight="Thin" VerticalAlignment="Top"/>
             <Label x:Name="MapLabel" Content="Summoner's Rift" HorizontalAlignment="Left" Margin="0,30,0,0" FontSize="12" VerticalAlignment="Top" FontStyle="Italic"/>
 
+            <TextBlock x:Name="RankedWarnLabel" Margin="0,10,50,0" FontStyle="Italic" Foreground="#FF6E6E6E" FontSize="16" HorizontalAlignment="Center" VerticalAlignment="Top">
+                this client is still in beta and may crash/error randomly<LineBreak/>dont play ranked unless you are willing to lose lp
+            </TextBlock>
+
             <Label x:Name="WaitTimeLabel" Content="avg time 0:00" HorizontalAlignment="Right" Margin="0,0,160,0" FontSize="16" FontWeight="Thin" VerticalAlignment="Top"/>
             <Label x:Name="AmountInQueueLabel" Content="people in queue 0" HorizontalAlignment="Right" Margin="0,25,160,0" FontSize="16" FontWeight="Thin" VerticalAlignment="Top"/>
             <Button x:Name="QueueButton" Content="Queue" HorizontalAlignment="Right" VerticalAlignment="Top" Width="150" Height="60" FontSize="24" Foreground="White" Background="#16a085"/>
@@ -83,48 +87,55 @@
         </Grid>
 
         <Grid x:Name="CustomGrid" Margin="300,0,30,0" Opacity="0" Visibility="Hidden">
-            <ListView Style="{Binding CustomListView}" x:Name="CustomGameListView"  HorizontalAlignment="Stretch" Margin="0,30,0,90" VerticalAlignment="Stretch" Foreground="White" Background="#34495e" SelectionChanged="CustomGameListView_SelectionChanged">
-                <ListView.ItemContainerStyle>
-                    <Style TargetType="{x:Type ListViewItem}">
-                        <Setter Property="FontSize" Value="14" />
-                        <Setter Property="Margin" Value="0,2,0,2"/>
-                        <Setter Property="Foreground" Value="#FFF3F3F3"/>
-                        <Setter Property="Template">
-                            <Setter.Value>
-                                <ControlTemplate TargetType="ListBoxItem">
-                                    <Border Name="Border" Padding="2" SnapsToDevicePixels="true" Background="Transparent">
-                                        <GridViewRowPresenter VerticalAlignment="{TemplateBinding VerticalContentAlignment}"/>
-                                    </Border>
-                                    <ControlTemplate.Triggers>
-                                        <Trigger Property="IsMouseOver" Value="True">
-                                            <Setter TargetName="Border" Property="Background" Value="#2c3e50"/>
-                                        </Trigger>
-                                        <Trigger Property="IsSelected" Value="true">
-                                            <Setter TargetName="Border" Property="Background" Value="#FF0D1727"/>
-                                        </Trigger>
-                                    </ControlTemplate.Triggers>
-                                </ControlTemplate>
-                            </Setter.Value>
-                        </Setter>
-                    </Style>
-                </ListView.ItemContainerStyle>
-                <ListView.View>
-                    <GridView>
-                        <GridViewColumn Header="Name" DisplayMemberBinding="{Binding GameName}" />
-                        <GridViewColumn Header="Owner" DisplayMemberBinding="{Binding GameOwner}" />
-                        <GridViewColumn Header="Slots" DisplayMemberBinding="{Binding Slots}" />
-                        <GridViewColumn Header="Map" DisplayMemberBinding="{Binding Map}" />
-                        <GridViewColumn Header="Private" DisplayMemberBinding="{Binding Private}" />
-                    </GridView>
-                </ListView.View>
-            </ListView>
+            <Grid HorizontalAlignment="Stretch" Margin="0,30,0,90" VerticalAlignment="Stretch">               
+                <ListView Style="{Binding CustomListView}" x:Name="CustomGameListView" Foreground="White" Background="#34495e" SelectionMode="Single" SelectionChanged="CustomGameListView_SelectionChanged">
+                    <ListView.ItemContainerStyle>
+                        <Style TargetType="{x:Type ListViewItem}">
+                            <Setter Property="FontSize" Value="14" />
+                            <Setter Property="Margin" Value="0,2,0,2"/>
+                            <Setter Property="Foreground" Value="#FFF3F3F3"/>
+                            <Setter Property="Template">
+                                <Setter.Value>
+                                    <ControlTemplate TargetType="ListBoxItem">
+                                        <Border Name="Border" Padding="2" SnapsToDevicePixels="true" Background="Transparent">
+                                            <GridViewRowPresenter VerticalAlignment="{TemplateBinding VerticalContentAlignment}"/>
+                                        </Border>
+                                        <ControlTemplate.Triggers>
+                                            <Trigger Property="IsMouseOver" Value="True">
+                                                <Setter TargetName="Border" Property="Background" Value="#2c3e50"/>
+                                            </Trigger>
+                                            <Trigger Property="IsSelected" Value="true">
+                                                <Setter TargetName="Border" Property="Background" Value="#FF0D1727"/>
+                                            </Trigger>
+                                        </ControlTemplate.Triggers>
+                                    </ControlTemplate>
+                                </Setter.Value>
+                            </Setter>
+                        </Style>
+                    </ListView.ItemContainerStyle>
+                    <ListView.View>
+                        <GridView>
+                            <GridViewColumn Header="Name" DisplayMemberBinding="{Binding GameName}" />
+                            <GridViewColumn Header="Owner" DisplayMemberBinding="{Binding GameOwner}" />
+                            <GridViewColumn Header="Slots" DisplayMemberBinding="{Binding Slots}" />
+                            <GridViewColumn Header="Map" DisplayMemberBinding="{Binding Map}" />
+                            <GridViewColumn Header="Private" DisplayMemberBinding="{Binding Private}" />
+                        </GridView>
+                    </ListView.View>
+                </ListView>
 
+                <Grid IsHitTestVisible="False">
+                    <Grid.Background>
+                        <ImageBrush ImageSource="/LegendaryClient;component/noise.png" Viewport="0,0,100,100" ViewportUnits="Absolute" TileMode="Tile" Stretch="None" AlignmentX="Left" AlignmentY="Top"  />
+                    </Grid.Background>
+                </Grid>
+            </Grid>
+                
             <Grid x:Name="PasswordGrid" Visibility="Hidden" Opacity="0">
-                <TextBox x:Name="PasswordTextBox" HorizontalAlignment="Left" Height="30" Margin="0,0,0,39" Width="300" VerticalAlignment="Bottom" TextChanged="PasswordTextBox_TextChanged"/>
-                <Label x:Name="PasswordHintLabel" Content="password for game" HorizontalAlignment="Left" Margin="2,0,0,39" VerticalAlignment="Bottom" Foreground="#FFC5C2C2" IsHitTestVisible="False"/>
+                <local:WatermarkTextbox x:Name="PasswordTextBox" HorizontalAlignment="Left" Height="30" Margin="0,0,0,39" Width="300" VerticalAlignment="Bottom" Watermark="password for game"/>
             </Grid>
 
-            <Button x:Name="JoinGameButton" Content="Join Game" Margin="0,0,0,39" HorizontalAlignment="Right" VerticalAlignment="Bottom" Width="150" Height="30" FontSize="16" Foreground="White" Background="#16a085"/>
+            <Button x:Name="JoinGameButton" Content="Join Game" Margin="0,0,0,39" HorizontalAlignment="Right" VerticalAlignment="Bottom" Width="150" Height="30" FontSize="16" Foreground="White" Background="#16a085" Click="JoinGameButton_Click"/>
         </Grid>
     </Grid>
 </Page>

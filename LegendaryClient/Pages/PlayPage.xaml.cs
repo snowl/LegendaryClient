@@ -83,6 +83,11 @@ namespace LegendaryClient.Pages
             QueueLabel.Content = Client.InternalQueueToPretty(SelectedConfig.CacheName);
             MapLabel.Content = map.DisplayName;
 
+            if (Client.InternalQueueToPretty(SelectedConfig.CacheName).Contains("ranked"))
+                RankedWarnLabel.Visibility = Visibility.Visible;
+            else
+                RankedWarnLabel.Visibility = Visibility.Hidden;
+
             QueueInfo qinfo = await RiotCalls.GetQueueInformation(SelectedConfig.Id);
             if (!Client.InternalQueueToPretty(SelectedConfig.CacheName).StartsWith("ranked team"))
                 AmountInQueueLabel.Content = string.Format("people in queue {0}", qinfo.QueueLength);
@@ -194,7 +199,7 @@ namespace LegendaryClient.Pages
         {
             if (CustomGameListView.SelectedIndex != -1)
             {
-                PasswordTextBox.Text = "";
+                PasswordTextBox.WaterTextbox.Text = "";
                 if (CustomGameListView.SelectedItem == null)
                     return;
                 GameItem gitem = (GameItem)CustomGameListView.SelectedItem;
@@ -214,18 +219,20 @@ namespace LegendaryClient.Pages
             }
         }
 
-        private void PasswordTextBox_TextChanged(object sender, TextChangedEventArgs e)
+        private void JoinGameButton_Click(object sender, RoutedEventArgs e)
         {
-            if (PasswordTextBox.Text.Length > 0)
-            {
-                var fadeLabelOutAnimation = new DoubleAnimation(0, TimeSpan.FromSeconds(0.1));
-                PasswordHintLabel.BeginAnimation(Label.OpacityProperty, fadeLabelOutAnimation);
-            }
+            double GameID = 0;
+            string GameName = "";
+            GameItem item = (GameItem)CustomGameListView.SelectedItem;
+            GameID = item.Id;
+            GameName = item.GameName;
+
+            if (!String.IsNullOrEmpty(PasswordTextBox.WaterTextbox.Text))
+                RiotCalls.JoinGame(GameID, PasswordTextBox.WaterTextbox.Text);
             else
-            {
-                var fadeLabelInAnimation = new DoubleAnimation(1, TimeSpan.FromSeconds(0.1));
-                PasswordHintLabel.BeginAnimation(Label.OpacityProperty, fadeLabelInAnimation);
-            }
+                RiotCalls.JoinGame(GameID);
+
+            Client.SwitchPage<CustomGameLobbyPage>();
         }
     }
 

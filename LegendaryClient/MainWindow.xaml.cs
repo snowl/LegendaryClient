@@ -6,6 +6,7 @@ using System.Reflection;
 using System.Timers;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Interop;
 using System.Windows.Media.Animation;
 
 namespace LegendaryClient
@@ -23,6 +24,12 @@ namespace LegendaryClient
             Client.MainHolder = Container;
             Client.Win = this;
 
+            if (Properties.Settings.Default.Status != "")
+                Client.CurrentStatus = Properties.Settings.Default.Status;
+
+            if (Properties.Settings.Default.ChampionGroups == null)
+                Properties.Settings.Default.ChampionGroups = new string[0];
+
             Client.OverlayContainer = OverlayContainer;
             Client.OverlayGrid = OverlayGrid;
 
@@ -30,7 +37,7 @@ namespace LegendaryClient
             Client.PingTimer.Elapsed += new ElapsedEventHandler(Client.PingElapsed);
             Client.PingTimer.Enabled = true;
 
-            //Wait half a second before starting, makes it look sleek. This is a hack tho. TODO: Use a proper class for this, not an animation
+            //Wait half a second before starting, makes it look sleek. This is a hack tho (but it's pretty!)
             var waitAnimation = new DoubleAnimation(1, TimeSpan.FromSeconds(0.5));
             waitAnimation.Completed += (o, e) =>
             {

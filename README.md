@@ -31,3 +31,5 @@ These screenshots are in progress and may not represent the final look of the cl
 ![Chat](http://puu.sh/6iKBW.jpg)
 ![Profile](http://puu.sh/6kduH.jpg)
 ![Queueing](http://puu.sh/6kdvL.png)
+![CustomGame](http://puu.sh/6p5aU.jpg)
+![ChampionSelect](http://puu.sh/6p5dL.jpg)

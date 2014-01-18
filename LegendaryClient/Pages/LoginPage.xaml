@@ -38,8 +38,7 @@
 
         <Grid x:Name="LoginInfoGrid">
             <Image x:Name="SettingsButton" HorizontalAlignment="Right" Height="16" Margin="0,5,5,0" Opacity="0.3" VerticalAlignment="Top" Width="16" Source="/LegendaryClient;component/gear.png" MouseEnter="SettingsButton_MouseEnter" MouseLeave="SettingsButton_MouseLeave" MouseDown="SettingsButton_MouseDown"/>
-            <TextBox x:Name="UsernameTextBox" HorizontalAlignment="Center" Margin="0,0,160,0" VerticalAlignment="Center" Width="150" TextChanged="UsernameTextBox_TextChanged"/>
-            <Label x:Name="UsernameLabel" Content="username" HorizontalAlignment="Center" Margin="0,0,237,0" VerticalAlignment="Center" Foreground="#FFC5C2C2" IsHitTestVisible="False"/>
+            <Elements:WatermarkTextbox x:Name="UsernameTextBox" HorizontalAlignment="Center" Margin="0,0,160,0" VerticalAlignment="Center" Width="150" Watermark="username"/>
             <PasswordBox x:Name="PasswordBox" HorizontalAlignment="Center" Height="30" Margin="160,0,0,0" VerticalContentAlignment="Center" VerticalAlignment="Center" Width="150" Foreground="#FFE4E4E4" Padding="3,0,0,0" Background="#FF474747" BorderBrush="{x:Null}" PasswordChanged="PasswordBox_PasswordChanged"/>
             <Label x:Name="PasswordLabel" Content="password" HorizontalAlignment="Center" Margin="80,0,0,0" VerticalAlignment="Center" Foreground="#FFC5C2C2" IsHitTestVisible="False"/>
             <Label x:Name="HintLabel" Content="press enter to login" HorizontalAlignment="Center" Margin="0,60,0,0" VerticalAlignment="Center" FontStyle="Italic" Foreground="#FF838383" Opacity="0"/>

@@ -1,0 +1,24 @@
+﻿<UserControl x:Class="LegendaryClient.Elements.ChampionGroupItem"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             mc:Ignorable="d" 
+             d:DesignHeight="100" d:DesignWidth="600">
+    <Grid HorizontalAlignment="Stretch">
+        <StackPanel x:Name="ChampionHolderPanel" Orientation="Vertical">
+            <Grid x:Name="EditGrid" Height="31" Visibility="Collapsed">
+                <TextBox x:Name="GroupNameTextBox" Height="28" Width="300" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+                <Button x:Name="RemoveGroupButton" Content="-" HorizontalAlignment="Left" Height="28" Margin="305,0,0,0" VerticalAlignment="Top" Width="30" Click="RemoveGroupButton_Click"/>
+
+                <ComboBox x:Name="ChampionComboBox" Margin="0,0,35,0" Height="28" Width="200" HorizontalAlignment="Right" VerticalAlignment="Top"/>
+                <Button x:Name="AddChampionButton" Content="+" HorizontalAlignment="Right" Height="28" Margin="0,0,0,0" VerticalAlignment="Top" Width="30" Click="AddChampionButton_Click" />
+
+            </Grid>
+            <Grid x:Name="ViewGrid">
+                <Label x:Name="GroupLabel" Content="ADC" HorizontalAlignment="Left" FontSize="14"/>
+            </Grid>
+            <WrapPanel x:Name="ChampionPanel" Orientation="Horizontal" MinHeight="68"/>
+        </StackPanel>
+    </Grid>
+</UserControl>

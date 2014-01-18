@@ -22,6 +22,7 @@ namespace LegendaryClient.Pages
         RecentGames Games;
         SummonerLeaguesDTO Leagues;
         List<AggregatedChampion> ChampionStats;
+        Type CurrentPage; //Stop changing to same page
 
         public ProfilePage()
         {
@@ -34,7 +35,11 @@ namespace LegendaryClient.Pages
 
         public void SwitchProfilePage<T>(params object[] Arguments)
         {
+            if (CurrentPage == typeof(T))
+                return;
+
             Page instance = (Page)Activator.CreateInstance(typeof(T), Arguments);
+            CurrentPage = typeof(T);
 
             var fadeOutAnimation = new DoubleAnimation(0, TimeSpan.FromSeconds(0.25));
             fadeOutAnimation.Completed += (x, y) =>
@@ -105,11 +110,9 @@ namespace LegendaryClient.Pages
             {
                 SetChampionImage((int)ChampionStats[1].ChampionId);
             }
-
+            //Switch to overview... make sure it switches if it's currently on overview by giving a fake type
+            CurrentPage = typeof(string);
             SwitchProfilePage<Overview>(ChampionStats, Games);
-
-
-
 
             //Load everything after overview is loaded
             if (Summoner.SummonerLevel == 30)
@@ -147,8 +150,8 @@ namespace LegendaryClient.Pages
             if (e.Key != System.Windows.Input.Key.Enter) return;
 
             SearchImage_MouseDown(null, null);
-            SearchForPlayer(PlayerSearchBox.Text);
-            PlayerSearchBox.Text = "";
+            SearchForPlayer(PlayerSearchBox.WaterTextbox.Text);
+            PlayerSearchBox.WaterTextbox.Text = "";
             e.Handled = true;
         }
 
@@ -181,20 +184,18 @@ namespace LegendaryClient.Pages
             }
         }
 
-        private void PlayerSearchBox_TextChanged(object sender, TextChangedEventArgs e)
-        {
-            if (PlayerSearchBox.Text.Length > 0)
-            {
-                var fadeLabelOutAnimation = new DoubleAnimation(0, TimeSpan.FromSeconds(0.1));
-                HintLabel.BeginAnimation(Label.OpacityProperty, fadeLabelOutAnimation);
-            }
-            else
-            {
-                var fadeLabelInAnimation = new DoubleAnimation(1, TimeSpan.FromSeconds(0.1));
-                HintLabel.BeginAnimation(Label.OpacityProperty, fadeLabelInAnimation);
-            }
-        }
         #endregion
+
+        private void OverviewButton_MouseDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
+        {
+            SwitchProfilePage<Overview>(ChampionStats, Games);
+        }
+
+        private void ChampionsButton_MouseDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
+        {
+            SwitchProfilePage<Champions>();
+        }
+
     }
 
     public class AggregatedChampion

@@ -48,7 +48,7 @@ namespace LegendaryClient.Pages.Profile
                     ChampControl.Margin = new Thickness(0, 2.5, 0, 2.5);
 
                     champions Champion = champions.GetChampion((int)Champ.ChampionId);
-                    ChampControl.ChampionImage.Source = Champion.icon;
+                    ChampControl.ChampionImage.DataContext = Champion;
                     Rectangle cropRect = new Rectangle(new System.Drawing.Point(10, 90), new System.Drawing.Size(300, 60));
                     Bitmap src = Image.FromFile(Path.Combine(Client.ExecutingDirectory, "Assets", "champions", Champion.portraitPath)) as Bitmap;
                     Bitmap target = new Bitmap(cropRect.Width, cropRect.Height);
@@ -60,7 +60,7 @@ namespace LegendaryClient.Pages.Profile
 
                     ChampControl.BackgroundImage.Source = Client.ToWpfBitmap(target);
 
-                    ChampControl.ChampionNameLabel.Content = Champion.name;
+                    ChampControl.ChampionNameLabel.Content = Champion.displayName;
                     int GamesPlayed = (int)Champ.TotalSessionsPlayed;
                     ChampControl.GamesPlayedLabel.Content = GamesPlayed;
                     ChampControl.CSLabel.Content = string.Format("{0:0.0}", Champ.TotalMinionKills / GamesPlayed);
@@ -116,8 +116,9 @@ namespace LegendaryClient.Pages.Profile
                 ChampionOverviewControl GameControl = new ChampionOverviewControl();
                 GameControl.Margin = new Thickness(10, 5, 10, 5);
 
-                var uriSource = Path.Combine(Client.ExecutingDirectory, "Assets", "champions", champions.GetChampion((int)Match.Game.ChampionId).iconPath);
-                GameControl.ChampionImage.Source = Client.GetImage(uriSource);
+                champions Champion = champions.GetChampion((int)Match.Game.ChampionId);
+
+                GameControl.DataContext = Champion;
 
                 GameControl.KillsLabel.Content = string.Format("{0:0.0}", Match.ChampionsKilled / Match.AmountTogether);
                 GameControl.DeathsLabel.Content = string.Format("{0:0.0}", Match.NumDeaths / Match.AmountTogether);

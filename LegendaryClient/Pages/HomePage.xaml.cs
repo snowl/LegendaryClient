@@ -66,12 +66,7 @@ namespace LegendaryClient.Pages
             foreach (var objectGame in gameList)
             {
                 Dictionary<string, object> SpectatorGame = objectGame as Dictionary<string, object>;
-                FeaturedGameControl FeaturedGame = new FeaturedGameControl();
-                FeaturedGame.Margin = new Thickness(5, 5, 5, 5);
-                FeaturedGame.HorizontalAlignment = HorizontalAlignment.Left;
 
-                //Parse games
-                //FeaturedGamesStackPanel.Children.Add(FeaturedGame);
             }
         }
 

@@ -32,10 +32,7 @@ namespace LegendaryClient.Pages
             Client.SwitchPage<HomePage>();
 
             if (Properties.Settings.Default.Status != "")
-            {
-                StatusTextbox.Text = Properties.Settings.Default.Status;
-                Client.CurrentStatus = Properties.Settings.Default.Status;
-            }
+                StatusTextbox.WaterTextbox.Text = Properties.Settings.Default.Status;
 
             //Should these be data contexted? idk
             NameLabel.Content = Client.LoginPacket.AllSummonerData.Summoner.Name;
@@ -71,6 +68,7 @@ namespace LegendaryClient.Pages
                 ExpProgressBar.Value = (CurrentEXP / RequiredExp) * 100;
                 ExpLabel.Content = string.Format("{0}/{1}", CurrentEXP, RequiredExp);
             }
+
             Client.OnUpdatePlayer += OnUpdatePlayer;
         }
 
@@ -78,6 +76,12 @@ namespace LegendaryClient.Pages
         {
             Client.RunOnUIThread(new Action(() =>
             {
+                if (result.SummonerLeagues == null || result.SummonerLeagues.Count == 0) //If player has been reset
+                {
+                    Client.PlayerIsRanked = false;
+                    return;
+                }
+
                 foreach (LeagueListDTO leagues in result.SummonerLeagues)
                 {
                     if (leagues.Queue == "RANKED_SOLO_5x5")
@@ -306,32 +310,18 @@ namespace LegendaryClient.Pages
 
         private void StatusTextbox_LostFocus(object sender, RoutedEventArgs e)
         {
-            if (Client.CurrentStatus != StatusTextbox.Text && !string.IsNullOrWhiteSpace(StatusTextbox.Text))
+            if (Client.CurrentStatus != StatusTextbox.WaterTextbox.Text && !string.IsNullOrWhiteSpace(StatusTextbox.WaterTextbox.Text))
             {
-                Client.CurrentStatus = StatusTextbox.Text;
+                Client.CurrentStatus = StatusTextbox.WaterTextbox.Text;
             }
-            else if (string.IsNullOrWhiteSpace(StatusTextbox.Text))
+            else if (string.IsNullOrWhiteSpace(StatusTextbox.WaterTextbox.Text))
             {
                 Client.CurrentStatus = "Online";
             }
 
-            Properties.Settings.Default.Status = StatusTextbox.Text;
+            Properties.Settings.Default.Status = StatusTextbox.WaterTextbox.Text;
             Properties.Settings.Default.Save();
             Client.SetPresence();
-        }
-
-        private void StatusTextbox_TextChanged(object sender, TextChangedEventArgs e)
-        {
-            if (StatusTextbox.Text.Length > 0)
-            {
-                var fadeLabelOutAnimation = new DoubleAnimation(0, TimeSpan.FromSeconds(0.1));
-                StatusLabel.BeginAnimation(Label.OpacityProperty, fadeLabelOutAnimation);
-            }
-            else
-            {
-                var fadeLabelInAnimation = new DoubleAnimation(1, TimeSpan.FromSeconds(0.1));
-                StatusLabel.BeginAnimation(Label.OpacityProperty, fadeLabelInAnimation);
-            }
         }
 
         private void StatusTextbox_KeyUp(object sender, KeyEventArgs e)

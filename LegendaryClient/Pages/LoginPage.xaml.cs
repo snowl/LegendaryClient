@@ -81,7 +81,7 @@ namespace LegendaryClient.Pages
             {
                 byte[] encrypted = (byte[])Settings.Default.Password;
                 byte[] unencrypted = ProtectedData.Unprotect(encrypted, null, DataProtectionScope.CurrentUser);
-                UsernameTextBox.Text = Settings.Default.Username;
+                UsernameTextBox.WaterTextbox.Text = Settings.Default.Username;
                 PasswordBox.Password = Encoding.Unicode.GetString(unencrypted);
                 LoginInfoGrid.Opacity = 0;
                 LoginInfoGrid.Visibility = Visibility.Visible;
@@ -115,11 +115,11 @@ namespace LegendaryClient.Pages
             AuthenticationCredentials newCredentials = new AuthenticationCredentials();
             Client.RunOnUIThread(new Action(() =>
             {
-                newCredentials.Username = UsernameTextBox.Text;
+                newCredentials.Username = UsernameTextBox.WaterTextbox.Text;
                 newCredentials.Password = PasswordBox.Password;
             }));
 
-            newCredentials.ClientVersion = patcher.DDragonVersion;
+            newCredentials.ClientVersion = "4.1.test";//patcher.DDragonVersion;
             newCredentials.IpAddress = RiotCalls.GetIpAddress();
             newCredentials.Locale = SelectedRegion.Locale;
             newCredentials.Domain = "lolclient.lol.riotgames.com";
@@ -178,7 +178,7 @@ namespace LegendaryClient.Pages
 
             Client.RunOnUIThread(new Action(async () =>
             {
-                bool LoggedIn = await Client.RtmpConnection.LoginAsync(UsernameTextBox.Text.ToLower(), Client.PlayerSession.Token);
+                bool LoggedIn = await Client.RtmpConnection.LoginAsync(UsernameTextBox.WaterTextbox.Text.ToLower(), Client.PlayerSession.Token);
                 Client.LoginPacket = await RiotCalls.GetLoginDataPacketForUser();
             }));
 
@@ -224,7 +224,8 @@ namespace LegendaryClient.Pages
                 Client.Masteries = Masteries.PopulateMasteries();
                 Client.Runes = Runes.PopulateRunes();
 
-                Client.PlayerChampions = await RiotCalls.GetAvailableChampions();
+                Client.PlayerChampions = new List<ChampionDTO>(await RiotCalls.GetAvailableChampions());
+                Client.PlayerChampions.Sort(delegate(ChampionDTO x, ChampionDTO y) { return champions.GetChampion(x.ChampionId).displayName.CompareTo(champions.GetChampion(y.ChampionId).displayName); });
                 Client.GameConfigs = Client.LoginPacket.GameTypeConfigs;
             }));
 
@@ -233,7 +234,7 @@ namespace LegendaryClient.Pages
             Client.ChatClient = new JabberClient();
             Client.RunOnUIThread(new Action(() =>
             {
-                Client.ChatClient.User = UsernameTextBox.Text;
+                Client.ChatClient.User = UsernameTextBox.WaterTextbox.Text;
                 Client.ChatClient.Password = "AIR_" + PasswordBox.Password;
             }));
 
@@ -307,20 +308,6 @@ namespace LegendaryClient.Pages
         }
 
         #region Fade labels
-        private void UsernameTextBox_TextChanged(object sender, TextChangedEventArgs e)
-        {
-            if (UsernameTextBox.Text.Length > 0)
-            {
-                var fadeLabelOutAnimation = new DoubleAnimation(0, TimeSpan.FromSeconds(0.1));
-                UsernameLabel.BeginAnimation(Label.OpacityProperty, fadeLabelOutAnimation);
-            }
-            else
-            {
-                var fadeLabelInAnimation = new DoubleAnimation(1, TimeSpan.FromSeconds(0.1));
-                UsernameLabel.BeginAnimation(Label.OpacityProperty, fadeLabelInAnimation);
-            }
-        }
-
         private void PasswordBox_PasswordChanged(object sender, RoutedEventArgs e)
         {
             if (PasswordBox.Password.Length > 0)
