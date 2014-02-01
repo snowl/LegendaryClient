@@ -30,9 +30,10 @@ These screenshots are in progress and may not represent the final look of the cl
 
 ![Login](http://puu.sh/6iKrX.png)
 ![Chat](http://puu.sh/6iKBW.jpg)
-![Profile](http://puu.sh/6kduH.jpg)
+![Profile](http://puu.sh/6FLQb.jpg)
 ![Queueing](http://puu.sh/6kdvL.png)
 ![CustomGame](http://puu.sh/6p5aU.jpg)
-![ChampionSelect](http://puu.sh/6p5dL.jpg)
+![ChampionSelect](http://puu.sh/6FJBX.jpg)
+![Replays](http://puu.sh/6FJBX.jpg)
 
 Any Queue: http://www.youtube.com/watch?v=ObRd4xvR0xE
