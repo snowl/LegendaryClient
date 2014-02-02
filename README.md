@@ -1,31 +1,11 @@
 LegendaryClient
 ===============
 
-Beautiful, fully-featured League of Legends client.
+This client is discontinued due to a request from Riot. No more pull requests or code will be committed to this repository. No more support will be provided either. Hopefully some stuff from this client can be implemented in the Official client, though.
 
-Will not be accepting any changes until UI changes are merged into master.
+A partial UI rework (before discontinuing) can be seen here: https://github.com/Snowl/LegendaryClient/tree/newUi
 
-Prerequisites
-=============
-
-Currently you must have an up-to-date installation of League of Legends. It will not patch to the latest version, but it will retrieve your current data from your current installation
-
-Build it yourself
-=================
-
-You need these DLLS:
-
-* Awesomium
-* MahApps.Metro
-* SharpZipLib
-* Sqlite
-* rtmps-sharp
-
-You must compile these DLLS yourself:
-
-* https://github.com/bladecoding/Jabber-net
-
-In-Client Screenshots
+Old In-Client Screenshots
 =====================
 
 ![Login](http://puu.sh/5Q7jT.jpg)
