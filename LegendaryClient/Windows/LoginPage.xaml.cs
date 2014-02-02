@@ -79,7 +79,7 @@ namespace LegendaryClient.Windows
                         var str = System.Text.Encoding.Default.GetString(abcTag.ABCData);
                         //Ugly hack ahead - turn back now! (http://pastebin.com/yz1X4HBg)
                         string[] firstSplit = str.Split((char)6);
-                        string[] secondSplit = firstSplit[0].Split((char)19);
+                        string[] secondSplit = firstSplit[0].Split((char)18);
                         Client.Version = secondSplit[1];
                     }
                 }
