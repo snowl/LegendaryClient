@@ -187,6 +187,9 @@
     <Compile Include="Logic\Maps\Map12.cs" />
     <Compile Include="Logic\Maps\BaseMap.cs" />
     <Compile Include="Logic\Region\TR.cs" />
+    <Compile Include="Logic\Riot\com\riotgames\platform\gameinvite\contract\Invitee.cs" />
+    <Compile Include="Logic\Riot\com\riotgames\platform\gameinvite\contract\LobbyStatus.cs" />
+    <Compile Include="Logic\Riot\com\riotgames\platform\gameinvite\contract\Player.cs" />
     <Compile Include="Logic\Riot\com\riotgames\platform\reroll\pojo\RollResult.cs" />
     <Compile Include="Logic\Riot\RiotCalls.cs" />
     <Compile Include="Logic\Riot\RiotPatcher.cs" />
