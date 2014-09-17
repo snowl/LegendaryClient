@@ -17,7 +17,7 @@ namespace LegendaryClient.Logic.Region
 
         public override string ChatName
         {
-            get { return "eu"; }
+            get { return "euw1"; }
         }
 
         public override Uri NewsAddress
@@ -27,12 +27,12 @@ namespace LegendaryClient.Logic.Region
 
         public override string Server
         {
-            get { return "prod.eu.lol.riotgames.com"; }
+            get { return "prod.euw1.lol.riotgames.com"; }
         }
 
         public override string LoginQueue
         {
-            get { return "https://lq.eu.lol.riotgames.com/"; }
+            get { return "https://lq.euw1.lol.riotgames.com/"; }
         }
 
         public override string Locale
